@@ -6,7 +6,16 @@
   "repository": "https://github.com/markusunger/200_OK_admin.git",
   "author": "Markus Unger <schaulustig23@gmail.com>",
   "license": "GPL-3.0-or-later",
+  "scripts": {
+    "dev": "nodemon ./bin/www"
+  },
   "dependencies": {
-    "express": "^4.17.1"
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-handlebars": "^3.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-plugin-node": "^11.0.0"
   }
 }
