@@ -1,0 +1,12 @@
+{
+  "name": "200_OK_admin",
+  "version": "0.1.0",
+  "description": "The administrative/user-faced part of 200 OK",
+  "main": "app.js",
+  "repository": "https://github.com/markusunger/200_OK_admin.git",
+  "author": "Markus Unger <schaulustig23@gmail.com>",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
