@@ -1,4 +1,10 @@
 main {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+
   font-size: 3ch;
   max-width: 70ch;
   padding: 2ch;

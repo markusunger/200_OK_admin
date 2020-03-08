@@ -3,7 +3,10 @@ const ehb = require('express-handlebars');
 const path = require('path');
 
 const frontendRouter = require('./routes/frontendRouter');
-// const apiRouter = require('./routes/apiRouter');
+const apiRouter = require('./routes/apiRouter');
+
+const cfg = require('./services/config');
+require('./services/data')(cfg);
 
 const app = express();
 
@@ -19,8 +22,8 @@ app.engine('hbs', ehb({
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use('/api', express.json());
-// app.use('/api', apiRouter);
+app.use('/api', express.json());
+app.use('/api', apiRouter);
 
 app.use('/', frontendRouter);
 
