@@ -12,8 +12,6 @@ module.exports = {
       throw (error);
     }
 
-    console.log(result);
-
     if (!result) throw (new Error('Could not create new API.'));
 
     return result;

@@ -1,0 +1,25 @@
+.title-lighter {
+  color: #158348;
+  text-shadow: 1px 1px 5px rgb(148, 230, 141);
+}
+
+nav {
+  margin-top: 0.3rem;
+}
+
+.code-block {
+  font-family: monospace;
+  background-color: rgb(37, 37, 37);
+  color: #ccc;
+  border-radius: 0.4rem;
+  padding: 0.6rem;
+}
+
+p.information {
+  margin: 0.8rem 0;
+}
+
+table {
+  margin-left: auto;
+  margin-right: auto;
+}

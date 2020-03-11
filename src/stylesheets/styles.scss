@@ -1,0 +1,40 @@
+@charset "utf-8";
+
+// import Overpass from Google fonts
+@import url('https://fonts.googleapis.com/css?family=Overpass:400,700');
+
+// set 200 OK colors
+$dark-green: #158348;
+$green: #47ac76;
+$blue: #3867d6;
+$grey-light: #a5b1c2;
+$background: #e1ebdf;
+
+// Update Bulma's global variables
+$family-sans-serif: "Overpass", sans-serif;
+$grey-dark: $dark-green;
+$grey-light: $grey-light;
+$primary: $dark-green;
+$link: $green;
+$widescreen-enabled: false;
+$fullhd-enabled: false;
+
+// custom element variables
+$title-line-height: 1.5;
+
+// custo mcomponent variables
+$body-background-color: rgb(236, 233, 233);
+$control-border-width: 2px;
+$input-border-color: 1px solid $dark-green;
+$input-shadow: none;
+
+// import required sass files from bulma package
+@import "../../node_modules/bulma/sass/utilities/_all.sass";
+@import "../../node_modules/bulma/sass/base/_all.sass";
+@import "../../node_modules/bulma/sass/elements/box.sass";
+@import "../../node_modules/bulma/sass/elements/button.sass";
+@import "../../node_modules/bulma/sass/elements/container.sass";
+@import "../../node_modules/bulma/sass/elements/title.sass";
+@import "../../node_modules/bulma/sass/elements/table.sass";
+@import "../../node_modules/bulma/sass/form/_all.sass";
+@import "../../node_modules/bulma/sass/components/level.sass";

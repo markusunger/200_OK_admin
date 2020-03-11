@@ -7,7 +7,8 @@
   "author": "Markus Unger <schaulustig23@gmail.com>",
   "license": "GPL-3.0-or-later",
   "scripts": {
-    "dev": "nodemon ./bin/www"
+    "dev": "yarn run css-build && nodemon ./bin/www",
+    "css-build": "node-sass --omit-source-map-url src/stylesheets/styles.scss public/stylesheets/styles.css"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -17,7 +18,9 @@
     "mongoose": "^5.9.3"
   },
   "devDependencies": {
+    "bulma": "^0.8.0",
     "eslint": "^6.8.0",
-    "eslint-plugin-node": "^11.0.0"
+    "eslint-plugin-node": "^11.0.0",
+    "node-sass": "^4.13.1"
   }
 }
