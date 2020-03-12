@@ -7,7 +7,36 @@
     you are learning frontend web development and want to have a quick backend with real data, or you
     are at a hackathon and just want to store some data without having to worry about creating backend
     logic, you can simply use your <em>200 OK</em> API and follow REST principles.</p>
+    <h2>Wait, what does <em>ephemeral</em> mean?</h2>
+    <p>
+      It means your API will only exist for a set period of time before it will be automatically deleted.
+      For the use cases described above, this will be no problem, as their backend data needs to be
+      only temporary anyway.<br>
+      Currently, your API will exist for <strong>7 days</strong> before all its data and the subdomain
+      get removed.
+    </p>
     <h2 class="title is-3">How do I use my API?</h2>
-    <p>Without any further configuration, your API understands</p>
+    <p>Without any further configuration, your API endpoints follow RESTFUL principles and are completely
+      driven by the idea of <em>resources</em>. Each resource corresponds to a collection of items 
+      (in the case of <em>200 OK</em> an item corresponds to a JSON payload).<br>
+      Accessing a resource is as easy as requesting a single path element: <pre>https://your-api.200ok.app/users</pre>
+      would provide access to the <pre>users</pre> resource. A GET request would yield a list of all items
+      of that resource, while a POST request with a JSON body would add a new item to the collection.<br>
+      Each item receives an <pre>id</pre> property, allowing direct access to that item:
+      <pre>https://your-api.200ok.app/users/1</pre> represents a <pre>users</pre> item with the <pre>id</pre>
+      of <pre>1</pre>. A GET request will return the JSON data for that item, a PUT request will update the data 
+      with what is provided in the accompanying JSON body, and a DELETE request will delete that item from the 
+      resource.</p>
+    <p>Resources can also be nested. If each <pre>users</pre> item should have a collection of `images`, you can
+      access that subresource at <pre>https://your-api.200ok.app/users/1/images</pre>. This will represent the
+      <pre>images</pre> resource for the specific user with the id of <pre>1</pre>. Otherwise, those nested resources
+      behave exactly like any other resource.
+    </p>
+    <h2 class="title is-3">What is the API key? Why would I need to create an account here?</h2>
+    <p>If the behavior described above fits your use case, forget about the key. You will also not need an account.<br>
+    The API key can be used to claim your API and connect it with a user account on this site. If you login, you will
+    find a few options to customize and debug your API.<br>
+    First, you will be able to define custom behavior for certain endpoints.</p>
+    <p> ... to be continued when the features are actually available</p>
   </div>
 </div>
