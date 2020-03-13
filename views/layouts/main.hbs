@@ -18,8 +18,23 @@
 
       <div class="level-right">
         <p class="level-item"><a href="/faq">FAQ</a></p>
-        <p class="level-item"><a href="#">Login</a></p>
-        <p class="level-item"><a class="button is-success" href="#">Register</a></p>
+        {{#if isAuthenticated}}
+          <p class="level-item">
+            <a class="button is-primary" href="/dashboard">
+              To Dashboard
+            </a>
+          </p>
+          <p class="level-item">
+            <a href="/logout">Logout</a>
+          </p>
+        {{else}}
+          <p class="level-item">
+            <a class="button is-primary" href="/login">
+              <span class="icon-github">&nbsp;</span>
+              <span>Login with GitHub</span>
+            </a>
+          </p>
+        {{/if}}
       </div>
     </nav>
     {{{ body }}}

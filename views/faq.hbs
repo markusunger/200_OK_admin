@@ -23,12 +23,12 @@
       would provide access to the <code>users</code> resource. A GET request would yield a list of all items
       of that resource, while a POST request with a JSON body would add a new item to the collection.<br>
       Each item receives an <code>id</code> property, allowing direct access to that item:
-      <code>https://your-api.200ok.app/users/1</code> recodesents a <code>users</code> item with the <code>id</code>
+      <code>https://your-api.200ok.app/users/1</code> represents a <code>users</code> item with the <code>id</code>
       of <code>1</code>. A GET request will return the JSON data for that item, a PUT request will update the data 
       with what is provided in the accompanying JSON body, and a DELETE request will delete that item from the 
       resource.</p>
     <p>Resources can also be nested. If each <code>users</code> item should have a collection of `images`, you can
-      access that subresource at <code>https://your-api.200ok.app/users/1/images</code>. This will recodesent the
+      access that subresource at <code>https://your-api.200ok.app/users/1/images</code>. This will represent the
       <code>images</code> resource for the specific user with the id of <code>1</code>. Otherwise, those nested resources
       behave exactly like any other resource.
     </p>
