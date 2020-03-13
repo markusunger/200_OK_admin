@@ -18,8 +18,11 @@ router.use(session({
 router.use(auth.initialize());
 router.use(auth.session());
 
+// set user data to res.locals for usage in templates
 router.use((req, res, next) => {
   res.locals.isAuthenticated = req.isAuthenticated();
+  if (res.locals.isAuthenticated) res.locals.githubInfo = req.user.github;
+  console.log(res.locals.githubInfo);
   next();
 });
 
@@ -43,7 +46,7 @@ router.get('/login', auth.authenticate('github', {
 
 router.get('/login/callback', auth.authenticate('github', {
   successRedirect: '/dashboard',
-  failureRedirect: '/',
+  failureRedirect: '/login',
 }));
 
 module.exports = router;
