@@ -38,6 +38,32 @@ module.exports = (function apiModel() {
     },
   });
 
+  apiSchema.pre('save', async function uniqueApiNameHook(next) {
+    // TODO: remove comments (for now, I just want to check logs if it handles 
+    // duplicates correctly in all cases)
+    let uniqueName = false;
+    console.log(`Checking API name ${this.apiName} ...`);
+    while (!uniqueName) {
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        const result = await mongoose.models.ApiConfig.findOne({
+          apiName: this.apiName,
+        });
+        if (result) {
+          this.apiName = createApiName();
+          console.log(`Not unique! Creating new name: ${this.apiName} ...`);
+        } else {
+          console.log("It's unique. Moving on ...");
+          uniqueName = true;
+          next();
+        }
+      } catch (error) {
+        next(error);
+      }
+    }
+    next();
+  });
+
   const Api = mongoose.model('ApiConfig', apiSchema, 'apiConfig');
 
   return Api;
