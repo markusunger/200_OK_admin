@@ -6,6 +6,14 @@ const auth = require('../services/auth')(cfg);
 
 const router = express.Router();
 
+const ensureAuth = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    next();
+  } else {
+    res.redirect('/');
+  }
+};
+
 router.use(session({
   saveUninitialized: true,
   resave: true,
@@ -22,7 +30,6 @@ router.use(auth.session());
 router.use((req, res, next) => {
   res.locals.isAuthenticated = req.isAuthenticated();
   if (res.locals.isAuthenticated) res.locals.githubInfo = req.user.github;
-  console.log(res.locals.githubInfo);
   next();
 });
 
@@ -34,7 +41,7 @@ router.get('/faq', (req, res) => {
   res.render('faq');
 });
 
-router.get('/dashboard', (req, res) => {
+router.get('/dashboard', ensureAuth, (req, res) => {
   res.render('admin/dashboard');
 });
 
@@ -48,5 +55,10 @@ router.get('/login/callback', auth.authenticate('github', {
   successRedirect: '/dashboard',
   failureRedirect: '/login',
 }));
+
+router.get('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/');
+});
 
 module.exports = router;

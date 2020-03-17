@@ -39,7 +39,7 @@ module.exports = (function apiModel() {
   });
 
   apiSchema.pre('save', async function uniqueApiNameHook(next) {
-    // TODO: remove comments (for now, I just want to check logs if it handles 
+    // TODO: remove comments (for now, I just want to check logs if it handles
     // duplicates correctly in all cases)
     let uniqueName = false;
     console.log(`Checking API name ${this.apiName} ...`);
