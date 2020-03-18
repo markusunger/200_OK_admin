@@ -13,12 +13,6 @@ const router = express.Router();
 
 router.use(cors(corsOptions));
 
-router.get('/', (req, res) => {
-  res.status(200).json({
-    200: 'ok',
-  });
-});
-
 router.post('/', async (req, res, next) => {
   try {
     const { apiName, apiKey } = await configController.createApi();

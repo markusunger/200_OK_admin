@@ -1,4 +1,26 @@
 <h1 class="title is-4">
   Welcome, {{githubInfo.name}}!
 </h1>
-<p>You are successfully logged in.</p>
+<nav class="panel">
+  <p class="panel-heading">
+    Your APIs
+  </p>
+  {{#if hasConnectedApis}}
+    {{#each connectedApis}}
+      <a class="panel-block">
+        {{this}}
+      </a>
+    {{/each}}
+  {{else}}
+    <div class="panel-block">
+      <p>You did not yet connect any API with this account.</p>
+    </div>
+  {{/if}}
+  <div class="panel-block">
+    <a class="button is-link is-outlined is-fullwidth" href="/connect">
+      Connect an API
+    </a>
+  </div>
+
+  </div>
+</nav>

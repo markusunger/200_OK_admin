@@ -29,7 +29,11 @@ router.use(auth.session());
 // set user data to res.locals for usage in templates
 router.use((req, res, next) => {
   res.locals.isAuthenticated = req.isAuthenticated();
-  if (res.locals.isAuthenticated) res.locals.githubInfo = req.user.github;
+  if (res.locals.isAuthenticated) {
+    res.locals.connectedApis = req.user.connectedApis;
+    res.locals.hasConnectedAPIs = res.locals.connectedApis > 0;
+    res.locals.githubInfo = req.user.github;
+  }
   next();
 });
 
@@ -43,6 +47,14 @@ router.get('/faq', (req, res) => {
 
 router.get('/dashboard', ensureAuth, (req, res) => {
   res.render('admin/dashboard');
+});
+
+router.get('/connect', ensureAuth, (req, res) => {
+  res.render('admin/connect');
+});
+
+router.post('/connect', ensureAuth, async (req, res) => {
+  
 });
 
 router.get('/login', auth.authenticate('github', {

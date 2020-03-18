@@ -37,7 +37,7 @@ module.exports = function auth(cfg) {
       // create new user profile if it does not yet exist
       const newUser = new User({
         'github.id': profile.id,
-        'github.name': profile.displayname,
+        'github.name': profile.displayName,
         'github.avatar_url': profile.photos[0].value || '',
       });
       try {

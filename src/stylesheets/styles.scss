@@ -22,7 +22,7 @@ $fullhd-enabled: false;
 // custom element variables
 $title-line-height: 1.5;
 
-// custo mcomponent variables
+// custom component variables
 $body-background-color: rgb(236, 233, 233);
 $control-border-width: 2px;
 $input-border-color: 1px solid $dark-green;
@@ -37,4 +37,4 @@ $input-shadow: none;
 @import "../../node_modules/bulma/sass/elements/title.sass";
 @import "../../node_modules/bulma/sass/elements/table.sass";
 @import "../../node_modules/bulma/sass/form/_all.sass";
-@import "../../node_modules/bulma/sass/components/level.sass";
+@import "../../node_modules/bulma/sass/components/_all.sass";
