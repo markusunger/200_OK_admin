@@ -37,6 +37,22 @@
         {{/if}}
       </div>
     </nav>
+    <div class="flash-messages">
+      {{#if flash_success}}
+        <article class="message is-success">
+          <div class="message-body">
+            {{flash_success}}
+          </div>
+        </article>
+      {{/if}}
+      {{#if flash_error}}
+        <article class="message is-warning">
+          <div class="message-body">
+            {{flash_error}}
+          </div>
+        </article>
+      {{/if}}
+    </div>
     {{{ body }}}
   </div>
 </body>

@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const flash = require('connect-flash');
 
 const cfg = require('../services/config');
 const auth = require('../services/auth')(cfg);
@@ -10,6 +11,7 @@ const ensureAuth = (req, res, next) => {
   if (req.isAuthenticated()) {
     next();
   } else {
+    req.flash('error', 'You need to log in to access that page.');
     res.redirect('/');
   }
 };
@@ -26,8 +28,13 @@ router.use(session({
 router.use(auth.initialize());
 router.use(auth.session());
 
-// set user data to res.locals for usage in templates
+router.use(flash());
+
+// set user data and flash messages to res.locals for usage in templates
 router.use((req, res, next) => {
+  res.locals.flash_success = req.flash('success');
+  res.locals.flash_error = req.flash('error');
+
   res.locals.isAuthenticated = req.isAuthenticated();
   if (res.locals.isAuthenticated) {
     res.locals.connectedApis = req.user.connectedApis;

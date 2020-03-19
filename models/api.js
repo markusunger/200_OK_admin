@@ -36,6 +36,10 @@ module.exports = (function apiModel() {
       type: Date,
       default: Date.now,
     },
+    isConnected: {
+      type: Boolean,
+      default: false,
+    },
   });
 
   apiSchema.pre('save', async function uniqueApiNameHook(next) {

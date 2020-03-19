@@ -29,7 +29,7 @@ module.exports = function auth(cfg) {
       try {
         user = await User.findOne({ 'github.id': profile.id });
       } catch (error) {
-        return done(error, null);
+        return done(error, false);
       }
 
       if (user) return done(null, user);
@@ -44,7 +44,7 @@ module.exports = function auth(cfg) {
         await newUser.save();
         return done(null, newUser);
       } catch (error) {
-        return done(error, null);
+        return done(error, false);
       }
     });
   }));

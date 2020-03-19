@@ -1,0 +1,30 @@
+<h1 class="title is-4">Connect an API</h1>
+<p class="information">
+  In order to customize behavior or see live debugging information for an API, you first need to connect
+  it with your user account. In order to do so, please enter the name of the API you wish to connect
+  and the API key you received during API creation.
+</p>
+<form method="POST" action="/connect">
+  <div class="field">
+    <label class="label">API name</label>
+    <div class="control">
+      <input class="input" type="text" name="api-name" placeholder="Your API name">
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">API key</label>
+    <div class="control">
+      <input class="input" type="text" name="api-key" placeholder="Your API key">
+    </div>
+  </div>
+
+  <div class="field is-grouped">
+    <div class="control">
+      <button class="button is-link" type="submit">Connect</button>
+    </div>
+    <div class="control">
+      <button class="button is-link is-light" type="reset">Cancel</button>
+    </div>
+  </div>
+</form>

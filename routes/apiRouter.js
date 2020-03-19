@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 
-const configController = require('../controllers/configController');
+const ajaxController = require('../controllers/ajaxController');
 
 const corsOptions = {
   origin: 'http://localhost',
@@ -15,7 +15,7 @@ router.use(cors(corsOptions));
 
 router.post('/', async (req, res, next) => {
   try {
-    const { apiName, apiKey } = await configController.createApi();
+    const { apiName, apiKey } = await ajaxController.createApi();
     res.status(200).json({ apiName, apiKey });
   } catch (error) {
     next(error);
