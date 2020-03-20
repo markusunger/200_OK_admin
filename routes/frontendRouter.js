@@ -40,6 +40,7 @@ router.use((req, res, next) => {
   res.locals.flash_error = req.flash('error');
 
   if (req.isAuthenticated()) {
+    res.locals.isAuthenticated = true;
     res.locals.connectedApis = req.user.connectedApis;
     res.locals.hasConnectedApis = req.user.connectedApis.length > 0;
     res.locals.githubInfo = req.user.github;
