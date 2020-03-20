@@ -2,6 +2,8 @@ const express = require('express');
 const session = require('express-session');
 const flash = require('connect-flash');
 
+const dashboardController = require('../controllers/dashboardController');
+
 const cfg = require('../services/config');
 const auth = require('../services/auth')(cfg);
 
@@ -15,6 +17,8 @@ const ensureAuth = (req, res, next) => {
     res.redirect('/');
   }
 };
+
+router.use(express.urlencoded({ extended: true }));
 
 router.use(session({
   saveUninitialized: true,
@@ -35,14 +39,14 @@ router.use((req, res, next) => {
   res.locals.flash_success = req.flash('success');
   res.locals.flash_error = req.flash('error');
 
-  res.locals.isAuthenticated = req.isAuthenticated();
-  if (res.locals.isAuthenticated) {
+  if (req.isAuthenticated()) {
     res.locals.connectedApis = req.user.connectedApis;
-    res.locals.hasConnectedAPIs = res.locals.connectedApis > 0;
+    res.locals.hasConnectedApis = req.user.connectedApis.length > 0;
     res.locals.githubInfo = req.user.github;
   }
   next();
 });
+
 
 router.get('/', (req, res) => {
   res.render('index');
@@ -53,6 +57,7 @@ router.get('/faq', (req, res) => {
 });
 
 router.get('/dashboard', ensureAuth, (req, res) => {
+  console.log(res.locals);
   res.render('admin/dashboard');
 });
 
@@ -61,7 +66,25 @@ router.get('/connect', ensureAuth, (req, res) => {
 });
 
 router.post('/connect', ensureAuth, async (req, res) => {
-  
+  const userId = req.user.github.id;
+  const apiName = req.body['api-name'];
+  const apiKey = req.body['api-key'];
+
+  if (!apiName || !apiKey) {
+    req.flash('error', 'API name and API key are required.');
+    req.redirect('/connect');
+  }
+
+  try {
+    const result = await dashboardController.connectApi(userId, apiName, apiKey);
+    if (result) {
+      req.flash('success', `API <em>${apiName}</em> successfully connected.`);
+      res.redirect('/dashboard');
+    }
+  } catch (error) {
+    req.flash('error', error.message);
+    res.redirect('/connect');
+  }
 });
 
 router.get('/login', auth.authenticate('github', {
