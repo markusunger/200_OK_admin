@@ -1,6 +1,6 @@
 const handleDashboard = (function createDashboardHandler() {
 
-  // loading information + fa spinner
+  // loading information + fa spinne r
   const loadingAnimation = `
     <div class="fa-3x">
       <i class="fas fa-spinner fa-pulse"></i>
