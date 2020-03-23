@@ -43,6 +43,20 @@ module.exports = (function apiModel() {
     },
   });
 
+  apiSchema.set('toObject', { virtuals: true });
+  apiSchema.set('toJSON', { virtuals: true });
+
+  apiSchema.virtual('expiresIn')
+    .get(function getExpiresIn() {
+      const expiryDate = moment(this.createdAt).add(7, 'days');
+      return expiryDate.fromNow();
+    });
+
+  apiSchema.virtual('createdAtFormatted')
+    .get(function getCreatedAtFormatted() {
+      return moment(this.createdAt).format('dddd, MMMM Do YYYY, HH:mm');
+    });
+
   apiSchema.pre('save', async function uniqueApiNameHook(next) {
     // TODO: remove comments (for now, I just want to check logs if it handles
     // duplicates correctly in all cases)

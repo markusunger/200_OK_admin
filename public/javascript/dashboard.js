@@ -15,11 +15,12 @@ const handleDashboard = (function createDashboardHandler() {
 
   // information about API + available actions links
   const apiInfoBlock = (apiInfo) => {
-    const { apiName, createdAt } = apiInfo;
+    const { apiName, createdAtFormatted, expiresIn } = apiInfo;
 
     return `
       <h3 class="title is-5">${apiName}</h3>
-      <p class="information">Expires in ${createdAt}</p>
+      <p>Expires ${expiresIn}</p>
+      <p class="is-small">(Created on ${createdAtFormatted})</p>
       <div class="information">
         <a class="button is-medium is-primary is-fullwidth" href="/debug/${apiName}">
           <span class="icon is-medium">
@@ -44,6 +45,7 @@ const handleDashboard = (function createDashboardHandler() {
       try {
         let data = await fetch(`/api/info/${apiName}`);
         data = await data.json();
+        console.log(data);
         return data;
       } catch (error) {
         return null;
