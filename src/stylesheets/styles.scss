@@ -4,7 +4,7 @@
 @import url('https://fonts.googleapis.com/css?family=Overpass:400,700');
 
 // set 200 OK colors
-$dark-green: #158348;
+$dark-green: #0f6d3b;
 $green: #47ac76;
 $blue: #3867d6;
 $grey-light: #a5b1c2;
@@ -38,3 +38,4 @@ $input-shadow: none;
 @import "../../node_modules/bulma/sass/elements/table.sass";
 @import "../../node_modules/bulma/sass/form/_all.sass";
 @import "../../node_modules/bulma/sass/components/_all.sass";
+@import "../../node_modules/bulma/sass/grid/columns.sass";

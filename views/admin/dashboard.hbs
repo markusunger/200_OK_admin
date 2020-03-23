@@ -1,26 +1,55 @@
 <h1 class="title is-4">
   Welcome, {{githubInfo.name}}!
 </h1>
-<nav class="panel">
-  <p class="panel-heading">
-    Your APIs
-  </p>
-  {{#if hasConnectedApis}}
-    {{#each connectedApis}}
-      <a class="panel-block" href="/manage/{{this}}">
-        {{this}}
-      </a>
-    {{/each}}
-  {{else}}
-    <div class="panel-block">
-      <p>You did not yet connect any API with this account.</p>
+
+{{#if hasConnectedApis}}
+
+  <div class="columns is-desktop">
+    <div class="column">
+      <nav class="panel is-link">
+        <p class="panel-heading">
+          Your APIs
+        </p>
+        
+        {{#each connectedApis}}
+          <a class="panel-block api-link" data-name="{{this}}">
+          <span class="panel-icon" data-name="{{this}}">
+            <i class="fas fa-database" aria-hidden="true" data-name="{{this}}"></i>
+          </span>
+          <span class="api-name" data-name="{{this}}">{{this}}</span>
+          </a>
+        {{/each}}
+
+        <div class="panel-block">
+          <a class="button is-link is-outlined is-fullwidth" href="/connect">
+            <span class="icon is-large">
+              <i class="fas fa-plug"></i>
+            </span>
+            <span>Connect an API</span>
+          </a>
+        </div>
+      </nav>
     </div>
-  {{/if}}
-  <div class="panel-block">
-    <a class="button is-link is-outlined is-fullwidth" href="/connect">
-      Connect an API
-    </a>
+
+    <div class="column">
+      <div class="box has-text-centered" id="api-info-box">
+        <div class="fa-3x">
+          <i class="fas fa-spinner fa-pulse"></i>
+        </div>
+        <p>Loading API information ...</p>
+      </div>
+    </div>
   </div>
 
+{{else}}
+
+  <div>
+    <p>You do not have any connected API.</p>
+    <p>If you have already created one, you can <a href="/connect">connect
+    it here</a> with your API name and key.</p>
+    <p>If you do not have an API, <a href="/">create one on the starting page</a>.</p>
   </div>
-</nav>
+
+{{/if}}
+
+<script src="/javascript/dashboard.js"></script>

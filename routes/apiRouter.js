@@ -22,6 +22,18 @@ router.post('/', async (req, res, next) => {
   }
 });
 
+router.get('/info/:apiName', async (req, res, next) => {
+  const { apiName } = req.params;
+  if (!apiName) next(new Error('No API name provided.'));
+
+  try {
+    const apiInfo = await ajaxController.getApiInfo(apiName);
+    res.status(200).json(apiInfo);
+  } catch (error) {
+    next(error);
+  }
+});
+
 // general error handling middleware
 router.use((err, req, res, next) => {
   console.error(err);

@@ -6,13 +6,16 @@
   <title>200 OK</title>
   <link rel="stylesheet" href="/stylesheets/styles.css">
   <link rel="stylesheet" href="/stylesheets/custom.css">
+  <link rel="stylesheet" href="/stylesheets/all.css">
 </head>
 <body>
   <div class="container">
     <nav class="level">
       <div class="level-left">
         <div class="level-item">
-          <h1 class="title is-4" id="main-title">200 <span class="title-lighter">OK</span></h1>
+          <a class="title is-4 title-link" href="/">
+            <span class="title-200">200</span> <span class="title-ok">OK</span>
+          </a>
         </div>
       </div>
 
@@ -20,8 +23,8 @@
         <p class="level-item"><a href="/faq">FAQ</a></p>
         {{#if isAuthenticated}}
           <p class="level-item">
-            <a class="button is-primary" href="/dashboard">
-              To Dashboard
+            <a href="/dashboard">
+              Dashboard
             </a>
           </p>
           <p class="level-item">
@@ -30,7 +33,9 @@
         {{else}}
           <p class="level-item">
             <a class="button is-primary" href="/login">
-              <span class="icon-github">&nbsp;</span>
+              <span class="icon">
+                <i class="fab fa-github"></i>
+              </span>
               <span>Login with GitHub</span>
             </a>
           </p>
@@ -54,6 +59,7 @@
       {{/if}}
     </div>
     {{{ body }}}
+
   </div>
 </body>
 </html>

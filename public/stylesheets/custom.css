@@ -1,35 +1,30 @@
-@font-face {
-  font-family: 'gh-icon';
-  src:  url('../fonts/gh-icon.eot?eukaej');
-  src:  url('../fonts/gh-icon.eot?eukaej#iefix') format('embedded-opentype'),
-    url('../fonts/gh-icon.ttf?eukaej') format('truetype'),
-    url('../fonts/gh-icon.woff?eukaej') format('woff'),
-    url('../fonts/gh-icon.svg?eukaej#icomoon') format('svg');
-  font-weight: normal;
-  font-style: normal;
-  font-display: block;
+.title-200 {
+  color: rgb(41, 41, 41);
 }
 
-[class^="icon-"], [class*=" icon-"] {
-  /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'gh-icon' !important;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.icon-github:before {
-  content: "\eab0";
-}
-
-.title-lighter {
+.title-ok {
   color: #158348;
   text-shadow: 1px 1px 5px rgb(148, 230, 141);
+}
+
+.title-link {
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.3rem;
+  transition-property: background-color;
+  transition-duration: 1s;
+}
+
+.title-link:hover {
+  background-color: #0f6d3b;
+}
+
+.title-link:hover .title-200 {
+  color: #fff;
+}
+
+.title-link:hover .title-ok {
+  color: #81b99b;
+  text-shadow: 1px 1px 5px rgb(34, 58, 32);
 }
 
 nav {
@@ -44,11 +39,21 @@ nav {
   padding: 0.6rem;
 }
 
-p.information {
-  margin: 0.8rem 0;
+.information {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 table {
   margin-left: auto;
   margin-right: auto;
+}
+
+nav.panel {
+  margin-top: 0;
+}
+
+h2.faq {
+  margin-top: 1rem;
+  margin-bottom: 0.2rem;
 }

@@ -58,7 +58,6 @@ router.get('/faq', (req, res) => {
 });
 
 router.get('/dashboard', ensureAuth, (req, res) => {
-  console.log(res.locals);
   res.render('admin/dashboard');
 });
 
@@ -79,13 +78,17 @@ router.post('/connect', ensureAuth, async (req, res) => {
   try {
     const result = await dashboardController.connectApi(userId, apiName, apiKey);
     if (result) {
-      req.flash('success', `API <em>${apiName}</em> successfully connected.`);
+      req.flash('success', `API '${apiName}' successfully connected.`);
       res.redirect('/dashboard');
     }
   } catch (error) {
     req.flash('error', error.message);
     res.redirect('/connect');
   }
+});
+
+router.get('/manage/:apiName', (req, res) => {
+  dashboardController.manageApi(apiName);
 });
 
 router.get('/login', auth.authenticate('github', {
