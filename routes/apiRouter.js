@@ -35,6 +35,7 @@ router.get('/info/:apiName', async (req, res, next) => {
 });
 
 // general error handling middleware
+// TODO: improve! :P
 router.use((err, req, res, next) => {
   console.error(err);
   res.status(500).end();
