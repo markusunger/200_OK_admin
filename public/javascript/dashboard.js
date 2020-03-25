@@ -43,9 +43,10 @@ const handleDashboard = (function createDashboardHandler() {
   return async () => {
     const fetchApiInfo = async (apiName) => {
       try {
-        let data = await fetch(`/api/info/${apiName}`);
+        let data = await fetch(`/api/info/${apiName}`, {
+          credentials: 'include',
+        });
         data = await data.json();
-        console.log(data);
         return data;
       } catch (error) {
         return null;

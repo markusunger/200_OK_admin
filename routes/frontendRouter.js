@@ -1,51 +1,12 @@
 const express = require('express');
-const session = require('express-session');
 const flash = require('connect-flash');
 
 const dashboardController = require('../controllers/dashboardController');
-
-const cfg = require('../services/config');
-const auth = require('../services/auth')(cfg);
+const auth = require('../middlewares/authorize');
 
 const router = express.Router();
 
-// drop-in middleware to ensure that the request originates from a user that is logged in
-const ensureAuth = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    next();
-  } else {
-    req.flash('error', 'You need to log in to access that page.');
-    res.redirect('/');
-  }
-};
-
-// drop-in middleware to ensure that API-specific requests can only be made by their owners,
-// useable in any route with a parameter :apiName
-const ensureOwnership = (req, res, next) => {
-  const { apiName } = req.params;
-  if (!apiName) next();
-  if (req.user.connectedApis.includes(apiName)) {
-    next();
-  } else {
-    req.flash('error', `You are not the owner of the '${apiName}' API.`);
-    res.redirect('/dashboard');
-  }
-};
-
 router.use(express.urlencoded({ extended: true }));
-
-router.use(session({
-  saveUninitialized: true,
-  resave: true,
-  maxAge: 1209600, // 14 days
-  secure: false, // set to true for prod!!
-  proxy: true,
-  secret: cfg.cookieSecret,
-}));
-
-router.use(auth.initialize());
-router.use(auth.session());
-
 router.use(flash());
 
 // set user data and flash messages to res.locals for usage in templates
@@ -71,15 +32,15 @@ router.get('/faq', (req, res) => {
   res.render('faq');
 });
 
-router.get('/dashboard', ensureAuth, (req, res) => {
+router.get('/dashboard', auth.ensureAuthentication, (req, res) => {
   res.render('admin/dashboard');
 });
 
-router.get('/connect', ensureAuth, (req, res) => {
+router.get('/connect', auth.ensureAuthentication, (req, res) => {
   res.render('admin/connect');
 });
 
-router.post('/connect', ensureAuth, async (req, res) => {
+router.post('/connect', auth.ensureAuthentication, async (req, res) => {
   const userId = req.user.github.id;
   const apiName = req.body['api-name'];
   const apiKey = req.body['api-key'];
@@ -101,20 +62,9 @@ router.post('/connect', ensureAuth, async (req, res) => {
   }
 });
 
-router.get('/debug/:apiName', ensureAuth, ensureOwnership, (req, res) => {
+router.get('/debug/:apiName', auth.ensureAuthentication, auth.ensureOwnership, (req, res) => {
   res.end();
 });
-
-router.get('/login', auth.authenticate('github', {
-  scope: ['read:user'],
-  successRedirect: '/dashboard',
-  failureRedirect: '/login',
-}));
-
-router.get('/login/callback', auth.authenticate('github', {
-  successRedirect: '/dashboard',
-  failureRedirect: '/login',
-}));
 
 router.get('/logout', (req, res) => {
   req.logout();

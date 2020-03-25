@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 
 const ajaxController = require('../controllers/ajaxController');
+const auth = require('../middlewares/authorize');
 
 const corsOptions = {
   origin: 'http://localhost',
@@ -22,7 +23,7 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.get('/info/:apiName', async (req, res, next) => {
+router.get('/info/:apiName', auth.ensureAuthentication, auth.ensureOwnership, async (req, res, next) => {
   const { apiName } = req.params;
   if (!apiName) next(new Error('No API name provided.'));
 
@@ -32,6 +33,10 @@ router.get('/info/:apiName', async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+});
+
+router.get('/debug-stream/:apiName', auth.ensureAuthentication, auth.ensureOwnership, (req, res) => {
+
 });
 
 // general error handling middleware
