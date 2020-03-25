@@ -8,7 +8,7 @@ const apiRouter = require('./routes/apiRouter');
 
 const cfg = require('./services/config');
 require('./services/data')(cfg);
-const auth = require('./services/auth')(cfg);
+const authService = require('./services/auth')(cfg);
 
 const app = express();
 
@@ -34,16 +34,16 @@ app.use(session({
   secret: cfg.cookieSecret,
 }));
 
-app.use(auth.initialize());
-app.use(auth.session());
+app.use(authService.initialize());
+app.use(authService.session());
 
-app.get('/login', auth.authenticate('github', {
+app.get('/login', authService.authenticate('github', {
   scope: ['read:user'],
   successRedirect: '/dashboard',
   failureRedirect: '/login',
 }));
 
-app.get('/login/callback', auth.authenticate('github', {
+app.get('/login/callback', authService.authenticate('github', {
   successRedirect: '/dashboard',
   failureRedirect: '/login',
 }));

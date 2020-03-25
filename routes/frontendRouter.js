@@ -62,8 +62,11 @@ router.post('/connect', auth.ensureAuthentication, async (req, res) => {
   }
 });
 
-router.get('/debug/:apiName', auth.ensureAuthentication, auth.ensureOwnership, (req, res) => {
-  res.end();
+router.get('/debug/:apiName', auth.ensureAuthentication, auth.ensureOwnership, (req, res, next) => {
+  const { apiName } = req.params;
+  if (!apiName) next(new Error('API name not provided.'));
+
+  res.render('admin/debug', { apiName });
 });
 
 router.get('/logout', (req, res) => {

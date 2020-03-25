@@ -35,15 +35,28 @@ router.get('/info/:apiName', auth.ensureAuthentication, auth.ensureOwnership, as
   }
 });
 
-router.get('/debug-stream/:apiName', auth.ensureAuthentication, auth.ensureOwnership, (req, res) => {
+router.get('/debug-stream/:apiName', auth.ensureAuthentication, auth.ensureOwnership, (req, res, next) => {
+  const { apiName } = req.params;
+  if (!apiName) next(new Error('No API name provided'));
 
+  req.socket.setTimeout(0);
+
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    Connection: 'keep-alive',
+  });
+  res.write('\n');
+
+  ajaxController.getSSE(req, res, apiName);
 });
 
 // general error handling middleware
 // TODO: improve! :P
 router.use((err, req, res, next) => {
   console.error(err);
-  res.status(500).end();
+  if (res.statusCode === 200) res.status(500);
+  res.end();
 });
 
 module.exports = router;

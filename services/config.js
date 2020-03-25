@@ -11,4 +11,8 @@ module.exports = {
   GitHubCallback: process.env.GITHUB_CALLBACK,
 
   cookieSecret: process.env.COOKIE_SECRET,
+
+  redisHost: process.env.REDIS_HOST,
+  redisPort: process.env.REDIS_PORT,
+  redisPassword: process.env.REDIS_PW,
 };

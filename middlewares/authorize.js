@@ -1,24 +1,32 @@
+// middleware to check:
+// - that a user is authenticated and logged in
+// - that a user has ownership when accessing API-specific functionality
+
 module.exports = {
-  // drop-in middleware to ensure that the request originates from a user that is logged in
   ensureAuthentication: function ensureAuthenication(req, res, next) {
     if (req.isAuthenticated()) {
       next();
-    } else {
+    } else if (req.flash) {
       req.flash('error', 'You need to log in to access that page.');
       res.redirect('/');
+    } else {
+      res.status(403);
+      next(new Error('You need to log in to be able to make that request.'));
     }
   },
 
-  // drop-in middleware to ensure that API-specific requests can only be made by their owners,
   // useable in any route with a parameter :apiName
   ensureOwnership: function ensureOwnership(req, res, next) {
     const { apiName } = req.params;
     if (!apiName) next();
     if (req.user.connectedApis.includes(apiName)) {
       next();
-    } else {
+    } else if (req.flash) {
       req.flash('error', `You are not the owner of the '${apiName}' API.`);
       res.redirect('/dashboard');
+    } else {
+      res.status(403);
+      next(new Error(`You cannot make that request as you are not the owner of '${apiName}'.`));
     }
   },
 };
