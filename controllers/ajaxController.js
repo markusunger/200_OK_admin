@@ -51,7 +51,6 @@ module.exports = {
 
     req.on('close', () => {
       listener.unsubscribe(apiName);
-      listener.close();
     });
   },
 };

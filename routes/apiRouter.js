@@ -39,12 +39,17 @@ router.get('/debug-stream/:apiName', auth.ensureAuthentication, auth.ensureOwner
   const { apiName } = req.params;
   if (!apiName) next(new Error('No API name provided'));
 
+  // prepare connection for SSE text/event-stream payload
   req.socket.setTimeout(0);
+  req.socket.setNoDelay(true);
+  req.socket.setKeepAlive(true);
 
-  res.writeHead(200, {
+  // set status (needs to be 200), required headers and first newline,
+  res.status(200).set({
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
     Connection: 'keep-alive',
+    'X-Accel-Buffering': 'no',
   });
   res.write('\n');
 
