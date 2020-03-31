@@ -5,6 +5,6 @@ export default function RequestColumn({ request }) {
     <div>
       <h2 class="title is-4">Request</h2>
       <p>${JSON.stringify(request)}</p>
-    <div>
+    </div>
   `;
 }

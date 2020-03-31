@@ -44,6 +44,11 @@ nav {
   margin-bottom: 1rem;
 }
 
+.event-list-title {
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+}
+
 table {
   margin-left: auto;
   margin-right: auto;
@@ -56,4 +61,29 @@ nav.panel {
 h2.faq {
   margin-top: 1rem;
   margin-bottom: 0.2rem;
+}
+
+div.event-list-container {
+  max-height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+ul.event-list {
+}
+
+ul.event-list li {
+  padding: 0.4rem;
+  margin-bottom: 0.2rem;
+  font-family: monospace;
+  background-color: rgb(217, 238, 204);
+  color: #000;
+  width: 100%;
+  border-radius: 0.25rem;
+}
+
+ul.event-list li:hover {
+  cursor: pointer;
+  background-color: white;
+  color: #0f6d3b;
 }
