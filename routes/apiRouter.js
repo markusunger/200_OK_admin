@@ -44,6 +44,8 @@ router.get('/debug-stream/:apiName', auth.ensureAuthentication, auth.ensureOwner
   req.socket.setNoDelay(true);
   req.socket.setKeepAlive(true);
 
+  res.connection.setTimeout(0);
+
   // set status (needs to be 200), required headers and first newline,
   res.status(200).set({
     'Content-Type': 'text/event-stream',
