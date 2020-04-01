@@ -1,5 +1,7 @@
 /* eslint-disable */
 
+import EventListItem from './eventListItem.js';
+
 import { html, useEffect, useRef } from '../preact-htm.js';
 
 export default function EventList({ eventList, selectedEvent, clickEvent }) {
@@ -7,15 +9,15 @@ export default function EventList({ eventList, selectedEvent, clickEvent }) {
   
   useEffect(() => {
     const container = containerRef.current || null;
-    if (container) container.scrollTo(container.scrollHeight);
-  });
+    if (container) container.scrollTo(0, container.scrollHeight);
+  }, [eventList]);
 
   return html`
     <div class="column is-one-third">
       <div class="box event-list-container" ref=${containerRef}>
         <p class="event-list-title">Select Request</p>
         <ul class="event-list">
-          ${eventList.map(event => html`<li onClick=${clickEvent}>${event.request.method} ${event.request.target}</li>`)}
+          ${eventList.map((event, idx) => html`<${EventListItem} clickEvent=${clickEvent} key=${event.timeStamp} event=${event} selectedClass=${idx === selectedEvent ? 'is-selected-event' : ''} />`)}
         </ul>
       </div>
     </div>

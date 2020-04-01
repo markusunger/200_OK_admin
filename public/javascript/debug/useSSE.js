@@ -9,6 +9,7 @@ export default function useSSE(apiName) {
     const handler = (e) => {
       try {
         const result = JSON.parse(e.data);
+        result.timestamp = result.response.sentAt; // add custom timestamp as unique identifier
         setData(result);
       } catch (error) {
         console.error(error);
