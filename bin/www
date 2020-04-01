@@ -7,5 +7,5 @@ const app = require('../app');
 
 const port = cfg.nodePort || 3333;
 
-const server = http.createServer(app);
+const server = http.createServer(app).setTimeout(0);
 server.listen(port, () => console.log(`Server started on port ${port}.`));

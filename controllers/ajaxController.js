@@ -37,15 +37,13 @@ module.exports = {
   getSSE: function getSSE(req, res, apiName) {
     const listener = subscriber.subscribe(apiName);
     let messageId = 0;
-    let heartbeatTimer;
 
-    // send a comment (':\n\n') every 10 seconds as a heartbeat
-    // to prevent a connection timeout
-    listener.on('open', () => {
-      heartbeatTimer = setInterval(() => {
-        res.write(':\n\n');
-      }, 10000);
-    });
+    // send a regular heartbeat comment (':\n\n') to prevent
+    // connection timeouts (that do not seem to be the standard
+    // Node.js socket timeouts)
+    const heartbeatTimer = setInterval(() => {
+      res.write(':\n\n');
+    }, 10000);
 
     listener.on('error', (error) => {
       console.error(error);

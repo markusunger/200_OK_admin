@@ -40,10 +40,8 @@ router.get('/debug-stream/:apiName', auth.ensureAuthentication, auth.ensureOwner
   if (!apiName) next(new Error('No API name provided'));
 
   // prepare connection for SSE text/event-stream payload
+  // FIX: this currently does not seem to have an effect
   req.socket.setTimeout(0);
-  req.socket.setNoDelay(true);
-  req.socket.setKeepAlive(true);
-
   res.connection.setTimeout(0);
 
   // set status (needs to be 200), required headers and first newline,
