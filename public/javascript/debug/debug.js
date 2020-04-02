@@ -29,10 +29,17 @@ export default function Debug({ apiName }) {
 
   if (events.length === 0) {
     return html`
-      <div>Issue requests to your API to see them here.</div>
+      <div class="box">
+        <h2 class="title is-4">As soon as you make requests to your API <em>${apiName}</em>,
+        they will appear here.</h2>
+        <a href="/dashboard">Back to dashboard</a>
+      </div>
     `;
   } else {
     return html`
+      <div>
+        <a href="/dashboard">Back to dashboard</a>
+      </div>
       <div class="columns">
         <${EventList} eventList=${events} selectedEvent=${selected} clickEvent=${clickEvent} />
         <${EventContainer} event=${events[selected]} />

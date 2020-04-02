@@ -97,3 +97,47 @@ ul.event-list li:hover {
   background-color: white;
   color: #0f6d3b;
 }
+
+span.json-key {
+  color: black;
+}
+
+span.json-string {
+  color: rgb(46, 105, 54);
+}
+
+span.json-number {
+  color: rgb(19, 111, 153);
+}
+
+span.json-boolean {
+  color: rgb(46, 59, 42);
+}
+
+span.json-null {
+  color: rgb(133, 62, 62);
+}
+
+div.status-code {
+  padding: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-radius: 0.5rem;
+  color: white;
+}
+
+div.status-code.ok {
+  background-color: rgb(43, 83, 31);
+}
+
+div.status-code.redirect {
+  background-color: rgb(77, 97, 71);
+}
+
+div.status-code.client-error {
+  background-color: rgb(114, 106, 62);
+}
+
+div.status-code.server-error {
+  background-color: #7c2222;
+}

@@ -14,7 +14,7 @@ export default function EventContainer({ event }) {
   return html`
     <div class="column">
       <div class="box">
-        <div class="tabs is-medium">
+        <div class="tabs">
           <ul>
             <li class=${selectedTab === 'request' ? 'is-active' : ''} onClick=${setRequest}><a>
               <span class="icon is-medium"><i class="fas fa-upload" aria-hidden="true"></i></span>
