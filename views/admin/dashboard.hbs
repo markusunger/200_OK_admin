@@ -4,42 +4,9 @@
 
 {{#if hasConnectedApis}}
 
-  <div class="columns is-desktop">
-    <div class="column">
-      <nav class="panel is-link">
-        <p class="panel-heading">
-          Your APIs
-        </p>
-        
-        {{#each connectedApis}}
-          <a class="panel-block api-link" data-name="{{this}}">
-          <span class="panel-icon" data-name="{{this}}">
-            <i class="fas fa-database" aria-hidden="true" data-name="{{this}}"></i>
-          </span>
-          <span class="api-name" data-name="{{this}}">{{this}}</span>
-          </a>
-        {{/each}}
+  <div id="dashboard-container" data-apis="{{connectedApis}}"></div>
 
-        <div class="panel-block">
-          <a class="button is-link is-outlined is-fullwidth" href="/connect">
-            <span class="icon is-large">
-              <i class="fas fa-plug"></i>
-            </span>
-            <span>Connect an API</span>
-          </a>
-        </div>
-      </nav>
-    </div>
-
-    <div class="column">
-      <div class="box has-text-centered" id="api-info-box">
-        <div class="fa-3x">
-          <i class="fas fa-spinner fa-pulse"></i>
-        </div>
-        <p>Loading API information ...</p>
-      </div>
-    </div>
-  </div>
+  <script type="module"  src="/javascript/dashboard/index.js"></script>
 
 {{else}}
 
@@ -51,5 +18,3 @@
   </div>
 
 {{/if}}
-
-<script src="/javascript/dashboard.js"></script>
