@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 
 const ajaxController = require('../controllers/ajaxController');
+const customizationController = require('../controllers/customizationController');
 const auth = require('../middlewares/authorize');
 
 const corsOptions = {
@@ -14,6 +15,7 @@ const router = express.Router();
 
 router.use(cors(corsOptions));
 
+// AJAX call for API creation directly from the anonymous front page
 router.post('/', async (req, res, next) => {
   try {
     const { apiName, apiKey } = await ajaxController.createApi();
@@ -23,6 +25,7 @@ router.post('/', async (req, res, next) => {
   }
 });
 
+// AJAX call for API details from the user-specific dashboard
 router.get('/info/:apiName', auth.ensureAuthentication, auth.ensureOwnership, async (req, res, next) => {
   const { apiName } = req.params;
   if (!apiName) next(new Error('No API name provided.'));
@@ -35,6 +38,27 @@ router.get('/info/:apiName', auth.ensureAuthentication, auth.ensureOwnership, as
   }
 });
 
+// AJAX call for customized endpoints from the customization page
+router.get('/customize/:apiName', auth.ensureAuthentication, auth.ensureOwnership, async (req, res, next) => {
+
+});
+
+// AJAX call for new custom endpoint behavior from the customization page
+router.post('/customize/:apiName', auth.ensureAuthentication, auth.ensureOwnership, async (req, res, next) => {
+
+});
+
+// AJAX call for changed custom endpoint behavior from the customization page
+router.put('/customize/:apiName', auth.ensureAuthentication, auth.ensureOwnership, async (req, res, next) => {
+
+});
+
+// AJAX call for deletion of custom endpoint from the customization page
+router.delete('/customize/:apiName', auth.ensureAuthentication, auth.ensureOwnership, async (req, res, next) => {
+
+});
+
+// AJAX call for SSE stream from the live debugging page
 router.get('/debug-stream/:apiName', auth.ensureAuthentication, auth.ensureOwnership, (req, res, next) => {
   const { apiName } = req.params;
   if (!apiName) next(new Error('No API name provided'));
@@ -44,7 +68,7 @@ router.get('/debug-stream/:apiName', auth.ensureAuthentication, auth.ensureOwner
   req.socket.setTimeout(0);
   res.connection.setTimeout(0);
 
-  // set status (needs to be 200), required headers and first newline,
+  // set status (needs to be 200), required headers and first newline
   res.status(200).set({
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
