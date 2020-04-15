@@ -37,6 +37,7 @@ export default function ApiInfo({ selectedApi }) {
       return html`
         <div class="box has-text-centered">
           <h3 class="title is-5">${apiName}</h3>
+          <p>Aavailable under <a href="https://${apiName}.200ok.app">${apiName}.200ok.app</a></p>
           <p>Expires ${expiresIn}</p>
           <p class="is-small">(Created on ${createdAtFormatted})</p>
           <div class="information">

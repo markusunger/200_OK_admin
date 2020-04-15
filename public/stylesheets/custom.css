@@ -141,3 +141,9 @@ div.status-code.client-error {
 div.status-code.server-error {
   background-color: #7c2222;
 }
+
+pre {
+  overflow-x: auto;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}

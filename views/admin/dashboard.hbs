@@ -6,14 +6,18 @@
 
   <div id="dashboard-container" data-apis="{{connectedApis}}"></div>
 
-  <script type="module"  src="/javascript/dashboard/index.js"></script>
+  <script type="module" src="/javascript/dashboard/index.js"></script>
 
 {{else}}
 
   <div>
     <p>You do not have any connected API.</p>
-    <p>If you have already created one, you can <a href="/connect">connect
-    it here</a> with your API name and key.</p>
+    <a class="button is-link is-outlined is-fullwidth" href="/connect">
+      <span class="icon is-large">
+        <i class="fas fa-plug"></i>
+      </span>
+      <span>Connect an API</span>
+    </a>
     <p>If you do not have an API, <a href="/">create one on the starting page</a>.</p>
   </div>
 

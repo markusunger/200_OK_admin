@@ -13,6 +13,7 @@ export default function StatusCode({ status }) {
     404: 'Not Found',
     405: 'Method Not Allowed',
     415: 'Unsupported Media Type',
+    429: 'Too Many Requests',
     500: 'Internal Server Error',
   };
 
@@ -22,6 +23,6 @@ export default function StatusCode({ status }) {
   if (status >= 500) style = 'server-error';
 
   return html`
-    <div class="${style} status-code is-pulled-right">${status} ${codeMessages[status]}</div>
+    <div class="${style} status-code is-pulled-right">${status} ${codeMessages[status] || ''}</div>
   `;
 }
