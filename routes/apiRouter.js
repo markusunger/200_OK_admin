@@ -40,7 +40,15 @@ router.get('/info/:apiName', auth.ensureAuthentication, auth.ensureOwnership, as
 
 // AJAX call for customized endpoints from the customization page
 router.get('/customize/:apiName', auth.ensureAuthentication, auth.ensureOwnership, async (req, res, next) => {
+  const { apiName } = req.params;
+  if (!apiName) next(new Error('No API name provided.'));
 
+  try {
+    const customRoutes = await customizationController.getRoutes(apiName);
+    res.status(200).json(customRoutes);
+  } catch (error) {
+    next(error);
+  }
 });
 
 // AJAX call for new custom endpoint behavior from the customization page

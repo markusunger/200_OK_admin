@@ -14,9 +14,9 @@ export default function EventList({ eventList, selectedEvent, clickEvent }) {
 
   return html`
     <div class="column is-one-third">
-      <div class="box event-list-container" ref=${containerRef}>
-        <p class="event-list-title">Select Request</p>
-        <ul class="event-list">
+      <div class="box config-list-container" ref=${containerRef}>
+        <p class="config-list-title">Select Request</p>
+        <ul class="config-list">
           ${eventList.map((event, idx) => html`<${EventListItem} clickEvent=${clickEvent} key=${event.timeStamp} event=${event} selectedClass=${idx === selectedEvent ? 'is-selected-event' : ''} />`)}
         </ul>
       </div>

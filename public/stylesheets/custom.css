@@ -48,7 +48,7 @@ nav {
   margin-top: 1.5rem;
 }
 
-.event-list-title {
+.config-list-title {
   font-weight: bold;
   margin-bottom: 0.3rem;
 }
@@ -67,16 +67,16 @@ h2.faq {
   margin-bottom: 0.2rem;
 }
 
-div.event-list-container {
+div.config-list-container {
   max-height: 90vh;
   overflow-y: auto;
   overflow-x: hidden;
 }
 
-ul.event-list {
+ul.config-list {
 }
 
-ul.event-list li {
+ul.config-list li {
   padding: 0.4rem;
   margin-bottom: 0.2rem;
   font-family: monospace;
@@ -86,13 +86,13 @@ ul.event-list li {
   border-radius: 0.25rem;
 }
 
-ul.event-list li.is-selected-event {
+ul.config-list li.is-selected-event {
   background-color: white;
   cursor: auto;
   color: #000;
 }
 
-ul.event-list li:hover {
+ul.config-list li:hover {
   cursor: pointer;
   background-color: white;
   color: #0f6d3b;

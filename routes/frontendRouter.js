@@ -23,19 +23,22 @@ router.use((req, res, next) => {
   next();
 });
 
-
+// front page
 router.get('/', (req, res) => {
   res.render('index');
 });
 
+// FAQ / documentation
 router.get('/faq', (req, res) => {
   res.render('faq');
 });
 
+// user dashboard
 router.get('/dashboard', auth.ensureAuthentication, (req, res) => {
   res.render('admin/dashboard');
 });
 
+// connection of APIs to users
 router.get('/connect', auth.ensureAuthentication, (req, res) => {
   res.render('admin/connect');
 });
@@ -62,6 +65,7 @@ router.post('/connect', auth.ensureAuthentication, async (req, res) => {
   }
 });
 
+// live debugging of API requests/responses
 router.get('/debug/:apiName', auth.ensureAuthentication, auth.ensureOwnership, (req, res, next) => {
   const { apiName } = req.params;
   if (!apiName) next(new Error('API name not provided.'));
@@ -69,6 +73,15 @@ router.get('/debug/:apiName', auth.ensureAuthentication, auth.ensureOwnership, (
   res.render('admin/debug', { apiName });
 });
 
+// customization page for user-defined endpoint behavior
+router.get('/customize/:apiName', auth.ensureAuthentication, auth.ensureOwnership, (req, res, next) => {
+  const { apiName } = req.params;
+  if (!apiName) next(new Error('API name not provided.'));
+
+  res.render('admin/customize', { apiName });
+});
+
+// logout
 router.get('/logout', (req, res) => {
   req.logout();
   res.redirect('/');
