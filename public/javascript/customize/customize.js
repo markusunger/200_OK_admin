@@ -4,14 +4,26 @@ import useFetch from './useFetch.js';
 import RouteList from './routeList.js';
 import RouteDetails from './routeDetails.js';
 
-import { html } from '../preact-htm.js';
+import { html, useState } from '../preact-htm.js';
 
 export default function Customize({ apiName }) {
+  const [selectedRoute, setSelectedRoute] = useState(null);
   const { data, error, isLoading } = useFetch(`/api/customize/${apiName}`, 'GET');
 
-  console.log(`data is ${data}`);
-  console.log(`error is ${error}`);
-  console.log(`isLoading is ${isLoading}`);
+  // reset selected route to null if no custom routes present (e.g. by deleting the last one)
+  // otherwise set to first route
+  if (data && data.length === 0) {
+    setSelectedRoute(null);
+  }
+  // if (data) setSelectedRoute(0);
+
+  // click handler for items in routeList
+  const clickHandler = (e) => {
+    const routePath = e.target.getAttribute('data-route');
+    let idx = data.findIndex(route => route.path === routePath);
+    if (idx < 0) idx = 0;
+    setSelectedRoute(idx);
+  };
 
   if (isLoading) {
     return html`
@@ -33,10 +45,11 @@ export default function Customize({ apiName }) {
     `;
   }
 
+
   return html`
     <div class="columns">
-      <${RouteList} routes=${data} />
-      <${RouteDetails} />
+      <${RouteList} routes=${data} clickHandler=${clickHandler} selectedRoute=${selectedRoute} />
+      <${RouteDetails} route=${data ? data[selectedRoute] : null} />
     </div>
   `;
 }

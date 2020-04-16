@@ -17,7 +17,7 @@ export default function EventList({ eventList, selectedEvent, clickEvent }) {
       <div class="box config-list-container" ref=${containerRef}>
         <p class="config-list-title">Select Request</p>
         <ul class="config-list">
-          ${eventList.map((event, idx) => html`<${EventListItem} clickEvent=${clickEvent} key=${event.timeStamp} event=${event} selectedClass=${idx === selectedEvent ? 'is-selected-event' : ''} />`)}
+          ${eventList.map((event, idx) => html`<${EventListItem} clickEvent=${clickEvent} key=${event.timeStamp} event=${event} selectedClass=${idx === selectedEvent ? 'is-selected-item' : ''} />`)}
         </ul>
       </div>
     </div>

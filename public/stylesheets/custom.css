@@ -67,6 +67,10 @@ h2.faq {
   margin-bottom: 0.2rem;
 }
 
+p {
+  color: #000;
+}
+
 div.config-list-container {
   max-height: 90vh;
   overflow-y: auto;
@@ -86,7 +90,7 @@ ul.config-list li {
   border-radius: 0.25rem;
 }
 
-ul.config-list li.is-selected-event {
+ul.config-list li.is-selected-item {
   background-color: white;
   cursor: auto;
   color: #000;
