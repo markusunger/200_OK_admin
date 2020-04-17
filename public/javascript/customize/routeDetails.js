@@ -1,13 +1,22 @@
-import { html } from '../preact-htm.js';
+import { html, useState } from '../preact-htm.js';
+
+import MethodResponse from './methodResponse.js';
 
 export default function routeDetails({ route, apiName }) {
-  const { path, data } = route || {};
+  const [hasThisPath, setPath] = useState(route ? route.path : '/');
+
+  const { data } = route || {};
   const {
     GET,
     POST,
     PUT,
-    DELETE
+    DELETE,
   } = data || {};
+
+  const updatePath = (e) => {
+    const { value } = e.target;
+    setPath(value);
+  };
 
   if (!route) {
     return html`
@@ -24,7 +33,7 @@ export default function routeDetails({ route, apiName }) {
   return html`
     <div class="column">
       <div class="box">
-        <h2 class="title">Custom Route</h2>
+        <h2 class="title">Custom Route for <code>${hasThisPath}</code></h2>
 
         <label class="label">endpoint path</label>
         <div class="field has-addons">
@@ -34,25 +43,27 @@ export default function routeDetails({ route, apiName }) {
             </a>
           </div>
           <div class="control is-expanded">
-            <input class="input" type="text" placeholder="e.g. /logout" value="${path}" />
+            <input class="input" type="text" placeholder="e.g. /logout" onInput=${updatePath} value="${hasThisPath}" />
           </div>
         </div>
 
         <hr />
+        <${MethodResponse} type='GET' data=${GET} />
+        <hr />
+        <${MethodResponse} type='POST' data=${POST} />
+        <hr /> 
+        <${MethodResponse} type='PUT' data=${PUT} />
+        <hr /> 
+        <${MethodResponse} type='DELETE' data=${DELETE} />
+        <hr />
 
-        <div class="field">
-          <div class="control">
-            <label class="checkbox">
-              <input type="checkbox" checked=${!!GET} /> Allow GET requests
-            </label>
-          </div>
-        </div>
-
-        <div class="field">
-          <label class="label">JSON response to GET</label>
-          <div class="control">
-            <textarea class="textarea" placeholder="enter JSON here">${JSON.stringify(GET, null, 2)}</textarea>
-          </div>
+        <div class="field is-grouped">
+          <p class="control">
+            <a class="button is-primary">Save Changes</a>
+          </p>
+          <p class="control">
+            <a class="button is-danger">Delete Route</a>
+          </p>
         </div>
 
       </div>
