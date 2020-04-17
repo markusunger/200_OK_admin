@@ -49,7 +49,7 @@ export default function Customize({ apiName }) {
   return html`
     <div class="columns">
       <${RouteList} routes=${data} clickHandler=${clickHandler} selectedRoute=${selectedRoute} />
-      <${RouteDetails} route=${data ? data[selectedRoute] : null} />
+      <${RouteDetails} route=${data ? data[selectedRoute] : null} apiName=${apiName} />
     </div>
   `;
 }

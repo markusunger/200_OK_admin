@@ -10,9 +10,6 @@ $blue: #3867d6;
 $grey-light: #a5b1c2;
 $background: #e1ebdf;
 
-// Generic variables
-$body-size: 18px;
-
 // Update Bulma's global variables
 $family-sans-serif: "Overpass", sans-serif;
 $grey-dark: $dark-green;
@@ -27,9 +24,7 @@ $title-line-height: 1.5;
 
 // custom component variables
 $body-background-color: rgb(236, 233, 233);
-$control-border-width: 2px;
-$input-border-color: 1px solid $dark-green;
-$input-shadow: none;
+$input-border-color: $grey-light;
 
 // import required sass files from bulma package
 @import "../../node_modules/bulma/sass/utilities/_all.sass";
