@@ -1,12 +1,10 @@
-/* eslint-disable */
-
 import EventListItem from './eventListItem.js';
 
 import { html, useEffect, useRef } from '../preact-htm.js';
 
 export default function EventList({ eventList, selectedEvent, clickEvent }) {
   const containerRef = useRef(null);
-  
+
   useEffect(() => {
     const container = containerRef.current || null;
     if (container) container.scrollTo(0, container.scrollHeight);

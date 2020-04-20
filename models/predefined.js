@@ -6,6 +6,8 @@ module.exports = (function predefinedModel() {
   const predefinedSchema = new mongoose.Schema({
     path: String,
     data: Object,
+  }, {
+    minimize: false,
   });
 
   return (apiName) => {

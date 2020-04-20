@@ -6,8 +6,14 @@ export default function useFetch(url, method, useCredentials = true) {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
+  const [needRefetch, setNeedRefetch] = useState(false);
+
+  const refetch = () => {
+    setNeedRefetch(true);
+  };
 
   useEffect(() => {
+    setNeedRefetch(false);
     const fetchData = async () => {
       const options = {
         method,
@@ -30,7 +36,12 @@ export default function useFetch(url, method, useCredentials = true) {
     };
 
     fetchData();
-  }, []);
+  }, [needRefetch]);
 
-  return { data, error, isLoading };
+  return {
+    data,
+    error,
+    isLoading,
+    refetch,
+  };
 }

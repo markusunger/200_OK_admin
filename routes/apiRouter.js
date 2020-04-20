@@ -51,14 +51,18 @@ router.get('/customize/:apiName', auth.ensureAuthentication, auth.ensureOwnershi
   }
 });
 
-// AJAX call for new custom endpoint behavior from the customization page
-router.post('/customize/:apiName', auth.ensureAuthentication, auth.ensureOwnership, async (req, res, next) => {
+// AJAX call for saving custom endpoint behavior from the customization page
+router.post('/customize/:apiName/save', auth.ensureAuthentication, auth.ensureOwnership, async (req, res, next) => {
+  const { apiName } = req.params;
+  if (!apiName) next(new Error('No API name provided.'));
+  const { path, responses } = req.body;
 
-});
-
-// AJAX call for changed custom endpoint behavior from the customization page
-router.put('/customize/:apiName', auth.ensureAuthentication, auth.ensureOwnership, async (req, res, next) => {
-
+  try {
+    await customizationController.saveRoute(apiName, path, responses);
+    res.status(201).end();
+  } catch (error) {
+    next(error);
+  }
 });
 
 // AJAX call for deletion of custom endpoint from the customization page
