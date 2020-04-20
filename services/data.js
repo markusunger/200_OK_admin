@@ -8,6 +8,7 @@ module.exports = async function dataService(cfg) {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true,
+      useFindAndModify: false,
     });
   } catch (error) {
     console.error(error);

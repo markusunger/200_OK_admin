@@ -21,11 +21,15 @@ module.exports = {
 
     try {
       const ApiModel = predefinedModels(apiName);
-      const newRoute = new ApiModel({
-        path: '/new-custom-route',
-        data: {},
+      result = ApiModel.findOneAndUpdate({
+        path,
+      }, {
+        path,
+        data: responses,
+      }, {
+        new: true,
+        upsert: true,
       });
-      result = await newRoute.save();
     } catch (error) {
       throw (error);
     }

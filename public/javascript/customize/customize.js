@@ -55,8 +55,27 @@ export default function Customize({ apiName }) {
   };
 
   // click handler for save button in routeDetails
-  const clickSaveHandler = async () => {
-
+  const clickSaveHandler = async (path, responses) => {
+    try {
+      const result = await fetch(
+        `/api/customize/${apiName}/save`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ path, responses }),
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+          },
+        },
+      );
+      if (result.ok) {
+        refetch();
+      } else {
+        console.log('Something was borked!');
+      }
+    } catch (_) {
+      // whatever
+    }
   };
 
   if (isLoading) {
@@ -83,7 +102,7 @@ export default function Customize({ apiName }) {
   return html`
     <div class="columns">
       <${RouteList} routes=${data} clickItemHandler=${clickItemHandler} clickNewHandler=${clickNewHandler} selectedRoute=${selectedRoute} />
-      <${RouteDetails} route=${route} apiName=${apiName} />
+      <${RouteDetails} route=${route} apiName=${apiName} clickSaveHandler=${clickSaveHandler} />
     </div>
   `;
 }

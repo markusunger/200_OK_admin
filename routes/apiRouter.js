@@ -56,6 +56,7 @@ router.post('/customize/:apiName/save', auth.ensureAuthentication, auth.ensureOw
   const { apiName } = req.params;
   if (!apiName) next(new Error('No API name provided.'));
   const { path, responses } = req.body;
+  if (!path || !responses) next(new Error('Insufficient custom route information provided.'));
 
   try {
     await customizationController.saveRoute(apiName, path, responses);

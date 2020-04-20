@@ -3,7 +3,7 @@ import { html, useState, useEffect } from '../preact-htm.js';
 import NoRouteSelected from './noRouteSelected.js';
 import MethodResponse from './methodResponse.js';
 
-export default function routeDetails({ route, apiName, saveHandler }) {
+export default function routeDetails({ route, apiName, clickSaveHandler }) {
   // separate states for path and custom responses
   const [hasThisPath, setPath] = useState(route ? route.path : '/');
   const [responses, setResponses] = useState(route.data || {});
@@ -50,7 +50,7 @@ export default function routeDetails({ route, apiName, saveHandler }) {
   // local save handler that compiles entered information, validates it
   // and then calls the route save handler passed down from the parent
   const saveClick = () => {
-    saveHandler(hasThisPath, responses);
+    clickSaveHandler(hasThisPath, responses);
   };
 
   // render returns
