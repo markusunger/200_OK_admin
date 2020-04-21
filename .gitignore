@@ -37,3 +37,6 @@ jspm_packages/
 
 # ESLint config
 .eslintrc.js
+
+# ignore generated CSS
+styles.css
