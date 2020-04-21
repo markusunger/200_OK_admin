@@ -15,10 +15,18 @@ export default function methodResponse({ type, data, updateResponse }) {
     setIsActive(!!data);
     setValue(data);
     setValidJson(true);
+
+    return () => {
+      setIsActive(false);
+    };
   }, [data]);
 
   useEffect(() => {
-    if (!isActive) setValue({});
+    if (isActive) {
+      setValue({});
+    } else {
+      setValue(undefined);
+    }
   }, [isActive]);
 
   // handler for inputs in textarea

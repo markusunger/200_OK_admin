@@ -16,13 +16,13 @@ module.exports = {
   },
 
   // saves route responses if route exists or creates new custom route
-  saveRoute: async function saveRoute(apiName, path, responses) {
+  saveRoute: async function saveRoute(apiName, path, originalPath, responses) {
     let result;
 
     try {
       const ApiModel = predefinedModels(apiName);
       result = ApiModel.findOneAndUpdate({
-        path,
+        path: originalPath || path,
       }, {
         path,
         data: responses,

@@ -55,11 +55,11 @@ router.get('/customize/:apiName', auth.ensureAuthentication, auth.ensureOwnershi
 router.post('/customize/:apiName/save', auth.ensureAuthentication, auth.ensureOwnership, async (req, res, next) => {
   const { apiName } = req.params;
   if (!apiName) next(new Error('No API name provided.'));
-  const { path, responses } = req.body;
+  const { path, originalPath, responses } = req.body;
   if (!path || !responses) next(new Error('Insufficient custom route information provided.'));
 
   try {
-    await customizationController.saveRoute(apiName, path, responses);
+    await customizationController.saveRoute(apiName, path, originalPath, responses);
     res.status(201).end();
   } catch (error) {
     next(error);

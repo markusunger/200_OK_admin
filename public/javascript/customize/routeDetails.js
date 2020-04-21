@@ -1,30 +1,25 @@
 import { html, useState, useEffect } from '../preact-htm.js';
 
-import NoRouteSelected from './noRouteSelected.js';
 import MethodResponse from './methodResponse.js';
+
+// default values for a null route
+const defaultPath = '/';
+const defaultData = {
+  GET: {
+    'new-key': 'new-value',
+  },
+};
 
 export default function routeDetails({ route, apiName, clickSaveHandler }) {
   // separate states for path and custom responses
-  const [hasThisPath, setPath] = useState(route ? route.path : '/');
-  const [responses, setResponses] = useState(route.data || {});
+  const [path, setPath] = useState(route ? route.path : defaultPath);
+  const [responses, setResponses] = useState(route ? route.data : defaultData);
   const [isReady, setIsReady] = useState(true);
 
   // change path and responses as soon as route prop changes
   useEffect(() => {
     setPath(route ? route.path : '/');
-    const { data } = route || {};
-    const {
-      GET,
-      POST,
-      PUT,
-      DELETE,
-    } = data || {};
-    setResponses({
-      GET,
-      POST,
-      PUT,
-      DELETE,
-    });
+    setResponses(route ? route.data : { GET: {} });
   }, [route]);
 
   // change handler for path input field
@@ -50,17 +45,14 @@ export default function routeDetails({ route, apiName, clickSaveHandler }) {
   // local save handler that compiles entered information, validates it
   // and then calls the route save handler passed down from the parent
   const saveClick = () => {
-    clickSaveHandler(hasThisPath, responses);
+    clickSaveHandler(path, route.path, responses);
   };
-
-  // render returns
-  if (!route) return html`<${NoRouteSelected} />`;
 
   return html`
     <div class="column">
       <div class="box">
         <h2 class="title">
-          ${hasThisPath.length === 0 ? 'New Route' : html`Custom Route for <code>${hasThisPath}</code>`}
+          ${path.length === 0 ? 'New Route' : html`Custom Route for <code>${path}</code>`}
         </h2>
 
         <label class="label">endpoint path</label>
@@ -71,7 +63,7 @@ export default function routeDetails({ route, apiName, clickSaveHandler }) {
             </a>
           </div>
           <div class="control is-expanded">
-            <input class="input" type="text" placeholder="e.g. /logout" onInput=${updatePath} value="${hasThisPath}" />
+            <input class="input" type="text" placeholder="e.g. /logout" onInput=${updatePath} value="${path}" />
           </div>
         </div>
 

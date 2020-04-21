@@ -6,6 +6,8 @@ export default function routeList({
   clickNewHandler,
   selectedRoute,
 }) {
+  console.log(`In RouteList, selectedRoute is ${selectedRoute}.`);
+
   return html`
     <div class="column is-one-third">
       <div class="box config-list-container">
@@ -16,7 +18,7 @@ export default function routeList({
             key=${route.path} 
             data-route=${route.path} 
             route=${route}
-            class=${selectedRoute === idx ? 'is-selected-item' : ''}>
+            class=${(selectedRoute === idx) ? 'is-selected-item' : ''}>
               ${route.path}
           </li>`)}
         </ul>

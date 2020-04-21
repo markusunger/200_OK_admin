@@ -8,7 +8,6 @@ import { html, useState } from '../preact-htm.js';
 
 export default function Customize({ apiName }) {
   const [selectedRoute, setSelectedRoute] = useState(0);
-  const [isNewRoute, setIsNewRoute] = useState(false);
 
   // custom fetch hook to get all previously defined routes on component mount
   const {
@@ -20,28 +19,10 @@ export default function Customize({ apiName }) {
 
   // reset selected route to null if no custom routes present (e.g. by deleting the last one)
   // otherwise set to first route
-  if (data && data.length === 0) {
-    setSelectedRoute(null);
-  }
-
-  // set route to be passed to routeDetails component
-  let route;
-  if (isNewRoute) {
-    route = {
-      path: '',
-      data: {
-        GET: {},
-      },
-    };
-  } else if (data) {
-    route = data[selectedRoute];
-  } else {
-    route = null;
-  }
+  if (data && data.length === 0) setSelectedRoute(null);
 
   // click handler for items in routeList
   const clickItemHandler = (e) => {
-    setIsNewRoute(false);
     const routePath = e.target.getAttribute('data-route');
     let idx = data.findIndex(r => r.path === routePath);
     if (idx < 0) idx = 0;
@@ -50,18 +31,17 @@ export default function Customize({ apiName }) {
 
   // click handler for new route button in routeList
   const clickNewHandler = () => {
-    setIsNewRoute(true);
     setSelectedRoute(null);
   };
 
   // click handler for save button in routeDetails
-  const clickSaveHandler = async (path, responses) => {
+  const clickSaveHandler = async (path, originalPath, responses) => {
     try {
       const result = await fetch(
         `/api/customize/${apiName}/save`,
         {
           method: 'POST',
-          body: JSON.stringify({ path, responses }),
+          body: JSON.stringify({ path, originalPath, responses }),
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json; charset=utf-8',
@@ -102,7 +82,7 @@ export default function Customize({ apiName }) {
   return html`
     <div class="columns">
       <${RouteList} routes=${data} clickItemHandler=${clickItemHandler} clickNewHandler=${clickNewHandler} selectedRoute=${selectedRoute} />
-      <${RouteDetails} route=${route} apiName=${apiName} clickSaveHandler=${clickSaveHandler} />
+      <${RouteDetails} route=${Number.isNaN(selectedRoute) ? null : data[selectedRoute]} apiName=${apiName} clickSaveHandler=${clickSaveHandler} />
     </div>
   `;
 }
