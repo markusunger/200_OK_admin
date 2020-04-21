@@ -1,44 +1,35 @@
 import { html, useState, useEffect } from '../preact-htm.js';
 
 export default function methodResponse({ type, data, updateResponse }) {
-  const [isActive, setIsActive] = useState(!!data);
-  const [value, setValue] = useState(data);
-  const [validJson, setValidJson] = useState(true);
+  const prettyJson = obj => JSON.stringify(obj, null, 2);
 
-  const outputJson = (obj = {}, pp = false) => {
-    if (pp) return JSON.stringify(obj, null, 2);
-    return JSON.stringify(obj);
-  };
+  const [isActive, setIsActive] = useState(!!data);
+  const [value, setValue] = useState(data ? prettyJson(data) : data);
+  const [validJson, setValidJson] = useState(true);
 
   // automatically update value state when new props arrive
   useEffect(() => {
     setIsActive(!!data);
     setValue(data);
-    setValidJson(true);
-
-    return () => {
-      setIsActive(false);
-    };
-  }, [data]);
-
-  useEffect(() => {
-    if (isActive) {
-      setValue({});
-    } else {
-      setValue(undefined);
+    try {
+      JSON.parse(data);
+      setValidJson(true);
+    } catch (_) {
+      setValidJson(false);
     }
-  }, [isActive]);
+  }, [data]);
 
   // handler for inputs in textarea
   const handleChange = (e) => {
+    let jsonText;
     try {
-      const input = JSON.parse(e.target.value);
+      jsonText = e.target.value;
+      JSON.parse(jsonText);
       setValidJson(true);
-      updateResponse(type, input, true);
-    } catch (err) {
-      updateResponse(type, '{}', false);
+    } catch (_) {
       setValidJson(false);
     }
+    updateResponse(type, jsonText, validJson);
   };
 
   const toggleInput = () => {
@@ -58,8 +49,8 @@ export default function methodResponse({ type, data, updateResponse }) {
     <div class="field">
       <label class="label">JSON response to ${type}</label>
       <div class="control">
-        <textarea class="textarea" onInput=${handleChange} placeholder="enter JSON here" value="${validJson ? outputJson(value, true) : outputJson(value)}" />
-        <p>${validJson ? '' : 'Please enter valid JSON.'}</p>
+        <textarea class="textarea" onInput=${handleChange} placeholder="enter JSON here" value="${value}" />
+        <p>${validJson ? '' : html`<div class="notification is-warning">Please enter valid JSON.</div>`}</p>
       </div>
     </div>
   `;

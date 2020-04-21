@@ -6,8 +6,6 @@ export default function routeList({
   clickNewHandler,
   selectedRoute,
 }) {
-  console.log(`In RouteList, selectedRoute is ${selectedRoute}.`);
-
   return html`
     <div class="column is-one-third">
       <div class="box config-list-container">

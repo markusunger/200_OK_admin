@@ -67,10 +67,6 @@ h2.faq {
   margin-bottom: 0.2rem;
 }
 
-p {
-  color: #000;
-}
-
 div.config-list-container {
   max-height: 90vh;
   overflow-y: auto;

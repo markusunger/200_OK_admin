@@ -1,6 +1,8 @@
 import { html, useState, useEffect } from '../preact-htm.js';
 
+import validateRouteInformation from './routeValidation.js';
 import MethodResponse from './methodResponse.js';
+import ErrorDisplay from './errorDisplay.js';
 
 // default values for a null route
 const defaultPath = '/';
@@ -10,27 +12,37 @@ const defaultData = {
   },
 };
 
-export default function routeDetails({ route, apiName, clickSaveHandler }) {
+export default function routeDetails({
+  route,
+  apiName,
+  clickSaveHandler,
+  clickDeleteHandler,
+}) {
   // separate states for path and custom responses
   const [path, setPath] = useState(route ? route.path : defaultPath);
   const [responses, setResponses] = useState(route ? route.data : defaultData);
+  const [errors, setErrors] = useState(null);
   const [isReady, setIsReady] = useState(true);
 
   // change path and responses as soon as route prop changes
   useEffect(() => {
     setPath(route ? route.path : '/');
     setResponses(route ? route.data : { GET: {} });
+    setErrors(null);
+    setIsReady(true);
   }, [route]);
 
   // change handler for path input field
   const updatePath = (e) => {
     const { value } = e.target;
     setPath(value);
+    setErrors(null);
   };
 
   // change handler for JSON textareas inside each MethodResponse,
   // merges updated field into existing state object
   const updateResponse = (type, updated, isValid) => {
+    setErrors(null);
     if (!isValid) {
       setIsReady(false);
       return;
@@ -45,7 +57,16 @@ export default function routeDetails({ route, apiName, clickSaveHandler }) {
   // local save handler that compiles entered information, validates it
   // and then calls the route save handler passed down from the parent
   const saveClick = () => {
-    clickSaveHandler(path, route.path, responses);
+    const errorMessages = validateRouteInformation(path, responses);
+    setErrors(errorMessages);
+    if (!errorMessages) {
+      const parsedResponses = Object.fromEntries(
+        Object.entries(responses)
+          .filter(([method, data]) => data)
+          .map(([method, data]) => [method, JSON.parse(data)]),
+      );
+      clickSaveHandler(path, route.path, parsedResponses);
+    }
   };
 
   return html`
@@ -54,6 +75,8 @@ export default function routeDetails({ route, apiName, clickSaveHandler }) {
         <h2 class="title">
           ${path.length === 0 ? 'New Route' : html`Custom Route for <code>${path}</code>`}
         </h2>
+
+        ${errors ? html`<${ErrorDisplay} errors=${errors} />` : ''}
 
         <label class="label">endpoint path</label>
         <div class="field has-addons">
@@ -68,13 +91,13 @@ export default function routeDetails({ route, apiName, clickSaveHandler }) {
         </div>
 
         <hr />
-        <${MethodResponse} type='GET' data=${responses.GET} updateResponse=${updateResponse} />
+        <${MethodResponse} type='GET' data=${responses.GET || null} updateResponse=${updateResponse} />
         <hr />
-        <${MethodResponse} type='POST' data=${responses.POST} updateResponse=${updateResponse} />
+        <${MethodResponse} type='POST' data=${responses.POST || null} updateResponse=${updateResponse} />
         <hr /> 
-        <${MethodResponse} type='PUT' data=${responses.PUT} updateResponse=${updateResponse} />
+        <${MethodResponse} type='PUT' data=${responses.PUT || null} updateResponse=${updateResponse} />
         <hr /> 
-        <${MethodResponse} type='DELETE' data=${responses.DELETE} updateResponse=${updateResponse} />
+        <${MethodResponse} type='DELETE' data=${responses.DELETE || null} updateResponse=${updateResponse} />
         <hr />
 
         <div class="field is-grouped">
@@ -89,14 +112,14 @@ export default function routeDetails({ route, apiName, clickSaveHandler }) {
             </button>
           </p>
           <p class="control">
-            <a class="button is-danger">
+            <button class="button is-danger" onClick=${() => clickDeleteHandler(route.path)} disabled=${!route}>
               <span class="icon is-small">
                 <i class="fas fa-ban"></i>
               </span>
               <span>
               Delete Route
               </span>
-            </a>
+            </button>
           </p>
         </div>
 

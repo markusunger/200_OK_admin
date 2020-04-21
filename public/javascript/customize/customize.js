@@ -29,12 +29,33 @@ export default function Customize({ apiName }) {
     setSelectedRoute(idx);
   };
 
-  // click handler for new route button in routeList
+  // click handler for new route button in RouteList
   const clickNewHandler = () => {
     setSelectedRoute(null);
   };
 
-  // click handler for save button in routeDetails
+  // click handler for delete button in RouteDetails
+  const clickDeleteHandler = async (path) => {
+    try {
+      const result = await fetch(
+        `/api/customize/${apiName}/${encodeURIComponent(path)}`,
+        {
+          method: 'DELETE',
+          credentials: 'include',
+        },
+      );
+      if (result.ok) {
+        refetch();
+        setSelectedRoute(0);
+      } else {
+        console.log('Something is borked.');
+      }
+    } catch (_) {
+      // TODO: whatever
+    }
+  };
+
+  // click handler for save button in RouteDetails
   const clickSaveHandler = async (path, originalPath, responses) => {
     try {
       const result = await fetch(
@@ -54,7 +75,7 @@ export default function Customize({ apiName }) {
         console.log('Something was borked!');
       }
     } catch (_) {
-      // whatever
+      // TODO: whatever
     }
   };
 
@@ -82,7 +103,7 @@ export default function Customize({ apiName }) {
   return html`
     <div class="columns">
       <${RouteList} routes=${data} clickItemHandler=${clickItemHandler} clickNewHandler=${clickNewHandler} selectedRoute=${selectedRoute} />
-      <${RouteDetails} route=${Number.isNaN(selectedRoute) ? null : data[selectedRoute]} apiName=${apiName} clickSaveHandler=${clickSaveHandler} />
+      <${RouteDetails} route=${Number.isNaN(selectedRoute) ? null : data[selectedRoute]} apiName=${apiName} clickSaveHandler=${clickSaveHandler} clickDeleteHandler=${clickDeleteHandler} />
     </div>
   `;
 }

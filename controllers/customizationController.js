@@ -36,4 +36,21 @@ module.exports = {
 
     return result;
   },
+
+  // deletes a custom route with the provided path name
+  deleteRoute: async function deleteRoute(apiName, path) {
+    let result;
+
+    try {
+      const ApiModel = predefinedModels(apiName);
+      result = await ApiModel.deleteOne({
+        path,
+      });
+    } catch (error) {
+      throw (error);
+    }
+
+    const { deletedCount } = result;
+    return deletedCount;
+  },
 };

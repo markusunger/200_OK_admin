@@ -60,15 +60,23 @@ router.post('/customize/:apiName/save', auth.ensureAuthentication, auth.ensureOw
 
   try {
     await customizationController.saveRoute(apiName, path, originalPath, responses);
-    res.status(201).end();
+    res.status(204).end();
   } catch (error) {
     next(error);
   }
 });
 
 // AJAX call for deletion of custom endpoint from the customization page
-router.delete('/customize/:apiName', auth.ensureAuthentication, auth.ensureOwnership, async (req, res, next) => {
+router.delete('/customize/:apiName/:path', auth.ensureAuthentication, auth.ensureOwnership, async (req, res, next) => {
+  const { apiName, path } = req.params;
+  if (!apiName || !path) next(new Error('Insufficient route information provided.'));
 
+  try {
+    await customizationController.deleteRoute(apiName, path);
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
 });
 
 // AJAX call for SSE stream from the live debugging page
