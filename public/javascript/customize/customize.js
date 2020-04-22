@@ -11,7 +11,7 @@ export default function Customize({ apiName }) {
 
   // custom fetch hook to get all previously defined routes on component mount
   const {
-    data,
+    routes,
     error,
     isLoading,
     refetch,
@@ -19,12 +19,12 @@ export default function Customize({ apiName }) {
 
   // reset selected route to null if no custom routes present (e.g. by deleting the last one)
   // otherwise set to first route
-  if (data && data.length === 0) setSelectedRoute(null);
+  if (routes && routes.length === 0) setSelectedRoute(null);
 
   // click handler for items in routeList
   const clickItemHandler = (e) => {
     const routePath = e.target.getAttribute('data-route');
-    let idx = data.findIndex(r => r.path === routePath);
+    let idx = routes.findIndex(r => r.path === routePath);
     if (idx < 0) idx = 0;
     setSelectedRoute(idx);
   };
@@ -47,8 +47,6 @@ export default function Customize({ apiName }) {
       if (result.ok) {
         refetch();
         setSelectedRoute(0);
-      } else {
-        console.log('Something is borked.');
       }
     } catch (_) {
       // TODO: whatever
@@ -71,8 +69,6 @@ export default function Customize({ apiName }) {
       );
       if (result.ok) {
         refetch();
-      } else {
-        console.log('Something was borked!');
       }
     } catch (_) {
       // TODO: whatever
@@ -102,8 +98,8 @@ export default function Customize({ apiName }) {
 
   return html`
     <div class="columns">
-      <${RouteList} routes=${data} clickItemHandler=${clickItemHandler} clickNewHandler=${clickNewHandler} selectedRoute=${selectedRoute} />
-      <${RouteDetails} route=${Number.isNaN(selectedRoute) ? null : data[selectedRoute]} apiName=${apiName} clickSaveHandler=${clickSaveHandler} clickDeleteHandler=${clickDeleteHandler} />
+      <${RouteList} routes=${routes} clickItemHandler=${clickItemHandler} clickNewHandler=${clickNewHandler} selectedRoute=${selectedRoute} />
+      <${RouteDetails} route=${Number.isNaN(selectedRoute) ? null : routes[selectedRoute]} apiName=${apiName} clickSaveHandler=${clickSaveHandler} clickDeleteHandler=${clickDeleteHandler} />
     </div>
   `;
 }

@@ -1,39 +1,44 @@
 import { html, useState, useEffect } from '../preact-htm.js';
 
 export default function methodResponse({ type, data, updateResponse }) {
-  const prettyJson = obj => JSON.stringify(obj, null, 2);
-
-  const [isActive, setIsActive] = useState(!!data);
-  const [value, setValue] = useState(data ? prettyJson(data) : data);
-  const [validJson, setValidJson] = useState(true);
-
-  // automatically update value state when new props arrive
-  useEffect(() => {
-    setIsActive(!!data);
-    setValue(data);
+  const validateJsonString = (string) => {
     try {
-      JSON.parse(data);
-      setValidJson(true);
-    } catch (_) {
-      setValidJson(false);
-    }
+      JSON.parse(string);
+      return true;
+    } catch (_) { return false; }
+  };
+
+  const convertInitialData = (obj) => {
+    if (!obj) return '';
+    const string = JSON.stringify(obj, null, 2);
+    return validateJsonString(string) ? string : '';
+  };
+
+  const [value, setValue] = useState(convertInitialData(data));
+  const [validJson, setValidJson] = useState(validateJsonString(value));
+  const [isActive, setIsActive] = useState(value !== '');
+
+  useEffect(() => {
+    const newData = convertInitialData(data);
+    setValue(newData);
   }, [data]);
+
+  useEffect(() => {
+    setIsActive(value !== '');
+    setValidJson(validateJsonString(value));
+  }, [value]);
 
   // handler for inputs in textarea
   const handleChange = (e) => {
-    let jsonText;
-    try {
-      jsonText = e.target.value;
-      JSON.parse(jsonText);
-      setValidJson(true);
-    } catch (_) {
-      setValidJson(false);
-    }
-    updateResponse(type, jsonText, validJson);
+    const jsonText = e.target.value;
+    const isValid = validateJsonString(jsonText);
+    setValue(jsonText);
+    updateResponse(type, jsonText, isValid);
   };
 
   const toggleInput = () => {
     setIsActive(!isActive);
+    setValue('{}');
   };
 
   if (isActive) {

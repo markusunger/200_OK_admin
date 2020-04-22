@@ -7,9 +7,10 @@ import ErrorDisplay from './errorDisplay.js';
 // default values for a null route
 const defaultPath = '/';
 const defaultData = {
-  GET: {
-    'new-key': 'new-value',
-  },
+  GET: null,
+  POST: null,
+  PUT: null,
+  DELETE: null,
 };
 
 export default function routeDetails({
@@ -18,16 +19,33 @@ export default function routeDetails({
   clickSaveHandler,
   clickDeleteHandler,
 }) {
+  // merge received route data from props with null-ish default
+  // data when response type is not present
+  const mergeResponses = (routeData) => {
+    if (!routeData || !routeData.data) return defaultData;
+    const { data } = routeData;
+    return Object.keys(defaultData).reduce((obj, type) => {
+      // eslint-disable-next-line no-param-reassign
+      obj[type] = Object.prototype.hasOwnProperty.call(data, type)
+        ? data[type]
+        : defaultData[type];
+      return obj;
+    }, {});
+  };
+
+  // keep complete response object for the initial route data
+  const initialData = mergeResponses(route);
+
   // separate states for path and custom responses
   const [path, setPath] = useState(route ? route.path : defaultPath);
-  const [responses, setResponses] = useState(route ? route.data : defaultData);
+  const [responses, setResponses] = useState(mergeResponses(route));
   const [errors, setErrors] = useState(null);
   const [isReady, setIsReady] = useState(true);
 
   // change path and responses as soon as route prop changes
   useEffect(() => {
-    setPath(route ? route.path : '/');
-    setResponses(route ? route.data : { GET: {} });
+    setPath(route ? route.path : defaultPath);
+    setResponses(mergeResponses(route));
     setErrors(null);
     setIsReady(true);
   }, [route]);
@@ -50,7 +68,7 @@ export default function routeDetails({
     setIsReady(true);
     setResponses({
       ...responses,
-      ...{ [type]: updated },
+      ...{ [type]: JSON.parse(updated) },
     });
   };
 
@@ -60,12 +78,11 @@ export default function routeDetails({
     const errorMessages = validateRouteInformation(path, responses);
     setErrors(errorMessages);
     if (!errorMessages) {
-      const parsedResponses = Object.fromEntries(
+      const enteredResponses = Object.fromEntries(
         Object.entries(responses)
-          .filter(([method, data]) => data)
-          .map(([method, data]) => [method, JSON.parse(data)]),
+          .filter(entry => entry[1]),
       );
-      clickSaveHandler(path, route.path, parsedResponses);
+      clickSaveHandler(path, route ? route.path : path, enteredResponses);
     }
   };
 
@@ -91,13 +108,13 @@ export default function routeDetails({
         </div>
 
         <hr />
-        <${MethodResponse} type='GET' data=${responses.GET || null} updateResponse=${updateResponse} />
+        <${MethodResponse} type='GET' data=${initialData.GET} updateResponse=${updateResponse} />
         <hr />
-        <${MethodResponse} type='POST' data=${responses.POST || null} updateResponse=${updateResponse} />
+        <${MethodResponse} type='POST' data=${initialData.POST} updateResponse=${updateResponse} />
         <hr /> 
-        <${MethodResponse} type='PUT' data=${responses.PUT || null} updateResponse=${updateResponse} />
+        <${MethodResponse} type='PUT' data=${initialData.PUT} updateResponse=${updateResponse} />
         <hr /> 
-        <${MethodResponse} type='DELETE' data=${responses.DELETE || null} updateResponse=${updateResponse} />
+        <${MethodResponse} type='DELETE' data=${initialData.DELETE} updateResponse=${updateResponse} />
         <hr />
 
         <div class="field is-grouped">

@@ -15,7 +15,6 @@ export default function routeList({
             onClick=${clickItemHandler} 
             key=${route.path} 
             data-route=${route.path} 
-            route=${route}
             class=${(selectedRoute === idx) ? 'is-selected-item' : ''}>
               ${route.path}
           </li>`)}

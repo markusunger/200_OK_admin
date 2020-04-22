@@ -12,7 +12,7 @@ export default function validateRouteInformation(path, responses) {
   }
 
   // check for path containing only valid characters ([a-zA-Z0-9\-_])
-  const validCharacters = /^\/([a-zA-Z][a-zA-Z0-9-_])*$/;
+  const validCharacters = /^(\/[a-zA-Z][a-zA-Z0-9-_]*)*$/;
   if (!validCharacters.test(path)) {
     messages.push('Route can only contain alphanumeric characters, hyphens or underscores.');
   }
@@ -26,7 +26,7 @@ export default function validateRouteInformation(path, responses) {
   try {
     Object.values(responses)
       .filter(response => response)
-      .forEach(response => JSON.parse(response));
+      .forEach(response => JSON.parse(JSON.stringify(response)));
   } catch (_) {
     messages.push('Response JSON data needs to be valid.');
   }

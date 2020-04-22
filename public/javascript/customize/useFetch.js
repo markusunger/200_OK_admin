@@ -4,7 +4,7 @@ import { useState, useEffect } from '../preact-htm.js';
 
 export default function useFetch(url, method, useCredentials = true) {
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState(null);
+  const [routes, setRoutes] = useState(null);
   const [error, setError] = useState(null);
   const [needRefetch, setNeedRefetch] = useState(false);
 
@@ -24,7 +24,7 @@ export default function useFetch(url, method, useCredentials = true) {
         const response = await fetch(url, options);
         const responseData = await response.json();
         if (responseData) {
-          setData(responseData);
+          setRoutes(responseData);
         } else {
           setError('No data to fetch.');
         }
@@ -39,7 +39,7 @@ export default function useFetch(url, method, useCredentials = true) {
   }, [needRefetch]);
 
   return {
-    data,
+    routes,
     error,
     isLoading,
     refetch,
