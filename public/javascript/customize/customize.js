@@ -106,7 +106,7 @@ export default function Customize() {
   return html`
     <div class="columns">
       <${RouteList} routes=${routes} isLoading=${isLoading} selectedRoute=${selectedRoute} clickRouteHandler=${clickRouteHandler} clickNewHandler=${clickNewHandler} />
-      <${RouteDetails} route=${selectedRoute >= 0 ? routes[selectedRoute] : routeTemplate} apiName=${apiName} clickSaveHandler=${clickSaveHandler} clickDeleteHandler=${clickDeleteHandler} />
+      <${RouteDetails} route=${selectedRoute >= 0 ? routes[selectedRoute] : routeTemplate} clickSaveHandler=${clickSaveHandler} clickDeleteHandler=${clickDeleteHandler} />
     </div>
   `;
 }

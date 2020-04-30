@@ -1,59 +1,47 @@
-import { html, useState, useEffect, useRef } from '../preact-htm.js';
+import { html, useState, useEffect } from '../preact-htm.js';
 
-export default function methodResponse({ type, data, updateResponse }) {
-  const validateJsonString = (string) => {
-    try {
-      JSON.parse(string);
-      return true;
-    } catch (_) { return false; }
-  };
+const stringify = str => (str ? JSON.stringify(str, null, 2) : '');
+const validate = (string) => {
+  try {
+    JSON.parse(string);
+    return true;
+  } catch (_) { return false; }
+};
 
-  const convertInitialData = (obj) => {
-    if (!obj || !obj[type]) return '';
-    return JSON.stringify(obj[type], null, 2);
-  };
-
-  const [value, setValue] = useState(convertInitialData(data));
-  const [validJson, setValidJson] = useState(false);
-  const [isActive, setIsActive] = useState(!!data[type]);
-
-  const prevDataRef = useRef();
+export default function methodResponse({
+  type, data, stateDispatch, validJsonDispatch,
+}) {
+  const [response, setResponse] = useState(stringify(data));
+  const [validJson, setValidJson] = useState(validate(stringify(data)));
+  const [isActive, setIsActive] = useState(!!data);
 
   useEffect(() => {
-    prevDataRef.current = data;
-  });
-
-  const prevData = prevDataRef.current;
-
-  useEffect(() => {
-    if (data === prevData);
-    const newData = convertInitialData(data);
-    setValue(newData);
-    setIsActive(newData !== '');
-    if (type === 'POST') {
-      console.log('---------------');
-      console.log(`New data received for ${type}`);
-      console.log('New data is:');
-      console.log(data);
-      console.log('prevData is:');
-      console.log(prevData);
-    }
+    const stringified = stringify(data);
+    setResponse(stringified);
+    setIsActive(!!data);
+    setValidJson(validate(stringified));
   }, [data]);
 
   useEffect(() => {
-    const isValid = validateJsonString(value);
-    setValidJson(isValid);
-    updateResponse(type, value, isValid);
-  }, [value]);
+    if (!isActive) {
+      stateDispatch({ op: 'DISABLE_METHOD', type });
+      validJsonDispatch({ type, value: true });
+    }
+  }, [isActive, type]);
 
-  // handler for inputs in textarea
-  const handleChange = (e) => {
-    const jsonText = e.target.value;
-    setValue(jsonText);
+
+  const responseEntryHandler = (e) => {
+    const { value } = e.target;
+    const isValid = validate(value);
+
+    setResponse(value);
+    setValidJson(isValid);
+    stateDispatch({ op: 'UPDATE_METHOD', type, newData: value });
+    validJsonDispatch({ type, value: isValid });
   };
 
-  const toggleInput = () => {
-    setIsActive(!isActive);
+  const toggleActive = () => {
+    setIsActive(state => !state);
   };
 
   if (isActive) {
@@ -61,7 +49,7 @@ export default function methodResponse({ type, data, updateResponse }) {
     <div class="field">
       <div class="control">
         <label class="checkbox">
-          <input type="checkbox" onClick=${toggleInput} checked=${isActive} /> Allow ${type} requests
+          <input type="checkbox" onClick=${toggleActive} checked=${isActive} /> Allow ${type} requests
         </label>
       </div>
     </div>
@@ -69,7 +57,7 @@ export default function methodResponse({ type, data, updateResponse }) {
     <div class="field">
       <label class="label">JSON response to ${type}</label>
       <div class="control">
-        <textarea class="textarea" onInput=${handleChange} placeholder="enter JSON here" value="${value}" />
+        <textarea class="textarea" onInput=${responseEntryHandler} placeholder="enter JSON here" value="${response}" />
         <p>${validJson ? '' : html`<div class="notification is-warning">Please enter valid JSON.</div>`}</p>
       </div>
     </div>
@@ -80,7 +68,7 @@ export default function methodResponse({ type, data, updateResponse }) {
   <div class="field">
     <div class="control">
       <label class="checkbox">
-        <input type="checkbox" onClick=${toggleInput} checked=${isActive} /> Allow ${type} requests
+        <input type="checkbox" onClick=${toggleActive} checked=${isActive} /> Allow ${type} requests
       </label>
     </div>
   </div>

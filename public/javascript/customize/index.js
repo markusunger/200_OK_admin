@@ -1,9 +1,7 @@
-/* eslint-disable */
-
 import Customize from './customize.js';
 import ApiName from './apiNameContext.js';
 
-import { html, render, createContext } from '../preact-htm.js';
+import { html, render } from '../preact-htm.js';
 
 const mountPoint = document.getElementById('customize-container');
 const { apiName } = mountPoint.dataset;
@@ -11,6 +9,6 @@ const { apiName } = mountPoint.dataset;
 render(
   html`
     <${ApiName.Provider} value=${apiName}>
-      <${Customize} apiName=${apiName} />
-    </${ApiName.Provider}
+      <${Customize} />
+    <//}
   `, mountPoint);

@@ -26,15 +26,14 @@ export default function routeDetails({ route, clickSaveHandler, clickDeleteHandl
   useEffect(() => {
     stateDispatch({
       op: 'UPDATE_ALL_METHODS',
-      path: route.path,
-      data: route.data,
+      newData: { path: route.path, data: route.data },
     });
     setErrors(null);
   }, [route]);
 
   // local save handler that compiles entered information, validates it
   // and then calls the route save handler passed down from the parent
-  const saveClick = () => {
+  const saveClickHandler = () => {
     const errorMessages = validateRouteInformation(state.path, state.data);
     setErrors(errorMessages);
     if (!errorMessages) {
@@ -44,6 +43,12 @@ export default function routeDetails({ route, clickSaveHandler, clickDeleteHandl
       );
       clickSaveHandler(state.path, route.path, enteredResponses);
     }
+  };
+
+  // local handler for updating the current path defined in the path input field
+  const changePathHandler = (e) => {
+    const { value } = e.target;
+    stateDispatch({ op: 'UPDATE_PATH', newData: value });
   };
 
   return html`
@@ -63,7 +68,7 @@ export default function routeDetails({ route, clickSaveHandler, clickDeleteHandl
             </a>
           </div>
           <div class="control is-expanded">
-            <input class="input" type="text" placeholder="e.g. /logout" stateDispatch=${stateDispatch} value="${state.path}" />
+            <input class="input" type="text" placeholder="e.g. /logout" onInput=${changePathHandler} value="${state.path}" />
           </div>
         </div>
 
@@ -79,7 +84,7 @@ export default function routeDetails({ route, clickSaveHandler, clickDeleteHandl
 
         <div class="field is-grouped">
           <p class="control">
-            <button class="button is-primary" onClick=${saveClick} disabled=${!(Object.values(validJson).every(v => v))}>
+            <button class="button is-primary" onClick=${saveClickHandler} disabled=${!(Object.values(validJson).every(v => v))}>
               <span class="icon is-small">
                 <i class="fas fa-save"></i>
               </span>
