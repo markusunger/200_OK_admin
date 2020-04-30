@@ -1,4 +1,4 @@
-import { html, useState, useEffect } from '../preact-htm.js';
+import { html, useState, useEffect, useRef } from '../preact-htm.js';
 
 export default function methodResponse({ type, data, updateResponse }) {
   const validateJsonString = (string) => {
@@ -9,36 +9,51 @@ export default function methodResponse({ type, data, updateResponse }) {
   };
 
   const convertInitialData = (obj) => {
-    if (!obj) return '';
-    const string = JSON.stringify(obj, null, 2);
-    return validateJsonString(string) ? string : '';
+    if (!obj || !obj[type]) return '';
+    return JSON.stringify(obj[type], null, 2);
   };
 
   const [value, setValue] = useState(convertInitialData(data));
-  const [validJson, setValidJson] = useState(validateJsonString(value));
-  const [isActive, setIsActive] = useState(value !== '');
+  const [validJson, setValidJson] = useState(false);
+  const [isActive, setIsActive] = useState(!!data[type]);
+
+  const prevDataRef = useRef();
 
   useEffect(() => {
+    prevDataRef.current = data;
+  });
+
+  const prevData = prevDataRef.current;
+
+  useEffect(() => {
+    if (data === prevData);
     const newData = convertInitialData(data);
     setValue(newData);
+    setIsActive(newData !== '');
+    if (type === 'POST') {
+      console.log('---------------');
+      console.log(`New data received for ${type}`);
+      console.log('New data is:');
+      console.log(data);
+      console.log('prevData is:');
+      console.log(prevData);
+    }
   }, [data]);
 
   useEffect(() => {
-    setIsActive(value !== '');
-    setValidJson(validateJsonString(value));
+    const isValid = validateJsonString(value);
+    setValidJson(isValid);
+    updateResponse(type, value, isValid);
   }, [value]);
 
   // handler for inputs in textarea
   const handleChange = (e) => {
     const jsonText = e.target.value;
-    const isValid = validateJsonString(jsonText);
     setValue(jsonText);
-    updateResponse(type, jsonText, isValid);
   };
 
   const toggleInput = () => {
     setIsActive(!isActive);
-    setValue('{}');
   };
 
   if (isActive) {

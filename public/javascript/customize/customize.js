@@ -1,37 +1,39 @@
-/* slint-disable */
-
 import useFetch from './useFetch.js';
 import RouteList from './routeList.js';
 import RouteDetails from './routeDetails.js';
+import ApiName from './apiNameContext.js';
 
-import { html, useState } from '../preact-htm.js';
+import { html, useState, useContext } from '../preact-htm.js';
 
-export default function Customize({ apiName }) {
+const routeTemplate = {
+  path: '/',
+  data: {
+    GET: {
+      'your-key': 'your-value',
+    },
+  },
+};
+
+export default function Customize() {
   const [selectedRoute, setSelectedRoute] = useState(0);
+  const apiName = useContext(ApiName);
 
   // custom fetch hook to get all previously defined routes on component mount
   const {
-    routes,
-    error,
-    isLoading,
-    refetch,
+    routes, error, isLoading, refetch,
   } = useFetch(`/api/customize/${apiName}`, 'GET');
 
-  // reset selected route to null if no custom routes present (e.g. by deleting the last one)
-  // otherwise set to first route
-  if (routes && routes.length === 0) setSelectedRoute(null);
-
-  // click handler for items in routeList
-  const clickItemHandler = (e) => {
-    const routePath = e.target.getAttribute('data-route');
-    let idx = routes.findIndex(r => r.path === routePath);
+  // click handler for items in RouteList
+  const clickRouteHandler = (e) => {
+    const { path } = e.target.dataset;
+    let idx = routes.findIndex(r => r.path === path);
     if (idx < 0) idx = 0;
     setSelectedRoute(idx);
   };
 
   // click handler for new route button in RouteList
   const clickNewHandler = () => {
-    setSelectedRoute(null);
+    setSelectedRoute(-1);
   };
 
   // click handler for delete button in RouteDetails
@@ -47,9 +49,11 @@ export default function Customize({ apiName }) {
       if (result.ok) {
         refetch();
         setSelectedRoute(0);
+        return true;
       }
+      return false;
     } catch (_) {
-      // TODO: whatever
+      return false;
     }
   };
 
@@ -69,22 +73,13 @@ export default function Customize({ apiName }) {
       );
       if (result.ok) {
         refetch();
+        return true;
       }
+      return false;
     } catch (_) {
-      // TODO: whatever
+      return false;
     }
   };
-
-  if (isLoading) {
-    return html`
-      <div class="box">
-        <div class="fa-3x">
-          <i class="fas fa-spinner fa-pulse"></i>
-        </div>
-        <p>Loading custom routes ...</p>
-      </div>
-    `;
-  }
 
   if (!isLoading && error) {
     return html`
@@ -95,11 +90,23 @@ export default function Customize({ apiName }) {
     `;
   }
 
+  if (isLoading) {
+    return html`
+      <div class="columns">
+        <${RouteList} routes=${routes} isLoading=${isLoading} selectedRoute=${selectedRoute} clickRouteHandler=${clickRouteHandler} clickNewHandler=${clickNewHandler} />
+        <div class="column">
+          <div class="box">
+            <div>...</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
 
   return html`
     <div class="columns">
-      <${RouteList} routes=${routes} clickItemHandler=${clickItemHandler} clickNewHandler=${clickNewHandler} selectedRoute=${selectedRoute} />
-      <${RouteDetails} route=${Number.isNaN(selectedRoute) ? null : routes[selectedRoute]} apiName=${apiName} clickSaveHandler=${clickSaveHandler} clickDeleteHandler=${clickDeleteHandler} />
+      <${RouteList} routes=${routes} isLoading=${isLoading} selectedRoute=${selectedRoute} clickRouteHandler=${clickRouteHandler} clickNewHandler=${clickNewHandler} />
+      <${RouteDetails} route=${selectedRoute >= 0 ? routes[selectedRoute] : routeTemplate} apiName=${apiName} clickSaveHandler=${clickSaveHandler} clickDeleteHandler=${clickDeleteHandler} />
     </div>
   `;
 }

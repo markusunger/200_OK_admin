@@ -1,20 +1,30 @@
 import { html } from '../preact-htm.js';
 
-export default function routeList({
-  routes,
-  clickItemHandler,
-  clickNewHandler,
-  selectedRoute,
+export default function RouteList({
+  routes, selectedRoute, isLoading, clickRouteHandler, clickNewHandler,
 }) {
+  if (isLoading) {
+    return html`
+      <div class="column is-one-third">
+        <div class="box">
+          <div class="fa-3x">
+            <i class="fas fa-spinner fa-pulse"></i>
+          </div>
+          <divFetching routes ...</div>
+        </div>
+      </div>
+    `;
+  }
+
   return html`
     <div class="column is-one-third">
       <div class="box config-list-container">
         <p class="config-list-title">Select Custom Route</p>
         <ul class="config-list">
           ${routes.map((route, idx) => html`<li 
-            onClick=${clickItemHandler} 
+            onClick=${clickRouteHandler} 
             key=${route.path} 
-            data-route=${route.path} 
+            data-path=${route.path} 
             class=${(selectedRoute === idx) ? 'is-selected-item' : ''}>
               ${route.path}
           </li>`)}

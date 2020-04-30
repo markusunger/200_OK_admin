@@ -1,88 +1,48 @@
-import { html, useState, useEffect } from '../preact-htm.js';
+import {
+  html, useState, useEffect, useReducer, useContext,
+} from '../preact-htm.js';
 
 import validateRouteInformation from './routeValidation.js';
 import MethodResponse from './methodResponse.js';
 import ErrorDisplay from './errorDisplay.js';
+import ApiName from './apiNameContext.js';
+import {
+  stateReducer, initialStateReducer, validJsonReducer, initialValidJsonReducer,
+} from './routeDetailsReducer.js';
 
-// default values for a null route
-const defaultPath = '/';
-const defaultData = {
-  GET: null,
-  POST: null,
-  PUT: null,
-  DELETE: null,
-};
-
-export default function routeDetails({
-  route,
-  apiName,
-  clickSaveHandler,
-  clickDeleteHandler,
-}) {
-  // merge received route data from props with null-ish default
-  // data when response type is not present
-  const mergeResponses = (routeData) => {
-    if (!routeData || !routeData.data) return defaultData;
-    const { data } = routeData;
-    return Object.keys(defaultData).reduce((obj, type) => {
-      // eslint-disable-next-line no-param-reassign
-      obj[type] = Object.prototype.hasOwnProperty.call(data, type)
-        ? data[type]
-        : defaultData[type];
-      return obj;
-    }, {});
-  };
-
-  // keep complete response object for the initial route data
-  const initialData = mergeResponses(route);
-
-  // separate states for path and custom responses
-  const [path, setPath] = useState(route ? route.path : defaultPath);
-  const [responses, setResponses] = useState(mergeResponses(route));
+export default function routeDetails({ route, clickSaveHandler, clickDeleteHandler }) {
+  const apiName = useContext(ApiName);
   const [errors, setErrors] = useState(null);
-  const [isReady, setIsReady] = useState(true);
+
+  // reducers for both method response state and validity of those response
+  const [state, stateDispatch] = useReducer(
+    stateReducer, initialStateReducer(route.path, route.data),
+  );
+  const [validJson, validJsonDispatch] = useReducer(
+    validJsonReducer, initialValidJsonReducer(),
+  );
 
   // change path and responses as soon as route prop changes
   useEffect(() => {
-    setPath(route ? route.path : defaultPath);
-    setResponses(mergeResponses(route));
-    setErrors(null);
-    setIsReady(true);
-  }, [route]);
-
-  // change handler for path input field
-  const updatePath = (e) => {
-    const { value } = e.target;
-    setPath(value);
-    setErrors(null);
-  };
-
-  // change handler for JSON textareas inside each MethodResponse,
-  // merges updated field into existing state object
-  const updateResponse = (type, updated, isValid) => {
-    setErrors(null);
-    if (!isValid) {
-      setIsReady(false);
-      return;
-    }
-    setIsReady(true);
-    setResponses({
-      ...responses,
-      ...{ [type]: JSON.parse(updated) },
+    stateDispatch({
+      op: 'UPDATE_ALL_METHODS',
+      path: route.path,
+      data: route.data,
     });
-  };
+    setErrors(null);
+  }, [route]);
 
   // local save handler that compiles entered information, validates it
   // and then calls the route save handler passed down from the parent
   const saveClick = () => {
-    const errorMessages = validateRouteInformation(path, responses);
+    const errorMessages = validateRouteInformation(state.path, state.data);
     setErrors(errorMessages);
     if (!errorMessages) {
       const enteredResponses = Object.fromEntries(
-        Object.entries(responses)
+        Object.entries(state.data)
           .filter(entry => entry[1]),
       );
-      clickSaveHandler(path, route ? route.path : path, enteredResponses);
+      clickSaveHandler(state.path, route.path, enteredResponses);
     }
   };
 
@@ -90,7 +50,7 @@ export default function routeDetails({
     <div class="column">
       <div class="box">
         <h2 class="title">
-          ${path.length === 0 ? 'New Route' : html`Custom Route for <code>${path}</code>`}
+          ${state.path.length === 0 ? 'New Route' : html`Custom Route for <code>${state.path}</code>`}
         </h2>
 
         ${errors ? html`<${ErrorDisplay} errors=${errors} />` : ''}
@@ -103,23 +63,23 @@ export default function routeDetails({
             </a>
           </div>
           <div class="control is-expanded">
-            <input class="input" type="text" placeholder="e.g. /logout" onInput=${updatePath} value="${path}" />
+            <input class="input" type="text" placeholder="e.g. /logout" stateDispatch=${stateDispatch} value="${state.path}" />
           </div>
         </div>
 
         <hr />
-        <${MethodResponse} type='GET' data=${initialData.GET} updateResponse=${updateResponse} />
+        <${MethodResponse} type='GET' data=${route.data.GET} stateDispatch=${stateDispatch} validJsonDispatch=${validJsonDispatch} />
         <hr />
-        <${MethodResponse} type='POST' data=${initialData.POST} updateResponse=${updateResponse} />
+        <${MethodResponse} type='POST' data=${route.data.POST} stateDispatch=${stateDispatch} validJsonDispatch=${validJsonDispatch} />
         <hr /> 
-        <${MethodResponse} type='PUT' data=${initialData.PUT} updateResponse=${updateResponse} />
+        <${MethodResponse} type='PUT' data=${route.data.PUT} stateDispatch=${stateDispatch} validJsonDispatch=${validJsonDispatch} />
         <hr /> 
-        <${MethodResponse} type='DELETE' data=${initialData.DELETE} updateResponse=${updateResponse} />
+        <${MethodResponse} type='DELETE' data=${route.data.DELETE} stateDispatch=${stateDispatch} validJsonDispatch=${validJsonDispatch} />
         <hr />
 
         <div class="field is-grouped">
           <p class="control">
-            <button class="button is-primary" onClick=${saveClick} disabled=${!isReady}>
+            <button class="button is-primary" onClick=${saveClick} disabled=${!(Object.values(validJson).every(v => v))}>
               <span class="icon is-small">
                 <i class="fas fa-save"></i>
               </span>
@@ -129,7 +89,7 @@ export default function routeDetails({
             </button>
           </p>
           <p class="control">
-            <button class="button is-danger" onClick=${() => clickDeleteHandler(route.path)} disabled=${!route}>
+            <button class="button is-danger" onClick=${() => clickDeleteHandler(route.path)} disabled=${!route.path}>
               <span class="icon is-small">
                 <i class="fas fa-ban"></i>
               </span>
