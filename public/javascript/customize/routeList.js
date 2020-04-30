@@ -10,7 +10,7 @@ export default function RouteList({
           <div class="fa-3x">
             <i class="fas fa-spinner fa-pulse"></i>
           </div>
-          <divFetching routes ...</div>
+          <div>Fetching routes ...</div>
         </div>
       </div>
     `;

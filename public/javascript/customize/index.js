@@ -11,4 +11,5 @@ render(
     <${ApiName.Provider} value=${apiName}>
       <${Customize} />
     <//}
-  `, mountPoint);
+  `, mountPoint,
+);
