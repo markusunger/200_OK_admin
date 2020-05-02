@@ -1,5 +1,6 @@
 import useFetch from './useFetch.js';
 import RouteList from './routeList.js';
+import NoRoutes from './noRoutes.js';
 import RouteDetails from './routeDetails.js';
 import ApiName from './apiNameContext.js';
 
@@ -96,7 +97,7 @@ export default function Customize() {
         <${RouteList} routes=${routes} isLoading=${isLoading} selectedRoute=${selectedRoute} clickRouteHandler=${clickRouteHandler} clickNewHandler=${clickNewHandler} />
         <div class="column">
           <div class="box">
-            <div>...</div>
+            <div>Loading custom route list ...</div>
           </div>
         </div>
       </div>
@@ -106,7 +107,10 @@ export default function Customize() {
   return html`
     <div class="columns">
       <${RouteList} routes=${routes} isLoading=${isLoading} selectedRoute=${selectedRoute} clickRouteHandler=${clickRouteHandler} clickNewHandler=${clickNewHandler} />
-      <${RouteDetails} route=${selectedRoute >= 0 ? routes[selectedRoute] : routeTemplate} clickSaveHandler=${clickSaveHandler} clickDeleteHandler=${clickDeleteHandler} />
+      ${selectedRoute === 0 && routes.length === 0
+        ? html`<${NoRoutes} />`
+        : html`<${RouteDetails} route=${selectedRoute >= 0 ? routes[selectedRoute] : routeTemplate} clickSaveHandler=${clickSaveHandler} clickDeleteHandler=${clickDeleteHandler} />`
+      }
     </div>
   `;
 }

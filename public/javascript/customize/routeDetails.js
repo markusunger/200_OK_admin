@@ -3,7 +3,7 @@ import {
 } from '../preact-htm.js';
 
 import validateRouteInformation from './routeValidation.js';
-import MethodResponse from './methodResponse.js';
+import RouteDetailsResponse from './routeDetailsResponse.js';
 import ErrorDisplay from './errorDisplay.js';
 import ApiName from './apiNameContext.js';
 import {
@@ -21,6 +21,10 @@ export default function routeDetails({ route, clickSaveHandler, clickDeleteHandl
   const [validJson, validJsonDispatch] = useReducer(
     validJsonReducer, initialValidJsonReducer(),
   );
+
+  // boolean to check for deleteable state of route
+  // TODO: refactor all components/backend logic to not need the prefixed forward slash
+  // const deleteable = route.path.length === 0;
 
   // change path and responses as soon as route prop changes
   useEffect(() => {
@@ -73,13 +77,13 @@ export default function routeDetails({ route, clickSaveHandler, clickDeleteHandl
         </div>
 
         <hr />
-        <${MethodResponse} type='GET' data=${route.data.GET} stateDispatch=${stateDispatch} validJsonDispatch=${validJsonDispatch} />
+        <${RouteDetailsResponse} type='GET' path=${route.path} data=${route.data.GET} stateDispatch=${stateDispatch} validJsonDispatch=${validJsonDispatch} />
         <hr />
-        <${MethodResponse} type='POST' data=${route.data.POST} stateDispatch=${stateDispatch} validJsonDispatch=${validJsonDispatch} />
+        <${RouteDetailsResponse} type='POST' path=${route.path} data=${route.data.POST} stateDispatch=${stateDispatch} validJsonDispatch=${validJsonDispatch} />
         <hr /> 
-        <${MethodResponse} type='PUT' data=${route.data.PUT} stateDispatch=${stateDispatch} validJsonDispatch=${validJsonDispatch} />
+        <${RouteDetailsResponse} type='PUT' path=${route.path} data=${route.data.PUT} stateDispatch=${stateDispatch} validJsonDispatch=${validJsonDispatch} />
         <hr /> 
-        <${MethodResponse} type='DELETE' data=${route.data.DELETE} stateDispatch=${stateDispatch} validJsonDispatch=${validJsonDispatch} />
+        <${RouteDetailsResponse} type='DELETE' path=${route.path} data=${route.data.DELETE} stateDispatch=${stateDispatch} validJsonDispatch=${validJsonDispatch} />
         <hr />
 
         <div class="field is-grouped">
@@ -94,7 +98,7 @@ export default function routeDetails({ route, clickSaveHandler, clickDeleteHandl
             </button>
           </p>
           <p class="control">
-            <button class="button is-danger" onClick=${() => clickDeleteHandler(route.path)} disabled=${!route.path}>
+            <button class="button is-danger" onClick=${() => clickDeleteHandler(route.path)} disabled=${route.path === '/'}>
               <span class="icon is-small">
                 <i class="fas fa-ban"></i>
               </span>
