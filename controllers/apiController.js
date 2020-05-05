@@ -1,5 +1,7 @@
 const Api = require('../models/api');
+const User = require('../models/user');
 const subscriber = require('../services/subscriber');
+const CustomError = require('../lib/customError');
 
 module.exports = {
   // creates a new API config
@@ -13,7 +15,7 @@ module.exports = {
       throw error;
     }
 
-    if (!result) throw (new Error('Could not create new API.'));
+    if (!result) throw (new CustomError('Could not create new API.'));
 
     return result;
   },
@@ -31,6 +33,44 @@ module.exports = {
     if (!result) throw (new Error('Could not retrieve API information.'));
 
     return result;
+  },
+
+  // connects an API to a specific user
+  connectApi: async function connectApi(userId, apiName, apiKey) {
+    let apiCheck;
+    try {
+      apiCheck = await Api.findOne({ apiName });
+    } catch (error) {
+      throw error;
+    }
+    if (!apiCheck) throw new Error('API not found.', 400);
+    if (apiCheck.isConnected) throw new Error('API already connected.', 403);
+    if (apiCheck.apiKey !== apiKey) throw new Error('Wrong API key.', 403);
+
+    // if valid connect request, register api as connected and add to user
+    try {
+      const result = await Api.updateOne({
+        apiName,
+      }, {
+        isConnected: true,
+      });
+      if (result.nModified < 1) throw new Error('Something went wrong.');
+    } catch (error) {
+      throw error;
+    }
+
+    try {
+      const result = await User.updateOne({
+        'github.id': userId,
+      }, {
+        $push: { connectedApis: apiName },
+      });
+      if (result.nModified < 1) throw new Error('Something went wrong.');
+    } catch (error) {
+      throw error;
+    }
+
+    return true;
   },
 
   // listens for published API messages on Redis and sends them to the client

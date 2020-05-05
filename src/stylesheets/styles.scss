@@ -1,7 +1,7 @@
 @charset "utf-8";
 
 // import Overpass from Google fonts
-@import url('https://fonts.googleapis.com/css?family=Overpass:400,700');
+@import url('https://fonts.googleapis.com/css?family=Hind:400,700');
 
 // set 200 OK colors
 $dark-green: #0f6d3b;
@@ -11,7 +11,7 @@ $grey-light: #a5b1c2;
 $background: #e1ebdf;
 
 // Update Bulma's global variables
-$family-sans-serif: "Overpass", sans-serif;
+$family-sans-serif: "Hind", sans-serif;
 $grey-dark: $dark-green;
 $grey-light: $grey-light;
 $primary: $dark-green;

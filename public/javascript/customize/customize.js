@@ -19,7 +19,7 @@ export default function Customize() {
   const [selectedRoute, setSelectedRoute] = useState(0);
   const apiName = useContext(ApiName);
 
-  // custom fetch hook to get all previously defined routes on component mount
+  // use custom fetch hook to get all previously defined routes on component mount
   const {
     routes, error, isLoading, refetch,
   } = useFetch(`/api/customize/${apiName}`, 'GET');

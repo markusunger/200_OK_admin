@@ -9,39 +9,50 @@
   <link rel="stylesheet" href="/stylesheets/all.css">
 </head>
 <body>
-  <div class="container">
-    <nav class="level">
-      <div class="level-left">
-        <div class="level-item">
-          <a class="title is-4 title-link" href="/">
-            <span class="title-200">200</span> <span class="title-ok">OK</span>
+  <nav class="navbar is-transparent is-spaced" role="navigation" aria-label="navigation menu">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="/">200 OK</a>
+
+      <a role="button" class="navbar-burger" data-target="navigation-menu" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu" id="navigation-menu">
+      <div class="navbar-start">
+        <a class="navbar-item" href="/documentation">
+          Documentation
+        </a>
+
+        {{#if isAuthenticated}}
+          <a class="navbar-item" href="/dashboard">
+            Dashboard
           </a>
-        </div>
+        {{/if}}
       </div>
 
-      <div class="level-right">
-        <p class="level-item"><a href="/faq">FAQ</a></p>
-        {{#if isAuthenticated}}
-          <p class="level-item">
-            <a href="/dashboard">
-              Dashboard
+      <div class="navbar-end">
+        <div class="navbar-item">
+          {{#if isAuthenticated}}
+            <a class="button is-primary" href="/logout">
+              Logout
             </a>
-          </p>
-          <p class="level-item">
-            <a href="/logout">Logout</a>
-          </p>
-        {{else}}
-          <p class="level-item">
+          {{else}}
             <a class="button is-primary" href="/login">
               <span class="icon">
                 <i class="fab fa-github"></i>
               </span>
               <span>Login with GitHub</span>
             </a>
-          </p>
-        {{/if}}
+          {{/if}}
+        </div>
       </div>
-    </nav>
+    </div>
+  </nav>
+
+  <div class="container spacing-top">
     <div class="flash-messages">
       {{#if flash_success}}
         <article class="message is-success">
@@ -58,8 +69,25 @@
         </article>
       {{/if}}
     </div>
-    {{{ body }}}
-
+  {{{ body }}}
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const navBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+      if (navBurgers.length > 0) {
+        navBurgers.forEach(burger => {
+          burger.addEventListener('click', () => {
+            const { target } = burger.dataset;
+            const targetItem = document.getElementById(target);
+
+            burger.classList.toggle('is-active');
+            targetItem.classList.toggle('is-active');
+          });
+        });
+      }
+    });
+  </script>
 </body>
 </html>

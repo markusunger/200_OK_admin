@@ -1,9 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 
-const ajaxController = require('../controllers/ajaxController');
+const apiController = require('../controllers/apiController');
 const customizationController = require('../controllers/customizationController');
 const auth = require('../middlewares/authorize');
+const CustomError = require('../lib/customError');
 
 const corsOptions = {
   origin: 'http://localhost',
@@ -18,7 +19,7 @@ router.use(cors(corsOptions));
 // AJAX call for API creation directly from the anonymous front page
 router.post('/', async (req, res, next) => {
   try {
-    const { apiName, apiKey } = await ajaxController.createApi();
+    const { apiName, apiKey } = await apiController.createApi();
     res.status(200).json({ apiName, apiKey });
   } catch (error) {
     next(error);
@@ -31,7 +32,7 @@ router.get('/info/:apiName', auth.ensureAuthentication, auth.ensureOwnership, as
   if (!apiName) next(new Error('No API name provided.'));
 
   try {
-    const apiInfo = await ajaxController.getApiInfo(apiName);
+    const apiInfo = await apiController.getApiInfo(apiName);
     res.status(200).json(apiInfo);
   } catch (error) {
     next(error);
@@ -98,15 +99,22 @@ router.get('/debug-stream/:apiName', auth.ensureAuthentication, auth.ensureOwner
   });
   res.write('\n');
 
-  ajaxController.getSSE(req, res, apiName);
+  apiController.getSSE(req, res, apiName);
 });
 
 // general error handling middleware
-// TODO: improve! :P
 router.use((err, req, res, next) => {
-  console.error(err);
-  if (res.statusCode === 200) res.status(500);
-  res.end();
+  if (process.env.NODE_ENV === 'development') console.error(err);
+  // eslint-disable-next-line valid-typeof
+  if (typeof err === 'CustomError') {
+    res.status(err.responseCode);
+    res.json({
+      error: err.message,
+    });
+  } else {
+    res.status(500);
+    res.end();
+  }
 });
 
 module.exports = router;

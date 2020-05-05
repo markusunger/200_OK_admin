@@ -1,7 +1,7 @@
 const express = require('express');
 const flash = require('connect-flash');
 
-const dashboardController = require('../controllers/dashboardController');
+const apiController = require('../controllers/apiController');
 const auth = require('../middlewares/authorize');
 
 const router = express.Router();
@@ -19,13 +19,19 @@ router.use((req, res, next) => {
     res.locals.connectedApis = req.user.connectedApis;
     res.locals.hasConnectedApis = req.user.connectedApis.length > 0;
     res.locals.githubInfo = req.user.github;
+  } else {
+    res.locals.isAuthenticated = false;
   }
   next();
 });
 
 // front page
 router.get('/', (req, res) => {
-  res.render('index');
+  res.render('index', {
+    helpers: {
+      toString: val => `${val}`,
+    },
+  });
 });
 
 // FAQ / documentation
@@ -54,7 +60,7 @@ router.post('/connect', auth.ensureAuthentication, async (req, res) => {
   }
 
   try {
-    const result = await dashboardController.connectApi(userId, apiName, apiKey);
+    const result = await apiController.connectApi(userId, apiName, apiKey);
     if (result) {
       req.flash('success', `API '${apiName}' successfully connected.`);
       res.redirect('/dashboard');

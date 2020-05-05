@@ -1,4 +1,6 @@
-import { html, useState, useEffect, useRef } from '../preact-htm.js';
+import {
+  html, useState, useEffect, useRef,
+} from '../preact-htm.js';
 
 const stringify = str => (str ? JSON.stringify(str, null, 2) : '');
 const validate = (string) => {
@@ -18,8 +20,8 @@ export default function RouteDetailsResponse({
 
   // useEffect needs the path to be able to update component state even when
   // the data prop is seemingly the same (undefined) after another route is
-  // selected (this would lead to problems when the response is activated but no response
-  // is entered, so it would stay activated after another route is selected)
+  // selected (this would otherwise lead to problems when the response is activated
+  // but no response is entered, so it would stay activated after another route is selected)
   useEffect(() => {
     const stringified = stringify(data);
     setResponse(stringified);
@@ -48,7 +50,7 @@ export default function RouteDetailsResponse({
   };
 
   // handler to toggle isActive state and update RouteDetail with validity (false by default)
-  // so that the save button gets disabled when a response type has just been activated without 
+  // so that the save button gets disabled when a response type has just been activated without
   // any data entered
   const toggleActive = () => {
     setIsActive(state => !state);
