@@ -4,6 +4,8 @@ const flash = require('connect-flash');
 const apiController = require('../controllers/apiController');
 const auth = require('../middlewares/authorize');
 
+const CustomError = require('../lib/customError');
+
 const router = express.Router();
 
 router.use(express.urlencoded({ extended: true }));
@@ -66,7 +68,10 @@ router.post('/connect', auth.ensureAuthentication, async (req, res) => {
       res.redirect('/dashboard');
     }
   } catch (error) {
-    req.flash('error', error.message);
+    const errorMessage = (error instanceof CustomError)
+      ? error.message
+      : 'Something went wrong';
+    req.flash('error', errorMessage);
     res.redirect('/connect');
   }
 });

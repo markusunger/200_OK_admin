@@ -30,7 +30,7 @@ module.exports = {
       throw error;
     }
 
-    if (!result) throw (new Error('Could not retrieve API information.'));
+    if (!result) throw (new CustomError('Could not retrieve API information.'));
 
     return result;
   },
@@ -43,9 +43,9 @@ module.exports = {
     } catch (error) {
       throw error;
     }
-    if (!apiCheck) throw new Error('API not found.', 400);
-    if (apiCheck.isConnected) throw new Error('API already connected.', 403);
-    if (apiCheck.apiKey !== apiKey) throw new Error('Wrong API key.', 403);
+    if (!apiCheck) throw new CustomError('API not found.', 400);
+    if (apiCheck.isConnected) throw new CustomError('API already connected.', 403);
+    if (apiCheck.apiKey !== apiKey) throw new CustomError('Wrong API key.', 403);
 
     // if valid connect request, register api as connected and add to user
     try {
@@ -54,7 +54,7 @@ module.exports = {
       }, {
         isConnected: true,
       });
-      if (result.nModified < 1) throw new Error('Something went wrong.');
+      if (result.nModified < 1) throw new CustomError('Something went wrong.');
     } catch (error) {
       throw error;
     }
@@ -65,7 +65,7 @@ module.exports = {
       }, {
         $push: { connectedApis: apiName },
       });
-      if (result.nModified < 1) throw new Error('Something went wrong.');
+      if (result.nModified < 1) throw new CustomError('Something went wrong.');
     } catch (error) {
       throw error;
     }

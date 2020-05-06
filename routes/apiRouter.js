@@ -4,7 +4,6 @@ const cors = require('cors');
 const apiController = require('../controllers/apiController');
 const customizationController = require('../controllers/customizationController');
 const auth = require('../middlewares/authorize');
-const CustomError = require('../lib/customError');
 
 const corsOptions = {
   origin: 'http://localhost',
