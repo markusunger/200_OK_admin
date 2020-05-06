@@ -41,7 +41,27 @@ router.get('/faq', (req, res) => {
   res.render('faq');
 });
 
-// user dashboard
+// create and connect new API for logged in user
+// this is a GET route (although it should be POST) to allow easy redirection from
+// the start page if a user is already logged in and clicks on the 'create API' button there
+router.get('/dashboard/create', auth.ensureAuthentication, async (req, res) => {
+  const userId = req.user.github.id;
+
+  if (req.user.connectedApis.length >= 7) {
+    req.flash('error', 'You cannot have more than 7 APIs connected to your account.');
+    return res.redirect('/dashboard');
+  }
+
+  const apiName = await apiController.createAndConnectApi(userId);
+  if (apiName) {
+    req.flash('success', `API '${apiName}' successfully created.`);
+  } else {
+    req.flash('error', 'Could not create new API.');
+  }
+  return res.redirect('/dashboard');
+});
+
+// user dashboard main page
 router.get('/dashboard', auth.ensureAuthentication, (req, res) => {
   res.render('admin/dashboard');
 });
@@ -52,13 +72,18 @@ router.get('/connect', auth.ensureAuthentication, (req, res) => {
 });
 
 router.post('/connect', auth.ensureAuthentication, async (req, res) => {
+  if (req.user.connectedApis.length >= 7) {
+    req.flash('error', 'You cannot have more than 7 APIs connected to your account.');
+    res.redirect('/dashboard');
+  }
+
   const userId = req.user.github.id;
   const apiName = req.body['api-name'];
   const apiKey = req.body['api-key'];
 
   if (!apiName || !apiKey) {
     req.flash('error', 'API name and API key are required.');
-    req.redirect('/connect');
+    res.redirect('/connect');
   }
 
   try {
@@ -79,7 +104,7 @@ router.post('/connect', auth.ensureAuthentication, async (req, res) => {
 // live debugging of API requests/responses
 router.get('/debug/:apiName', auth.ensureAuthentication, auth.ensureOwnership, (req, res, next) => {
   const { apiName } = req.params;
-  if (!apiName) next(new Error('API name not provided.'));
+  if (!apiName) next(new CustomError('API name not provided.', 400));
 
   res.render('admin/debug', { apiName });
 });
@@ -87,7 +112,7 @@ router.get('/debug/:apiName', auth.ensureAuthentication, auth.ensureOwnership, (
 // customization page for user-defined endpoint behavior
 router.get('/customize/:apiName', auth.ensureAuthentication, auth.ensureOwnership, (req, res, next) => {
   const { apiName } = req.params;
-  if (!apiName) next(new Error('API name not provided.'));
+  if (!apiName) next(new CustomError('API name not provided.', 400));
 
   res.render('admin/customize', { apiName });
 });

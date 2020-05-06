@@ -4,7 +4,7 @@ const subscriber = require('../services/subscriber');
 const CustomError = require('../lib/customError');
 
 module.exports = {
-  // creates a new API config
+  // creates a new API
   createApi: async function createApi() {
     let result;
 
@@ -17,6 +17,8 @@ module.exports = {
 
     if (!result) throw (new CustomError('Could not create new API.'));
 
+    // TODO: remove once no longer necessary for testing purposes
+    console.log(`New API created: ${result.apiName}`);
     return result;
   },
 
@@ -71,6 +73,13 @@ module.exports = {
     }
 
     return true;
+  },
+
+  // creates and immediately connects an API to a specific user (that needs to be logged in)
+  createAndConnectApi: async function createAndConnectApi(userId) {
+    const { apiName, apiKey } = await this.createApi();
+    const connected = await this.connectApi(userId, apiName, apiKey);
+    return connected ? apiName : null;
   },
 
   // listens for published API messages on Redis and sends them to the client
