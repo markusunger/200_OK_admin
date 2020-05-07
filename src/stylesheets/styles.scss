@@ -1,21 +1,24 @@
 @charset "utf-8";
 
 // import Overpass from Google fonts
-@import url('https://fonts.googleapis.com/css?family=Hind:400,700');
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700');
 
 // set 200 OK colors
-$dark-green: #0f6d3b;
-$green: #47ac76;
-$blue: #3867d6;
-$grey-light: #a5b1c2;
-$background: #e1ebdf;
+$dark-blue-grey: #2e3239;
+$light-green: #7fcb2d;
+$lighter-dark: #3d5d53;
+$lightest-green: #a0b87c;
 
 // Update Bulma's global variables
-$family-sans-serif: "Hind", sans-serif;
-$grey-dark: $dark-green;
-$grey-light: $grey-light;
-$primary: $dark-green;
-$link: $green;
+$family-sans-serif: "Roboto Condensed", sans-serif;
+$primary: $dark-blue-grey;
+$primary-light: $light-green;
+$primary-invert: $light-green;
+$primary-dark: $lighter-dark;
+$link: $lighter-dark;
+$dark: $dark-blue-grey;
+$text: black;
+$success: $light-green;
 $widescreen-enabled: false;
 $fullhd-enabled: false;
 
@@ -23,8 +26,11 @@ $fullhd-enabled: false;
 $title-line-height: 1.5;
 
 // custom component variables
+$navbar-item-img-max-height: 40px;
+$button-hover-color: $lighter-dark;
+$button-text-color: $light-green;
 $body-background-color: rgb(236, 233, 233);
-$input-border-color: $grey-light;
+$input-border-color: $light-green;
 
 // import required sass files from bulma package
 @import "../../node_modules/bulma/sass/utilities/_all.sass";

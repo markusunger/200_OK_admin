@@ -4,7 +4,7 @@ import { html } from '../preact-htm.js';
 
 export default function ApiSelector({ apiList, selectedApi, selectClickHandler }) {
   return html`
-    <nav class="panel is-link">
+    <nav class="panel is-primary">
       <p class="panel-heading">
         Your APIs
       </p>
@@ -16,7 +16,7 @@ export default function ApiSelector({ apiList, selectedApi, selectClickHandler }
           <span class="icon is-large">
             <i class="fas fa-plug"></i>
           </span>
-          <span>Connect an API</span>
+          <span>Connect another API</span>
         </a>
       </div>
 

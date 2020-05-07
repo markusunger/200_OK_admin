@@ -2,23 +2,6 @@
   Welcome, {{githubInfo.name}}!
 </h1>
 
-{{#if hasConnectedApis}}
+<div id="dashboard-container" data-apis="{{connectedApis}}"></div>
 
-  <div id="dashboard-container" data-apis="{{connectedApis}}"></div>
-
-  <script type="module" src="/javascript/dashboard/index.js"></script>
-
-{{else}}
-
-  <div>
-    <p>You do not have any connected API.</p>
-    <a class="button is-link is-outlined is-fullwidth" href="/connect">
-      <span class="icon is-large">
-        <i class="fas fa-plug"></i>
-      </span>
-      <span>Connect an API</span>
-    </a>
-    <p>If you do not have an API, <a href="/">create one on the starting page</a>.</p>
-  </div>
-
-{{/if}}
+<script type="module" src="/javascript/dashboard/index.js"></script>

@@ -12,6 +12,27 @@ export default function Dashboard({ apiList }) {
     setSelectedApi(api);
   };
 
+  if (apiList.length === 0) {
+    return html`
+      <div class="box">
+        <p>Currently, you do not have an API connected to your account.</p>
+        <a class="button is-success is-outlined is-fullwidth spacing-top" href="/connect">
+          <span class="icon is-large">
+            <i class="fas fa-plug"></i>
+          </span>
+          <span>Connect another API</span>
+        </a>
+
+        <a class="button is-success is-fullwidth spacing-top" href="/dashboard/create">
+          <span class="icon is-large">
+            <i class="fas fa-plus-square"></i>
+          </span>
+          <span>Create a new API</span>
+        </a>
+      </div>
+    `;
+  }
+
   return html`
     <div class="columns is-desktop">
       <div class="column">
