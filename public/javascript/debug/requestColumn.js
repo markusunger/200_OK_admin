@@ -30,9 +30,9 @@ export default function RequestColumn({ request }) {
         </table>
       </div>
       <h3 class="title is-6 spacing-top">Headers</h3>
-      <pre ref=${headerBlock}></pre>
+      <pre class="code-block" ref=${headerBlock}></pre>
       <h3 class="title is-6 spacing-top">Body</h3>
-      <pre ref=${bodyBlock}></div>
+      <pre class="code-block" ref=${bodyBlock}></div>
     </div>
   `;
 }

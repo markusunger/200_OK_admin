@@ -32,14 +32,19 @@ export default function Debug({ apiName }) {
       <div class="box">
         <h2 class="title is-4">As soon as you make requests to your API <em>${apiName}</em>,
         they will appear here.</h2>
-        <a href="/dashboard">Back to dashboard</a>
+        <p class="information">
+          You can try this out by issuing the following <code>curl</code> instruction in your command line:
+        </p>
+        <pre class="code-block">
+          curl https://${apiName}.200ok.app/test-route
+        </pre>
+        <p class="information">
+          Or find more information about how to use your API in the <a href="/documentation">documentation</a>.
+        </p>
       </div>
     `;
   } else {
     return html`
-      <div>
-        <a href="/dashboard">Back to dashboard</a>
-      </div>
       <div class="columns">
         <${EventList} eventList=${events} selectedEvent=${selected} clickEvent=${clickEvent} />
         <${EventContainer} event=${events[selected]} />

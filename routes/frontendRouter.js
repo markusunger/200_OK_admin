@@ -41,6 +41,10 @@ router.get('/faq', (req, res) => {
   res.render('faq');
 });
 
+router.get('/documentation', (req, res) => {
+  res.render('documentation');
+});
+
 // create and connect new API for logged in user
 // this is a GET route (although it should be POST) to allow easy redirection from
 // the start page if a user is already logged in and clicks on the 'create API' button there
@@ -74,7 +78,7 @@ router.get('/connect', auth.ensureAuthentication, (req, res) => {
 router.post('/connect', auth.ensureAuthentication, async (req, res) => {
   if (req.user.connectedApis.length >= 7) {
     req.flash('error', 'You cannot have more than 7 APIs connected to your account.');
-    res.redirect('/dashboard');
+    return res.redirect('/dashboard');
   }
 
   const userId = req.user.github.id;
@@ -83,22 +87,23 @@ router.post('/connect', auth.ensureAuthentication, async (req, res) => {
 
   if (!apiName || !apiKey) {
     req.flash('error', 'API name and API key are required.');
-    res.redirect('/connect');
+    return res.redirect('/connect');
   }
 
   try {
     const result = await apiController.connectApi(userId, apiName, apiKey);
     if (result) {
       req.flash('success', `API '${apiName}' successfully connected.`);
-      res.redirect('/dashboard');
     }
   } catch (error) {
     const errorMessage = (error instanceof CustomError)
       ? error.message
       : 'Something went wrong';
     req.flash('error', errorMessage);
-    res.redirect('/connect');
+    return res.redirect('/connect');
   }
+
+  return res.redirect('/dashboard');
 });
 
 // live debugging of API requests/responses

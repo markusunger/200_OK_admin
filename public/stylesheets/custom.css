@@ -1,47 +1,20 @@
-.title-200 {
-  color: rgb(41, 41, 41);
-}
-
-.title-ok {
-  color: #158348;
-  text-shadow: 1px 1px 5px rgb(148, 230, 141);
-}
-
-.title-link {
-  padding: 0.1rem 0.4rem;
-  border-radius: 0.3rem;
-  transition-property: background-color;
-  transition-duration: 1s;
-}
-
-.title-link:hover {
-  background-color: #0f6d3b;
-}
-
-.title-link:hover .title-200 {
-  color: #fff;
-}
-
-.title-link:hover .title-ok {
-  color: #81b99b;
-  text-shadow: 1px 1px 5px rgb(34, 58, 32);
-}
-
-nav {
-  margin-top: 0.3rem;
-}
-
 .code-block {
   font-family: monospace;
-  background-color: rgb(37, 37, 37);
-  color: #ccc;
+  background-color: #2e3239;
+  color: #7fcb2d;
   border-radius: 0.4rem;
   padding: 0.6rem;
 }
 
 .information {
-  margin-top: 0.5rem;
-  margin-bottom: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.docs {
+  font-size: 1.25rem;
+  margin-top: 1.4rem;
+  margin-bottom: 1.8rem;
 }
 
 .spacing-top {
@@ -67,9 +40,24 @@ nav.panel {
   margin-top: 0;
 }
 
-h2.faq {
-  margin-top: 1rem;
-  margin-bottom: 0.2rem;
+h1.docs {
+  margin-bottom: 2.25rem;
+}
+
+h2.docs {
+  margin-top: 3rem !important;
+  margin-bottom: 0.5rem;
+}
+
+aside.sticky {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 3rem;
+}
+
+textarea {
+  background-color: #2e3239 !important;
+  color: #7fcb2d !important;
 }
 
 div.config-list-container {
@@ -78,49 +66,46 @@ div.config-list-container {
   overflow-x: hidden;
 }
 
-ul.config-list {
-}
-
 ul.config-list li {
   padding: 0.4rem;
   margin-bottom: 0.2rem;
   font-family: monospace;
-  background-color: rgb(194, 206, 187);
-  color: #000;
+  background-color: #2e3239;
+  color: #7fcb2d;
   width: 100%;
   border-radius: 0.25rem;
 }
 
 ul.config-list li.is-selected-item {
-  background-color: white;
+  background-color: #3d5d53;
   cursor: auto;
-  color: #000;
+  color: white;
 }
 
 ul.config-list li:hover {
   cursor: pointer;
-  background-color: white;
-  color: #0f6d3b;
+  background-color: #7fcb2d;
+  color: #2e3239;
 }
 
 span.json-key {
-  color: black;
+  color: white;
 }
 
 span.json-string {
-  color: rgb(46, 105, 54);
+  color: #7fcb2d;
 }
 
 span.json-number {
-  color: rgb(19, 111, 153);
+  color: rgb(105, 184, 221);
 }
 
 span.json-boolean {
-  color: rgb(46, 59, 42);
+  color: rgb(154, 170, 148);
 }
 
 span.json-null {
-  color: rgb(133, 62, 62);
+  color: rgb(214, 175, 175);
 }
 
 div.status-code {
@@ -129,6 +114,7 @@ div.status-code {
   font-weight: bold;
   border-radius: 0.5rem;
   color: white;
+  background-color: #2e3239;
 }
 
 div.status-code.ok {

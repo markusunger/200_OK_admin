@@ -21,9 +21,9 @@ export default function ResponseColumn({ response }) {
         <${StatusCode} class="is-pulled-right" status=${response.status} />
       </div>
       <h3 class="title is-6 spacing-top">Headers</h3>
-      <pre ref=${headerBlock}></pre>
+      <pre class="code-block" ref=${headerBlock}></pre>
       <h3 class="title is-6 spacing-top">Body</h3>
-      <pre ref=${bodyBlock}></pre>
+      <pre class="code-block" ref=${bodyBlock}></pre>
     </div>
   `;
 }
