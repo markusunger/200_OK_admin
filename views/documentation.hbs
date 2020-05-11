@@ -1,7 +1,7 @@
 <div class="columns">
   <div class="column is-one-quarter">
-    <div class="box">
-      <aside class="menu sticky">
+    <div class="box sticky">
+      <aside class="menu">
         <p class="menu-label">
           What is 200 OK?
         </p>
@@ -26,7 +26,7 @@
     <div class="box">
       <img src="/images/200ok_logo_big.png" width="295" height="112" alt="200 OK Logo">
       <h1 class="title is-2 docs">Documentation & FAQ</h1>
-      <h2 class="subtitle is-4 docs" id="overview">Overview</h2>
+      <h2 class="title is-4 docs" id="overview">Overview</h2>
 
       <p class="docs"><em>200 OK</em> is an <strong>ephemeral, RESTful</strong> API service.</p>
       <p class="docs"><strong>Ephemeral</strong> means that each API will have a short life span: after seven days it will automatically be deleted, together with all its associated data.</p>
@@ -38,13 +38,14 @@
 
       <p class="docs"><a href="#top">Back to top</a></p>
 
-      <h2 class="subtitle is-4 docs" id="use-cases">Use cases</h2>
+      <h2 class="title is-4 docs" id="use-cases">Use cases</h2>
       <p class="docs"><em>200 OK</em> is intended as a learning and prototyping tool. If you are learning frontend web development, you might appreciate having a no-configuration API backend that you can use to test your client-side code. Or maybe you are writing frontend code that will rely on a backend API later, but the code does not yet exist. To mock those API calls, <em>200 OK</em> is a good fit.<br>
       It might also be that you participate in a hackathon, and you need a <em>fire-and-forget</em>-type of backend without any long-lived persistence. <em>200 OK</em> is well-suited for that use case.</p>
 
       <p class="docs"><a href="#top">Back to top</a></p>
 
-      <h2 class="subtitle is-4 docs" id="restful-requests">RESTful requests</h2>
+      <h2 class="title is-4 docs" id="restful-requests">RESTful requests</h2>
+      <h2 class="subtitle is-4 docs">Resource identifiers</h2>
       <p class="docs">The basic building block of a <em>200 OK</em> API is the <strong>resource</strong>.</p>
       <p class="docs">A simple resource can be accessed under the URI <code>/&lt;resource-name&gt;</code>. So a resource of users would have a fully qualified URL of</p>
       <pre class="code-block">https://&lt;your-API-name&gt;.200ok.app/users</pre>
@@ -52,9 +53,43 @@
       <p class="docs">Each item of a resource collection automatically receives an <strong>identifier</strong> in the form of an incrementing integer value (e.g. <code>1</code> or <code>2</code>). That identifier can be used in the form of the URI <code>/&lt;resource-name&gt;/&lt;resource-identifier&gt;</code> to build a URL for access:</p>
       <pre class="code-block">https://&lt;your-API-name&gt;.200ok.app/users/23</pre>
       <p class="docs">This would represent the user with the identifier <code>23</code>.</p>
-      <p class="docs">Resources can also be nested</p>
-      <p class="docs">&nbsp;</p>
-      <p class="docs">There are four kinds of action available</p>
+      <p class="docs">Resources can also be nested. Going with example above, each user could have an associated image resource, for example. Nested resources belong to a specific resource item in the form of the URI <code>/&lt;resource-name&gt;/&lt;resource-identifier&gt;/&lt;nested-resource-name&gt;</code>.</p>
+      <pre class="code-block">https://&lt;yourAPI-name&gt;.200ok.app/users/42/images</pre>
+      <p class="docs">This would represent the images resource collection for the user with the identifier <code>42</code>. Items from nested resource collections can be accessed the same way as described above. In total, you can nest resources up to <strong>4 levels deep</strong>.</p>
+      
+      <h2 class="subtitle is-4 docs">HTTP requests</h2>
+      <p class="docs">There are four kinds of action available on a resource collection or individual item, represented by an HTTP verb used in performing an request to an API.</p>
+      <p class="docs">
+        <ol class="docs">
+          <li>Retrieve collections or items (<code>GET</code>)</li>
+          <li>Create collection items (<code>POST</code>)</li>
+          <li>Alter collection items (<code>PUT</code>)</li>
+          <li>Delete collection items (<code>DELETE</code>)</li>
+        </ol>
+      </p>
+      <p class="docs"><strong>Retrieval &ndash;</strong> A resource can either be retrieved as a whole (comprising all of its items) or by specifically requesting a certain resource item. This is done by a <code>GET</code> request which is the default request type for most browsers or HTTP communication tools (like <code>curl</code> or the in-browser <code>fetch</code> functionality):</p>
+      <pre class="code-block">GET https://&lt;your-API-name&gt;/users</pre>
+      <p class="docs">This would return the whole <code>users</code> collection as a JSON array.</p>
+      <pre class="code-block">GET https://&lt;your-API-name&gt;/users/1337</pre>
+      <p class="docs">This would return the <code>user</code> with the identifier <code>1337</code>. The JSON response would include an <code>id</code> field with the value <code>1337</code>.</p>
+      <p class="docs"><strong>Creation &ndash;</strong> To create a new resource item, a <code>POST</code> request needs to be issued to the collection itself. The requst body must be valid JSON data. Keep in mind that <em>200 OK</em> issues the <code>id</code> field automatically to prevent inconsistent data being entered into the database. Any <code>id</code> values in your JSON request body will therefore be ignored and overwritten.</p>
+      <p class="docs">The response for a <code>POST</code> request will contain the newly created item (consisting of the data you sent as well as the newly created <code>id</code> field).</p>
+      <pre class="code-block">
+        POST https://&lt;your-API-name&gt;/users<br><br>
+        {
+        &nbsp;&nbsp;"name": "Tom Bombadil",
+        &nbsp;&nbsp;"alt-name": "Iarwain Ben-adar",
+        &nbsp;&nbsp;"isEldest": true
+        }</pre>
+      <p class="docs">The response to that request would be a JSON body with the following structure:</p>
+      <pre class="code-block">
+        {
+        &nbsp;&nbsp;id: 5,
+        &nbsp;&nbsp;"name": "Tom Bombadil",
+        &nbsp;&nbsp;"alt-name": "Iarwain Ben-adar",
+        &nbsp;&nbsp;"isEldest": true
+        }</pre>
+        <p class="docs"><strong>Altering &ndash;</strong> </p>
     </div>
   </div>
 </div>

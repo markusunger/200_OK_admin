@@ -12,7 +12,7 @@
 }
 
 .docs {
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   margin-top: 1.4rem;
   margin-bottom: 1.8rem;
 }
@@ -47,6 +47,10 @@ h1.docs {
 h2.docs {
   margin-top: 3rem !important;
   margin-bottom: 0.5rem;
+}
+
+ol.docs {
+  padding-left: 2.5rem;
 }
 
 aside.sticky {

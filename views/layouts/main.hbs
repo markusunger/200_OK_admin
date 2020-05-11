@@ -24,15 +24,24 @@
 
     <div class="navbar-menu" id="navigation-menu">
       <div class="navbar-start">
-        <a class="navbar-item" href="/documentation">
-          Documentation
-        </a>
-
         {{#if isAuthenticated}}
           <a class="navbar-item" href="/dashboard">
             Dashboard
           </a>
         {{/if}}
+
+        <a class="navbar-item" href="/documentation">
+          Documentation
+        </a>
+        <a class="navbar-item" href="/about">
+          About
+        </a>
+        <a class="navbar-item" href="/privacy">
+          Privacy
+        </a>
+        <a class="navbar-item" href="/contact">
+          Contact
+        </a>
       </div>
 
       <div class="navbar-end">
