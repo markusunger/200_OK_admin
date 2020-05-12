@@ -38,12 +38,15 @@ router.get('/', (req, res) => {
 
 // documentation
 router.get('/documentation', (req, res) => {
-  res.render('documentation');
+  res.render('static/documentation');
 });
 
-// about, privacy, contact
+// about, case study, privacy, contact
 router.get('/about', (req, res) => {
   res.render('static/about');
+});
+router.get('/case-study', (req, res) => {
+  res.render('static/case-study');
 });
 router.get('/contact', (req, res) => {
   res.render('static/contact');

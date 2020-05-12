@@ -29,7 +29,7 @@ app.use(session({
   saveUninitialized: true,
   resave: true,
   maxAge: 3600,
-  secure: false, // set to true for prod!!
+  secure: true,
   proxy: true,
   secret: cfg.cookieSecret,
 }));

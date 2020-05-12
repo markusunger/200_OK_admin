@@ -12,6 +12,5 @@ authed = authed === 'true';
 render(
   html`
     <${CreateApi} authed=${authed} />
-    <${LandingInformation} />
   `, mountPoint,
 );
