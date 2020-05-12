@@ -44,6 +44,11 @@ h1.docs {
   margin-bottom: 2.25rem;
 }
 
+h2.docs.first {
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.5rem;
+}
+
 h2.docs {
   margin-top: 3rem !important;
   margin-bottom: 0.5rem;
@@ -53,10 +58,24 @@ ol.docs {
   padding-left: 2.5rem;
 }
 
-aside.sticky {
+ul.has-bullets {
+  list-style: circle;
+  margin-bottom: 1.25rem;
+}
+
+ul.has-bullets > li {
+  margin-left: 2rem;
+}
+
+div.sticky {
   position: sticky;
   position: -webkit-sticky;
-  top: 3rem;
+  top: 1rem;
+  align-self: flex-start;
+}
+
+div.privacy-policy > h2 {
+  margin-top: 2rem;
 }
 
 textarea {

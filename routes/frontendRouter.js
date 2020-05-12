@@ -36,13 +36,20 @@ router.get('/', (req, res) => {
   });
 });
 
-// FAQ / documentation
-router.get('/faq', (req, res) => {
-  res.render('faq');
-});
-
+// documentation
 router.get('/documentation', (req, res) => {
   res.render('documentation');
+});
+
+// about, privacy, contact
+router.get('/about', (req, res) => {
+  res.render('static/about');
+});
+router.get('/contact', (req, res) => {
+  res.render('static/contact');
+});
+router.get('/privacy', (req, res) => {
+  res.render('static/privacy');
 });
 
 // create and connect new API for logged in user

@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="/stylesheets/styles.css">
   <link rel="stylesheet" href="/stylesheets/custom.css">
   <link rel="stylesheet" href="/stylesheets/all.css">
+  <link rel="stylesheet" href="/stylesheets/prism.css">
 </head>
 <body>
   <nav class="navbar is-transparent is-spaced" role="navigation" aria-label="navigation menu">
@@ -24,12 +25,6 @@
 
     <div class="navbar-menu" id="navigation-menu">
       <div class="navbar-start">
-        {{#if isAuthenticated}}
-          <a class="navbar-item" href="/dashboard">
-            Dashboard
-          </a>
-        {{/if}}
-
         <a class="navbar-item" href="/documentation">
           Documentation
         </a>
@@ -45,18 +40,32 @@
       </div>
 
       <div class="navbar-end">
-        <div class="navbar-item">
           {{#if isAuthenticated}}
-            <a class="button is-primary" href="/logout">
-              Logout
-            </a>
+            <div class="navbar-item">
+              <a class="button is-primary" href="/dashboard">
+                <span class="icon">
+                  <i class="fas fa-tachometer-alt"></i>
+                </span>
+                <span>Dashboard</span>
+              </a>
+            </div>
+            <div class="navbar-item">
+              <a class="button is-primary" href="/logout">
+                <span class="icon">
+                  <i class="fas fa-sign-out-alt"></i>
+                </span>
+                <span>Logout</span>
+              </a>
+            </div>
           {{else}}
-            <a class="button is-primary" href="/login">
-              <span class="icon">
-                <i class="fab fa-github"></i>
-              </span>
-              <span>Login with GitHub</span>
-            </a>
+            <div class="navbar-item">
+              <a class="button is-primary" href="/login">
+                <span class="icon">
+                  <i class="fab fa-github"></i>
+                </span>
+                <span>Login with GitHub</span>
+              </a>
+            </div>
           {{/if}}
         </div>
       </div>

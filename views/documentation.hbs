@@ -3,12 +3,20 @@
     <div class="box sticky">
       <aside class="menu">
         <p class="menu-label">
-          What is 200 OK?
+          General
         </p>
         <ul class="menu-list">
           <li><a href="#overview">Overview</a></li>
-          <li>Use cases</li>
-          <li>RESTful requests</li>
+          <li><a href="#use-cases">Use cases</a></li>
+          <li>
+            <a href="#restful-requests">RESTful requests</a>
+            <ul>
+              <li><a href="#restful-requests-create">Create items</a></li>
+              <li><a href="#restful-requests-retrieve">Retrieve collections/items</a></li>
+              <li><a href="#restful-requests-alter">Alter items</a></li>
+              <li><a href="#restful-requests-delete">Delete items</a></li>
+            </ul>
+          </li>
         </ul>
         <p class="menu-label">
           Tools
@@ -24,19 +32,18 @@
 
   <div class="column">
     <div class="box">
-      <img src="/images/200ok_logo_big.png" width="295" height="112" alt="200 OK Logo">
-      <h1 class="title is-2 docs">Documentation & FAQ</h1>
+      <h1 class="title is-2 docs">Documentation</h1>
       <h2 class="title is-4 docs" id="overview">Overview</h2>
 
       <p class="docs"><em>200 OK</em> is an <strong>ephemeral, RESTful</strong> API service.</p>
       <p class="docs"><strong>Ephemeral</strong> means that each API will have a short life span: after seven days it will automatically be deleted, together with all its associated data.</p>
       <p class="docs"><strong>RESTful</strong> means that the API follows the common REST (<em>Representational State Transfer</em>) principles.</p>
-      <p class="docs">They key concept is that of resources: a <em>200 OK</em> API can be used to store, retrieve, alter and delete information in the form of resources. Resources are represented as a collection of JSON data, with each piece of information having a unique resource identifier.</p>
+      <p class="docs">They key concept is that of resources: a <em>200 OK</em> API can be used to store, retrieve, alter and delete information in the form of resources. Resources are represented as a collection of items as <strong>JSON data</strong>, with each item having a unique resource identifier.</p>
       <p class="docs">The whole collection of resources as well as single items of a collection can be accessed with the commonly used HTTP request methods: <code>GET</code> for retrieval, <code>POST</code> for creation, <code>PUT</code> for altering and <code>DELETE</code> for deletion.</p>
       <p class="docs">See the section on <a href="#restful-requests">RESTful requests</a> for how to structure your requests.</p>
+      <p class="docs">Every API is <strong>CORS-enabled</strong> and <strong>public</strong>, so there is no authorization and requests can come from any source, be it an application, client-side JavaScript code or the command line.</p>
       <p class="docs">In order to create an API with <em>200 OK</em>, you do not need to register or signup. It's totally free and you can get your own API in a matter of seconds by clicking the big, shiny button on <a href="/">the frontpage</a>. If you have no need for any of the helpful <a href="#tools">tools</a> that <em>200 OK</em> provides, you only need to grab your API URL (in the form of <code>https://&lt;your-API-name&gt;.200ok.app/</code> and you're ready to <a href="#restful-requests">make requests to it</a>.</p>
-
-      <p class="docs"><a href="#top">Back to top</a></p>
+      <p class="docs">There are a few useful helper tools, though, that you can access by logging in with your <strong>GitHub account</strong> and connecting your API. For that, you will need to enter your API name and the <strong>API key</strong> that you receive during the API creation step.</p>
 
       <h2 class="title is-4 docs" id="use-cases">Use cases</h2>
       <p class="docs"><em>200 OK</em> is intended as a learning and prototyping tool. If you are learning frontend web development, you might appreciate having a no-configuration API backend that you can use to test your client-side code. Or maybe you are writing frontend code that will rely on a backend API later, but the code does not yet exist. To mock those API calls, <em>200 OK</em> is a good fit.<br>
@@ -45,16 +52,16 @@
       <p class="docs"><a href="#top">Back to top</a></p>
 
       <h2 class="title is-4 docs" id="restful-requests">RESTful requests</h2>
-      <h2 class="subtitle is-4 docs">Resource identifiers</h2>
+      <h2 class="subtitle is-4 docs first">Resource identifiers</h2>
       <p class="docs">The basic building block of a <em>200 OK</em> API is the <strong>resource</strong>.</p>
       <p class="docs">A simple resource can be accessed under the URI <code>/&lt;resource-name&gt;</code>. So a resource of users would have a fully qualified URL of</p>
-      <pre class="code-block">https://&lt;your-API-name&gt;.200ok.app/users</pre>
+      <pre class="code-block"><code>https://&lt;your-API-name&gt;.200ok.app/users</code></pre>
       <p class="docs">This would represent a <strong>resource collection</strong>, comprising a varying number of individual users.</p>
-      <p class="docs">Each item of a resource collection automatically receives an <strong>identifier</strong> in the form of an incrementing integer value (e.g. <code>1</code> or <code>2</code>). That identifier can be used in the form of the URI <code>/&lt;resource-name&gt;/&lt;resource-identifier&gt;</code> to build a URL for access:</p>
-      <pre class="code-block">https://&lt;your-API-name&gt;.200ok.app/users/23</pre>
+      <p class="docs">Each item of a resource collection automatically receives an <strong>identifier</strong> in the form of an incrementing integer value (e.g. <code>1</code> or <code>2</code>). The identifier is added automatically to each  That identifier can be used in the form of the URI <code>/&lt;resource-name&gt;/&lt;resource-identifier&gt;</code> to build a URL for access:</p>
+      <pre class="code-block"><code>https://&lt;your-API-name&gt;.200ok.app/users/23</code></pre>
       <p class="docs">This would represent the user with the identifier <code>23</code>.</p>
       <p class="docs">Resources can also be nested. Going with example above, each user could have an associated image resource, for example. Nested resources belong to a specific resource item in the form of the URI <code>/&lt;resource-name&gt;/&lt;resource-identifier&gt;/&lt;nested-resource-name&gt;</code>.</p>
-      <pre class="code-block">https://&lt;yourAPI-name&gt;.200ok.app/users/42/images</pre>
+      <pre class="code-block"><code>https://&lt;yourAPI-name&gt;.200ok.app/users/42/images</code></pre>
       <p class="docs">This would represent the images resource collection for the user with the identifier <code>42</code>. Items from nested resource collections can be accessed the same way as described above. In total, you can nest resources up to <strong>4 levels deep</strong>.</p>
       
       <h2 class="subtitle is-4 docs">HTTP requests</h2>
@@ -89,7 +96,16 @@
         &nbsp;&nbsp;"alt-name": "Iarwain Ben-adar",
         &nbsp;&nbsp;"isEldest": true
         }</pre>
-        <p class="docs"><strong>Altering &ndash;</strong> </p>
+        <p class="docs">The value of <code>id</code> is an incrementing number that is automatically assigned by <em>200 OK</em>.</p>
+        <p class="docs"><strong>Altering &ndash;</strong> In order to change the data represented by a resource item, a <code>PUT</code> request can be issued together with a JSON request body. This is always a <strong>merge operation</strong>, meaning that whatever data you send with the <code>PUT</code> request is merged with the already existing data: new fields are added, existing fields get overwritten and no existing ones get deleted.</p>
+        <pre class="code-block">PUT https://&lt;your-API-name&gt;/users/5<br><br>
+        {
+          "movieAppearances": 0
+        }</pre>
+        <p class="docs">This operation will return a <code>204 No Content</code> response status code. Afterwards, the data will contain everything from the <code>POST</code> request above plus an additional field <code>movieAppearances</code>.</p>
+        <p class="docs"><strong>Deleting &ndash;</strong> To remove data from a resource collection, the <code>DELETE</code> request method can be used </p>
     </div>
   </div>
 </div>
+
+<script src="/javascript/prism.js"></script>
