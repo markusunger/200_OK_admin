@@ -65,11 +65,11 @@ https://${data.apiName}.200ok.app/users
 
   return html`
     <div class="content has-text-centered spacing-bottom">
-      <h1 class="title is-4">
+      <h1 class="title is-2">
         A one-click, ephemeral REST API
       </h1>
       <h1 class="subtitle is-5">
-        No signup or registration required.
+        Valid for 7 days. No signup required.
       </h1>
       ${error && html`<${ErrorBox} error=${error} />`}
       <button class="button is-primary is-inverted is-large " disabled=${clicked} onClick=${handleCreationClick}>

@@ -1,6 +1,10 @@
 body {
-  height: 100vh;
-  background-image: linear-gradient(to left, #ffffff, #caced1)
+  min-height: 100%;
+  /* background: gradient(linear, to left, #ffffff, #caced1) fixed;
+  background: -webkit-gradient(linear, to left, #ffffff, #caced1) fixed;
+  background: -moz-gradient(linear, to left, #ffffff, #caced1) fixed;
+  background-repeat: no-repeat;
+  background-attachment: fixed; */
 }
 
 .code-block {
@@ -17,7 +21,6 @@ body {
 }
 
 .docs {
-  font-size: 1.15rem;
   margin-top: 1.4rem;
   margin-bottom: 1.8rem;
 }

@@ -36,12 +36,12 @@ export default function LandingInformation() {
 
   <div class="content spacing-top spacing-bottom"> </div>
 
-  <div class="content spacing-top information has-text-centered">
+  <div class="content spacing-top spacing-bottom has-text-centered">
     <h1 class="title is-4">Supercharge your experience with optional tooling</h1>
-    <h1 class="subtitle is-6">Login via GitHub and connect your API to benefit from helpful tools that enhance your experience</h1>
+    <h1 class="subtitle is-6"><a href="/login">Login via GitHub</a> and connect your API to benefit from helpful tools that enhance your experience</h1>
   </div>
 
-  <div class="columns spacing-top spacing-bottom outer-padding">
+  <div class="columns spacing-bottom outer-padding">
       <div class="column is-one-third">
         <div class="content has-text-centered">
           <span class="icon is-large has-text-primary">
