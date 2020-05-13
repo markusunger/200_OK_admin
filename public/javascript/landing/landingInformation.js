@@ -2,40 +2,75 @@ import { html } from '../preact-htm.js';
 
 export default function LandingInformation() {
   return html`
-    <section class="section spacing-top">
-      <div class="columns spacing-top outer-padding">
-        <div class="column">
-          <h2 class="title">A RESTful API. No registration required.</h2>
-          <h3 class="subtitle">Your API ist just one click away and you don't even have to give up any personal information. Create your personal RESTful API and you're ready to drop it into any project or tool. Or just play around with on the command line.</h3>
-        </div>
-        <div class="column">
-          <p>Some fancy image here ...</p>
+    <div class="columns spacing-top spacing-bottom outer-padding">
+      <div class="column is-one-third">
+        <div class="content has-text-centered">
+          <span class="icon is-large has-text-primary">
+            <i class="fas fa-laptop-code fa-2x logo-shadow"></i>
+          </span>
+          <h1 class="title is-5 lp-header">No configuration</h1>
+          <h2 class="lp-subtitle">Use RESTful request methods and the API will work without any further need for setup or configuration.</h2>
         </div>
       </div>
-    </section>
 
-    <section class="section spacing-top">
-      <div class="columns spacing-top outer-padding">
-        <div class="column">
-          <p>Some fancy image here ...</p>
-        </div>
-        <div class="column">
-          <h2 class="title">Customization is just a login away.</h2>
-          <h3 class="subtitle"><em>200 OK</em> provides a resource-based endpoint approach. If you need more flexibility, you can create your own custom endpoints. Define responses for each request method (GET, POST, PUT or DELETE) and let your API send the JSON payload you want.</h3>
+      <div class="column is-one-third">
+        <div class="content has-text-centered">
+          <span class="icon is-large has-text-primary">
+            <i class="fas fa-pencil-ruler fa-2x logo-shadow"></i>
+          </span>
+          <h1 class="title is-5 lp-header">Use from anywhere</h1>
+          <h2 class="lp-subtitle">Your API is CORS-enabled, so it can be used from within the browser, any code sandbox tool or the command line.</h2>
         </div>
       </div>
-    </section>
 
-    <section class="section spacing-top">
-      <div class="columns spacing-top outer-padding">
-        <div class="column">
-          <h2 class="title">Supercharge your debugging.</h2>
-          <h3 class="subtitle">Your application is yielding unexpected results and you are not sure if the API requests are correct? Use <em>200 OK</em>'s debugging tool and inspect your requests and the resulting responses in real-time.</h3>
-        </div>
-        <div class="column">
-          <p>Some fancy image here ...</p>
+      <div class="column is-one-third">
+      <div class="content has-text-centered">
+        <span class="icon is-large has-text-primary">
+          <i class="fas fa-exclamation-triangle fa-2x logo-shadow"></i>
+        </span>
+        <h1 class="title is-5 lp-header">User-friendly errors</h1>
+        <h2 class="lp-subtitle">Helpful error messages will make it easy to see at a glance why a request might not be successful.</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="content spacing-top spacing-bottom"> </div>
+
+  <div class="content spacing-top information has-text-centered">
+    <h1 class="title is-4">Supercharge your experience with optional tooling</h1>
+    <h1 class="subtitle is-6">Login via GitHub and connect your API to benefit from helpful tools that enhance your experience</h1>
+  </div>
+
+  <div class="columns spacing-top spacing-bottom outer-padding">
+      <div class="column is-one-third">
+        <div class="content has-text-centered">
+          <span class="icon is-large has-text-primary">
+            <i class="fas fa-search fa-2x logo-shadow"></i>
+          </span>
+          <h1 class="title is-5 lp-header">Inspect your requests</h1>
+          <h2 class="lp-subtitle">Live-inspect your requests and the accompanying responses. See details about the headers and bodies.</h2>
         </div>
       </div>
-    </section>
+
+      <div class="column is-one-third">
+        <div class="content has-text-centered">
+          <span class="icon is-large has-text-primary">
+            <i class="fas fa-edit fa-2x logo-shadow"></i>
+          </span>
+          <h1 class="title is-5 lp-header">Customize endpoints</h1>
+          <h2 class="lp-subtitle">Define custom JSON responses for endpoints that need it and enable or disable certain request methods.</h2>
+        </div>
+      </div>
+
+      <div class="column is-one-third">
+      <div class="content has-text-centered">
+        <span class="icon is-large has-text-primary">
+          <i class="fas fa-tasks fa-2x logo-shadow"></i>
+        </span>
+        <h1 class="title is-5 lp-header">Manage your APIs</h1>
+        <h2 class="lp-subtitle">Create and manage up to seven different APIs for all your project and learning needs.</h2>
+      </div>
+    </div>
+  </div>
   `;
 }

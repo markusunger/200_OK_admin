@@ -68,10 +68,10 @@
       <p class="docs">There are four kinds of action available on a resource collection or individual item, represented by an HTTP verb used in performing an request to an API.</p>
       <p class="docs">
         <ol class="docs">
-          <li>Retrieve collections or items (<code>GET</code>)</li>
-          <li>Create collection items (<code>POST</code>)</li>
-          <li>Alter collection items (<code>PUT</code>)</li>
-          <li>Delete collection items (<code>DELETE</code>)</li>
+          <li><a href="#restful-requests-retrieve">Retrieve collections or items</a> (<code>GET</code>)</li>
+          <li><a href="#restful-requests-create">Create collection items</a> (<code>POST</code>)</li>
+          <li><a href="#restful-requests-alter">Alter collection items</a> (<code>PUT</code>)</li>
+          <li><a href="#restful-requests-delete">Delete collection items</a> (<code>DELETE</code>)</li>
         </ol>
       </p>
       <p class="docs"><strong>Retrieval &ndash;</strong> A resource can either be retrieved as a whole (comprising all of its items) or by specifically requesting a certain resource item. This is done by a <code>GET</code> request which is the default request type for most browsers or HTTP communication tools (like <code>curl</code> or the in-browser <code>fetch</code> functionality):</p>
@@ -81,13 +81,16 @@
       <p class="docs">This would return the <code>user</code> with the identifier <code>1337</code>. The JSON response would include an <code>id</code> field with the value <code>1337</code>.</p>
       <p class="docs"><strong>Creation &ndash;</strong> To create a new resource item, a <code>POST</code> request needs to be issued to the collection itself. The requst body must be valid JSON data. Keep in mind that <em>200 OK</em> issues the <code>id</code> field automatically to prevent inconsistent data being entered into the database. Any <code>id</code> values in your JSON request body will therefore be ignored and overwritten.</p>
       <p class="docs">The response for a <code>POST</code> request will contain the newly created item (consisting of the data you sent as well as the newly created <code>id</code> field).</p>
-      <pre class="code-block">
-        POST https://&lt;your-API-name&gt;/users<br><br>
-        {
-        &nbsp;&nbsp;"name": "Tom Bombadil",
-        &nbsp;&nbsp;"alt-name": "Iarwain Ben-adar",
-        &nbsp;&nbsp;"isEldest": true
-        }</pre>
+      <pre>
+          <code class="lang-http">
+          POST https://&lt;your-API-name&gt;/users<br><br>
+          {
+          &nbsp;&nbsp;"name": "Tom Bombadil",
+          &nbsp;&nbsp;"alt-name": "Iarwain Ben-adar",
+          &nbsp;&nbsp;"isEldest": true
+          }
+          </code>
+      </pre>
       <p class="docs">The response to that request would be a JSON body with the following structure:</p>
       <pre class="code-block">
         {

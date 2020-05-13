@@ -18,6 +18,7 @@ $primary-light: $light-green;
 $primary-invert: $light-green;
 $primary-dark: $lighter-dark;
 $link: $link-green;
+$info: $light-green;
 $dark: $dark-blue-grey;
 $text: black;
 $success: $light-green;
@@ -28,7 +29,7 @@ $fullhd-enabled: false;
 $navbar-item-img-max-height: 40px;
 $button-hover-color: $lighter-dark;
 $button-text-color: $light-green;
-$body-background-color: rgb(236, 238, 243);
+$body-background-color: white;
 $input-border-color: $light-green;
 
 // import required sass files from bulma package
@@ -41,5 +42,7 @@ $input-border-color: $light-green;
 @import "../../node_modules/bulma/sass/elements/table.sass";
 @import "../../node_modules/bulma/sass/elements/notification.sass";
 @import "../../node_modules/bulma/sass/form/_all.sass";
+@import "../../node_modules/bulma/sass/layout/hero.sass";
+@import "../../node_modules/bulma/sass/layout/section.sass";
 @import "../../node_modules/bulma/sass/components/_all.sass";
 @import "../../node_modules/bulma/sass/grid/columns.sass";

@@ -1,6 +1,7 @@
 import { html, useState, useEffect } from '../preact-htm.js';
 
 import ErrorBox from './errorBox.js';
+import LandingInformation from './landingInformation.js';
 
 export default function CreateApi({ authed }) {
   const [clicked, setClicked] = useState(false);
@@ -49,7 +50,7 @@ export default function CreateApi({ authed }) {
           </tr>
         </table>
         <p class="information"><strong>Note:</strong> Your API key is required to connect your API to your user account, if you ever decide to create one. Please copy and store it somewhere because it will not be possible to retrieve it later.</p>
-        <p class="information">Try your API out in your command line:</p>
+        <p class="information">Try out your API in your command line:</p>
         <pre class="code-block">
           <code class="lang-bash">
             curl -d '{"name":"Testuser"}' -H "Content-Type: application/json" -X POST
@@ -63,17 +64,22 @@ https://${data.apiName}.200ok.app/users
   }
 
   return html`
-    <div class="content has-text-centered">
-      <div class="content information">
+    <div class="content has-text-centered spacing-bottom">
+      <h1 class="title is-4">
         A one-click, ephemeral REST API
-      </div>
+      </h1>
+      <h1 class="subtitle is-5">
+        No signup or registration required.
+      </h1>
       ${error && html`<${ErrorBox} error=${error} />`}
-      <button class="button is-primary is-outlined is-large" disabled=${clicked} onClick=${handleCreationClick}>
+      <button class="button is-primary is-inverted is-large " disabled=${clicked} onClick=${handleCreationClick}>
         <span class="icon is-large">
           <i class="fas fa-file-alt"></i>
         </span>
         <span>Create your API</span>
       </button>
     </div>
+
+    <${LandingInformation} />
   `;
 }

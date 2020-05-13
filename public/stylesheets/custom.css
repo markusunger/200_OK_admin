@@ -1,3 +1,8 @@
+body {
+  height: 100vh;
+  background-image: linear-gradient(to left, #ffffff, #caced1)
+}
+
 .code-block {
   font-family: monospace;
   background-color: #2e3239;
@@ -21,9 +26,17 @@
   margin-top: 1.5rem;
 }
 
+.spacing-bottom {
+  margin-bottom: 6rem;
+}
+
 .outer-padding {
   padding-left: 0.6rem;
   padding-right: 0.6rem;
+}
+
+.logo-shadow {
+  text-shadow: 0px 0px 5px #7fcb2d;
 }
 
 .config-list-title {
@@ -44,6 +57,10 @@ h1.docs {
   margin-bottom: 2.25rem;
 }
 
+h1.lp-header {
+  margin: 0.25rem 0 0.4rem 0 !important;
+}
+
 h2.docs.first {
   margin-top: 0.5rem !important;
   margin-bottom: 0.5rem;
@@ -52,6 +69,10 @@ h2.docs.first {
 h2.docs {
   margin-top: 3rem !important;
   margin-bottom: 0.5rem;
+}
+
+h2.lp-subtitle {
+  line-height: 1.25rem;
 }
 
 ol.docs {
@@ -78,11 +99,6 @@ div.privacy-policy > h2 {
   margin-top: 2rem;
 }
 
-textarea {
-  background-color: #2e3239 !important;
-  color: #7fcb2d !important;
-}
-
 div.config-list-container {
   max-height: 90vh;
   overflow-y: auto;
@@ -100,15 +116,15 @@ ul.config-list li {
 }
 
 ul.config-list li.is-selected-item {
-  background-color: #3d5d53;
+  background-color: #7fcb2d;
   cursor: auto;
-  color: white;
+  color: #2e3239;
 }
 
 ul.config-list li:hover {
   cursor: pointer;
-  background-color: #7fcb2d;
-  color: #2e3239;
+  background-color: #3d5d53;
+  color: white;
 }
 
 span.json-key {
