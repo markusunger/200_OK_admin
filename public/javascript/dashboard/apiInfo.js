@@ -45,7 +45,7 @@ export default function ApiInfo({ selectedApi }) {
               <span class="icon is-medium">
                 <i class="fas fa-wrench"></i>
               </span>
-              <span>Debug Requests/Responses</span>
+              <span>Inspect Requests/Responses</span>
             </a>
           </div>
           <div class="information">
