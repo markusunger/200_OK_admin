@@ -13,7 +13,7 @@
   <nav class="navbar is-transparent is-spaced" role="navigation" aria-label="navigation menu">
     <div class="navbar-brand">
       <a class="navbar-item" href="/">
-        <img src="/images/200ok_logo_top.png" width="106" height="40">
+        <img src="/images/200ok_logo_top.png" width="106" height="40" alt="Logo of 200 OK" title="200 OK <3 you">
       </a>
 
       <a role="button" class="navbar-burger" data-target="navigation-menu" aria-label="menu" aria-expanded="false">
@@ -72,7 +72,7 @@
     </div>
   </nav>
 
-  <div class="container spacing-top">
+  <div class="container information">
     <div class="flash-messages">
       {{#if flash_success}}
         <article class="message is-success information">
@@ -89,8 +89,15 @@
         </article>
       {{/if}}
     </div>
-  {{{ body }}}
   </div>
+
+  {{{ body }}}
+
+  <footer class="footer">
+      <div class="content has-text-centered">
+        <strong>200 OK</strong> was developed by <a href="https://www.unger.dev/">Markus Unger</a>.<br />The source code is available on <a href="https://github.com/markusunger/200_OK">GitHub</a> and licensed under the GNU General Public License v3.0.
+      </div>
+  </footer>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {

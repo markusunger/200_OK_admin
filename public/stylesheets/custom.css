@@ -1,10 +1,5 @@
 body {
   min-height: 100%;
-  /* background: gradient(linear, to left, #ffffff, #caced1) fixed;
-  background: -webkit-gradient(linear, to left, #ffffff, #caced1) fixed;
-  background: -moz-gradient(linear, to left, #ffffff, #caced1) fixed;
-  background-repeat: no-repeat;
-  background-attachment: fixed; */
 }
 
 .code-block {
@@ -29,6 +24,10 @@ body {
   margin-top: 1.5rem;
 }
 
+.spacing-top-2x {
+  margin-top: 3rem;
+}
+
 .spacing-bottom {
   margin-bottom: 6rem;
 }
@@ -38,9 +37,17 @@ body {
   padding-right: 0.6rem;
 }
 
+.landing-title-spacing {
+  padding-top: 3.5rem;
+}
+
 .logo-shadow {
   text-shadow: 0px 0px 5px #7fcb2d;
 }
+
+/* .hero-landing {
+  background-color: rgb(211, 217, 224);
+} */
 
 .config-list-title {
   font-weight: bold;
@@ -50,6 +57,13 @@ body {
 table {
   margin-left: auto;
   margin-right: auto;
+}
+
+img.shadow {
+  max-width: 100%;
+  max-height: 100%;
+  filter: drop-shadow(0px 0px 1rem #2e3239);
+  -webkit-filter: drop-shadow(0px 0px 1rem #2e3239);
 }
 
 nav.panel {

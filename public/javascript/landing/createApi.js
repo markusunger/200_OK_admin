@@ -1,6 +1,7 @@
 import { html, useState, useEffect } from '../preact-htm.js';
 
 import ErrorBox from './errorBox.js';
+import ApiInfo from './apiInfo.js';
 import LandingInformation from './landingInformation.js';
 
 export default function CreateApi({ authed }) {
@@ -37,49 +38,37 @@ export default function CreateApi({ authed }) {
 
   if (data) {
     return html`
-      <div class="content has-text-centered">
-        <table class="table is-hoverable is-striped">
-          <tr>
-            <td><strong>Your API name</strong></td><td><span class="is-family-monospace">${data.apiName}</span></td>
-          </tr>
-          <tr>
-            <td><strong>Your API key</strong></td><td><span class="is-family-monospace">${data.apiKey}</span></td>
-          </tr>
-          <tr>
-            <td><strong>Your API URL</strong></td><td><a target="_blank" href="https://${data.apiName}.200ok.app"><span class="is-family-monospace">https://${data.apiName}.200ok.app</span></a></td>
-          </tr>
-        </table>
-        <p class="information"><strong>Note:</strong> Your API key is required to connect your API to your user account, if you ever decide to create one. Please copy and store it somewhere because it will not be possible to retrieve it later.</p>
-        <p class="information">Try out your API in your command line:</p>
-        <pre class="code-block">
-          <code class="lang-bash">
-            curl -d '{"name":"Testuser"}' -H "Content-Type: application/json" -X POST
-https://${data.apiName}.200ok.app/users
-&& curl https://${data.apiName}.200ok.app/users
-          </code>
-        </pre>
-        <p class="information">For more information about how you can use and customize your API, head to the <a href="/documentation">docs</a>.</p>
+      <div class="container">
+        <${ApiInfo} data=${data} />}
       </div>
     `;
   }
 
   return html`
-    <div class="content has-text-centered spacing-bottom">
-      <h1 class="title is-2">
-        A one-click, ephemeral REST API
-      </h1>
-      <h1 class="subtitle is-5">
-        Valid for 7 days. No signup required.
-      </h1>
-      ${error && html`<${ErrorBox} error=${error} />`}
-      <button class="button is-primary is-inverted is-large " disabled=${clicked} onClick=${handleCreationClick}>
-        <span class="icon is-large">
-          <i class="fas fa-file-alt"></i>
-        </span>
-        <span>Create your API</span>
-      </button>
-    </div>
+    <div class="container spacing-bottom">
+      <div class="columns outer-padding">
+        <div class="column has-text-right-desktop has-text-centered-mobile landing-title-spacing">
+          <h1 class="title is-2">
+            A one-click, <br />ephemeral REST API
+          </h1>
+          <h1 class="subtitle is-5">
+            Valid for 7 days. No signup required.
+          </h1>
+          ${error && html`<${ErrorBox} error=${error} />`}
+          <button class="button is-primary is-inverted is-large " disabled=${clicked} onClick=${handleCreationClick}>
+            <span class="icon is-large">
+              <i class="fas fa-file-alt"></i>
+            </span>
+            <span>Create your API</span>
+          </button>
+        </div>
 
+        <div class="column has-text-left-dekstop has-text-centered-mobile">
+          <img class="shadow" src="/images/200ok_key_graphic.png" alt="Illustrative graphic" />
+        </div>
+      </div>
+    </div>
+      
     <${LandingInformation} />
   `;
 }

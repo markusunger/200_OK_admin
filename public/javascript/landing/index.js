@@ -1,5 +1,3 @@
-/* eslint-disable no-eval */
-
 import { html, render } from '../preact-htm.js';
 
 import CreateApi from './createApi.js';

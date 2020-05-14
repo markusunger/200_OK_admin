@@ -172,7 +172,7 @@ The resource item would afterwards look like this:
 }
 ```
 
-A `PUT` operation will return a _204 No Content_ response status code without a body to indicate a successful update.
+A `PUT` operation will return a _204 No Content_ response status code to indicate a successful update.
  
 #### Deletion
 
