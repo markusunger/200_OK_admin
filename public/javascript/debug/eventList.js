@@ -2,7 +2,9 @@ import EventListItem from './eventListItem.js';
 
 import { html, useEffect, useRef } from '../preact-htm.js';
 
-export default function EventList({ eventList, selectedEvent, clickEvent }) {
+export default function EventList({
+  eventList, selectedEvent, clickEvent, flushHandler,
+}) {
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -13,6 +15,14 @@ export default function EventList({ eventList, selectedEvent, clickEvent }) {
   return html`
     <div class="column is-one-third">
       <div class="box config-list-container" ref=${containerRef}>
+        <p class="information">
+          <button class="button is-danger is-fullwidth" onClick=${flushHandler}>
+            <span class="icon">
+              <i class="fas fa-eraser" aria-hidden="true"></i>
+            </span>
+            <span>Empty Request List</span>
+          </button>
+        </p>
         <p class="config-list-title">Select Request</p>
         <ul class="config-list">
           ${eventList.map((event, idx) => html`<${EventListItem} clickEvent=${clickEvent} key=${event.timeStamp} event=${event} selectedClass=${idx === selectedEvent ? 'is-selected-item' : ''} />`)}

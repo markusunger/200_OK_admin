@@ -129,8 +129,9 @@ div.privacy-policy > h2 {
 }
 
 div.config-list-container {
-  max-height: 90vh;
+  max-height: 90%;
   overflow-y: auto;
+  word-wrap: break-word;
   overflow-x: hidden;
 }
 

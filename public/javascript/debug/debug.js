@@ -24,8 +24,15 @@ export default function Debug({ apiName }) {
 
   const data = useSSE(apiName);
   useEffect(() => {
-    if (data) setEvents([...events, data]);
+    if (data) {
+      setEvents([...events, data]);
+      setSelected(events.length);
+    }
   }, [data]);
+
+  const flushHandler = () => {
+    setEvents([]);
+  };
 
   if (events.length === 0) {
     return html`
@@ -46,7 +53,7 @@ export default function Debug({ apiName }) {
   } else {
     return html`
       <div class="columns">
-        <${EventList} eventList=${events} selectedEvent=${selected} clickEvent=${clickEvent} />
+        <${EventList} eventList=${events} selectedEvent=${selected} clickEvent=${clickEvent} flushHandler=${flushHandler} />
         <${EventContainer} event=${events[selected]} />
       </div>
     `;
