@@ -39,7 +39,7 @@ export default function CreateApi({ authed }) {
   if (data) {
     return html`
       <div class="container">
-        <${ApiInfo} data=${data} />}
+        <${ApiInfo} data=${data} />
       </div>
     `;
   }

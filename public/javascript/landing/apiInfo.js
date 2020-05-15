@@ -16,14 +16,14 @@ export default function ApiInfo({ data }) {
       </table>
       <p class="information"><strong>Note:</strong> Your API key is required to connect your API to your user account, if you ever decide to create one. Please copy and store it somewhere because it will not be possible to retrieve it later.</p>
       <p class="information">Try out your API in your command line:</p>
-      <pre class="code-block">
+      <pre class="code-block has-text-left">
         <code class="lang-bash">
-curl \
--d '{"name":"Testuser"}' \
--H "Content-Type: application/json" \
--X POST \
-https://${data.apiName}.200ok.app/users \
-&& curl https://${data.apiName}.200ok.app/users
+${`curl \\
+  -d '{"name":"Testuser"}' \\
+  -H "Content-Type: application/json" \\
+  -X POST \\
+  https://${data.apiName}.200ok.app/users &&
+curl https://${data.apiName}.200ok.app/users`}
         </code>
       </pre>
       <p class="information">For more information about how you can use and customize your API, head to the <a href="/documentation">docs</a>.</p>

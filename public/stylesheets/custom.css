@@ -11,11 +11,12 @@ body {
 }
 
 .code-block {
+  display: inline-block;
   font-family: monospace;
   background-color: #2e3239;
   color: #7fcb2d;
   border-radius: 0.4rem;
-  padding: 0.6rem;
+  padding: 1rem;
 }
 
 .information {
