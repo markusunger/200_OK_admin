@@ -11,6 +11,7 @@
     "css-build": "node-sass --omit-source-map-url src/stylesheets/styles.scss public/stylesheets/styles.css"
   },
   "dependencies": {
+    "bulma-switch": "^2.0.0",
     "connect-flash": "^0.1.1",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",

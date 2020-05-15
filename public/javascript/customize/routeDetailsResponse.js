@@ -65,9 +65,8 @@ export default function RouteDetailsResponse({
     return html`
     <div class="field">
       <div class="control">
-        <label class="checkbox">
-          <input type="checkbox" onClick=${toggleActive} checked=${isActive} /> Allow ${type} requests
-        </label>
+        <input type="checkbox" id="switch${type}" class="switch is-rounded is-info" onClick=${toggleActive} checked=${isActive} />
+        <label class="checkbox" for="switch${type}">Allow ${type} requests</label>
       </div>
     </div>
 
@@ -84,9 +83,8 @@ export default function RouteDetailsResponse({
   return html`
   <div class="field">
     <div class="control">
-      <label class="checkbox">
-        <input type="checkbox" onClick=${toggleActive} checked=${isActive} /> Allow ${type} requests
-      </label>
+      <input type="checkbox" id="switch${type}" class="switch is-rounded is-info" onClick=${toggleActive} checked=${isActive} />
+      <label class="checkbox" for="switch${type}">Allow ${type} requests</label>
     </div>
   </div>
   `;
