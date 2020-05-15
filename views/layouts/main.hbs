@@ -10,88 +10,88 @@
   <link rel="stylesheet" href="/stylesheets/prism.css">
 </head>
 <body>
-  <nav class="navbar is-transparent is-spaced" role="navigation" aria-label="navigation menu">
-    <div class="navbar-brand">
-      <a class="navbar-item" href="/">
-        <img src="/images/200ok_logo_top.png" width="106" height="40" alt="Logo of 200 OK" title="200 OK <3 you">
-      </a>
+  <div class="page-wrapper lower-padding">
+    <nav class="navbar is-transparent is-spaced" role="navigation" aria-label="navigation menu">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+          <img src="/images/200ok_logo_top.png" width="106" height="40" alt="Logo of 200 OK" title="200 OK <3 you">
+        </a>
 
-      <a role="button" class="navbar-burger" data-target="navigation-menu" aria-label="menu" aria-expanded="false">
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </a>
-    </div>
-
-    <div class="navbar-menu" id="navigation-menu">
-      <div class="navbar-start">
-        <a class="navbar-item" href="/documentation">
-          Documentation
-        </a>
-        <a class="navbar-item" href="/case-study">
-          Case Study
-        </a>
-        <a class="navbar-item" href="/about">
-          About
-        </a>
-        <a class="navbar-item" href="/privacy">
-          Privacy
+        <a role="button" class="navbar-burger" data-target="navigation-menu" aria-label="menu" aria-expanded="false">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
         </a>
       </div>
 
-      <div class="navbar-end">
-          {{#if isAuthenticated}}
-            <div class="navbar-item">
-              <a class="button is-primary" href="/dashboard">
-                <span class="icon">
-                  <i class="fas fa-tachometer-alt"></i>
-                </span>
-                <span>Dashboard</span>
-              </a>
-            </div>
-            <div class="navbar-item">
-              <a class="button is-primary" href="/logout">
-                <span class="icon">
-                  <i class="fas fa-sign-out-alt"></i>
-                </span>
-                <span>Logout</span>
-              </a>
-            </div>
-          {{else}}
-            <div class="navbar-item">
-              <a class="button is-primary" href="/login">
-                <span class="icon">
-                  <i class="fab fa-github"></i>
-                </span>
-                <span>Login with GitHub</span>
-              </a>
-            </div>
-          {{/if}}
+      <div class="navbar-menu" id="navigation-menu">
+        <div class="navbar-start">
+          <a class="navbar-item" href="/documentation">
+            Documentation
+          </a>
+          <a class="navbar-item" href="/case-study">
+            Case Study
+          </a>
+          <a class="navbar-item" href="/about">
+            About
+          </a>
+          <a class="navbar-item" href="/privacy">
+            Privacy
+          </a>
         </div>
+
+        <div class="navbar-end">
+            {{#if isAuthenticated}}
+              <div class="navbar-item">
+                <a class="button is-primary" href="/dashboard">
+                  <span class="icon">
+                    <i class="fas fa-tachometer-alt"></i>
+                  </span>
+                  <span>Dashboard</span>
+                </a>
+              </div>
+              <div class="navbar-item">
+                <a class="button is-primary" href="/logout">
+                  <span class="icon">
+                    <i class="fas fa-sign-out-alt"></i>
+                  </span>
+                  <span>Logout</span>
+                </a>
+              </div>
+            {{else}}
+              <div class="navbar-item">
+                <a class="button is-primary" href="/login">
+                  <span class="icon">
+                    <i class="fab fa-github"></i>
+                  </span>
+                  <span>Login with GitHub</span>
+                </a>
+              </div>
+            {{/if}}
+        </div>
+    </nav>
+
+    <div class="container information">
+      <div class="flash-messages">
+        {{#if flash_success}}
+          <article class="message is-success information">
+            <div class="message-body">
+              {{flash_success}}
+            </div>
+          </article>
+        {{/if}}
+        {{#if flash_error}}
+          <article class="message is-warning information">
+            <div class="message-body">
+              {{flash_error}}
+            </div>
+          </article>
+        {{/if}}
       </div>
     </div>
-  </nav>
 
-  <div class="container information">
-    <div class="flash-messages">
-      {{#if flash_success}}
-        <article class="message is-success information">
-          <div class="message-body">
-            {{flash_success}}
-          </div>
-        </article>
-      {{/if}}
-      {{#if flash_error}}
-        <article class="message is-warning information">
-          <div class="message-body">
-            {{flash_error}}
-          </div>
-        </article>
-      {{/if}}
-    </div>
+    {{{ body }}}
   </div>
-
-  {{{ body }}}
 
   <footer class="footer">
       <div class="content has-text-centered">

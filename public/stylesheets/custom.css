@@ -1,5 +1,13 @@
 body {
-  min-height: 100%;
+  min-height: 100vh;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.page-wrapper {
+  flex: 1;
 }
 
 .code-block {
@@ -35,6 +43,10 @@ body {
 .outer-padding {
   padding-left: 0.6rem;
   padding-right: 0.6rem;
+}
+
+.lower-padding {
+  padding-bottom: 1.5rem;
 }
 
 .landing-title-spacing {
