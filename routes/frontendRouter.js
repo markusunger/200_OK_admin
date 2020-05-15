@@ -18,7 +18,9 @@ router.use((req, res, next) => {
 
   if (req.isAuthenticated()) {
     res.locals.isAuthenticated = true;
-    res.locals.connectedApis = req.user.connectedApis;
+    // reverse connected API list to display APIs in the order of their creation date
+    // (newest first)
+    res.locals.connectedApis = req.user.connectedApis.reverse();
     res.locals.hasConnectedApis = req.user.connectedApis.length > 0;
     res.locals.githubInfo = req.user.github;
   } else {

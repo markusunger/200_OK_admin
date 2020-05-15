@@ -17,8 +17,6 @@ module.exports = {
 
     if (!result) throw (new CustomError('Could not create new API.'));
 
-    // TODO: remove once no longer necessary for testing purposes
-    console.log(`New API created: ${result.apiName}`);
     return result;
   },
 
