@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 
 const apiController = require('../controllers/apiController');
 const customizationController = require('../controllers/customizationController');
@@ -12,12 +13,23 @@ const corsOptions = {
   maxAge: 3600,
 };
 
+// configure rate limiter to prevent more than two anonymously created APIs per minute
+const creationLimiter = rateLimit({
+  windowMs: 1000 * 60,
+  max: 2,
+  handler: (req, res) => {
+    res.status(500).json({
+      error: 'Slow down, cowboy.',
+    });
+  },
+});
+
 const router = express.Router();
 
 router.use(cors(corsOptions));
 
 // AJAX call for anonymous API creation
-router.post('/create', async (req, res, next) => {
+router.post('/create', creationLimiter, async (req, res, next) => {
   try {
     const { apiName, apiKey } = await apiController.createApi();
     res.status(200).json({ apiName, apiKey });
