@@ -39,18 +39,18 @@ module.exports = {
   connectApi: async function connectApi(userId, apiName, apiKey) {
     let apiCheck;
     try {
-      apiCheck = await Api.findOne({ apiName });
+      apiCheck = await Api.findOne({ apiName: apiName.trim() });
     } catch (error) {
       throw error;
     }
     if (!apiCheck) throw new CustomError('API not found.', 400);
     if (apiCheck.isConnected) throw new CustomError('API already connected.', 403);
-    if (apiCheck.apiKey !== apiKey) throw new CustomError('Wrong API key.', 403);
+    if (apiCheck.apiKey !== apiKey.trim()) throw new CustomError('Wrong API key.', 403);
 
     // if valid connect request, register api as connected and add to user
     try {
       const result = await Api.updateOne({
-        apiName,
+        apiName: apiName.trim(),
       }, {
         isConnected: true,
       });
@@ -63,7 +63,7 @@ module.exports = {
       const result = await User.updateOne({
         'github.id': userId,
       }, {
-        $push: { connectedApis: apiName },
+        $push: { connectedApis: apiName.trim() },
       });
       if (result.nModified < 1) throw new CustomError('Something went wrong.');
     } catch (error) {
