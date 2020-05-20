@@ -2,6 +2,7 @@ const express = require('express');
 const ehb = require('express-handlebars');
 const session = require('express-session');
 const path = require('path');
+const mongoose = require('mongoose');
 
 const frontendRouter = require('./routes/frontendRouter');
 const apiRouter = require('./routes/apiRouter');
@@ -52,5 +53,20 @@ app.use('/api', express.json());
 app.use('/api', apiRouter);
 
 app.use('/', frontendRouter);
+
+// catch-all route to handle 404's
+app.use((req, res) => {
+  res.render('static/404');
+});
+
+const gracefulShutdown = async (e) => {
+  console.error(e);
+  await mongoose.disconnect();
+  process.exit();
+};
+
+process.on('SIGINT', gracefulShutdown);
+process.on('uncaughtException', gracefulShutdown);
+process.on('unhandledRejection', gracefulShutdown);
 
 module.exports = app;
