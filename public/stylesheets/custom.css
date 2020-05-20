@@ -1,5 +1,4 @@
 body {
-  min-height: 100vh;
   display: flex;
   min-height: 100vh;
   flex-direction: column;
@@ -27,6 +26,17 @@ body {
 .docs {
   margin-top: 1.4rem;
   margin-bottom: 1.8rem;
+}
+
+figure.docs > img {
+  box-shadow: 0px 0px 16px -6px #777;
+}
+
+figure.docs > figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.1rem;
+  text-align: center;
 }
 
 .spacing-top {
@@ -58,10 +68,6 @@ body {
   text-shadow: 0px 0px 5px #7fcb2d;
 }
 
-/* .hero-landing {
-  background-color: rgb(211, 217, 224);
-} */
-
 .config-list-title {
   font-weight: bold;
   margin-bottom: 0.3rem;
@@ -91,13 +97,13 @@ h1.lp-header {
   margin: 0.25rem 0 0.4rem 0 !important;
 }
 
-h2.docs.first {
-  margin-top: 0.5rem !important;
+h2.docs {
+  margin-top: 3rem !important;
   margin-bottom: 0.5rem;
 }
 
-h2.docs {
-  margin-top: 3rem !important;
+h2.docs:nth-child(1) {
+  margin-top: 0.5rem !important;
   margin-bottom: 0.5rem;
 }
 

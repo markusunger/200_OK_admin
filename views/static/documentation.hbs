@@ -1,3 +1,555 @@
 <div class="container">
-  <p class="docs">Coming soon ...</p>
+  <div class="columns">
+    <div class="column is-one-quarter">
+      <div class="box sticky">
+        <aside class="menu">
+          <p class="menu-label">Documentation</p>
+          <ul class="menu-list">
+            <li><a href="#quick-start-guide">Quick Start Guide</a></li>
+            <li><a href="#use-cases">Use Cases</a></li>
+            <li><a href="#core-principles">Core Principles</a></li>
+            <li>
+              <a href="#restful-requests">RESTful Requests</a>
+              <ul>
+                <li><a href="#resources-and-resource-identifiers">Resources And Resource Identifiers</a></li>
+                <li><a href="#using-http-requests">Using HTTP Requests</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#tools">Tools</a>
+              <ul>
+                <li><a href="#prerequisites">Prerequisites</a></li>
+                <li><a href="#request-response-inspector">Request/Response Inspector</a></li>
+                <li><a href="#customizing-endpoint-behavior">Customizing Endpoint Behavior</a></li>
+              </ul>
+            </li>
+          </ul>
+        </aside>
+      </div>
+    </div>
+    <div class="column">
+      <div class="box">
+        <h1 class="title" id="documentation">Documentation</h1>
+        <h2 class="title is-4 docs" id="quick-start-guide">Quick Start Guide</h2>
+        <p class="docs"><em>200 OK</em> provides you with a RESTful, CORS-enabled backend that only lives for 7 days
+          after it has
+          been
+          created. It can be used for prototyping ideas or learning projects where you require a drop-in, ready-to-use
+          backend
+          without any configuration.</p>
+        <p class="docs">If you are familiar with REST APIs, you already know how to use <em>200 OK</em>.</p>
+        <p class="docs">Your API backend follows the resource-based REST design approach and assumes that each request
+          to a resource
+          is
+          made
+          with purpose. If you want to store data for a user resource, you simply send a <code class="docs">POST</code>
+          request to
+          <code class="docs">https://&lt;your-API-name&gt;.200ok.app/users</code>, include a
+          <code class="docs">Content-Type: application/json</code>
+          header and send some valid JSON in your request body.</p>
+        <p class="docs">Your API automatically assigns an incrementing <code class="docs">id</code> field to that data
+          and makes it available both
+          as part
+          of the resource collection (<code class="docs">/users</code>) and an individual collection item
+          (<code class="docs">/users/&lt;id&gt;</code>).
+        </p>
+        <p class="docs">You can issue requests for all of the basic CRUD operations:</p>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Target path</th>
+              <th>Response Status Code and Body on success</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>GET</td>
+              <td>a resource collection or individual item</td>
+              <td>200, requested data in body</td>
+            </tr>
+            <tr>
+              <td>POST</td>
+              <td>a resource collection</td>
+              <td>201, request body data plus added <code class="docs">id</code> field in response body</td>
+            </tr>
+            <tr>
+              <td>PUT</td>
+              <td>an individual resource item</td>
+              <td>204, no body</td>
+            </tr>
+            <tr>
+              <td>DELETE</td>
+              <td>an individual resource item</td>
+              <td>204, no body</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="docs">Resources can be nested up to four levels deep (e.g. <code
+            class="docs">/topics/1/posts/2/comments/3/likes</code>), and
+          each
+          subresource is specific to an item of the parent resource (meaning that e.g. <code
+            class="docs">/posts/1/comments/1</code>
+          and
+          <code class="docs">/posts/2/comments/1</code> refer to two different comments).</p>
+        <p class="docs">Upon creation, you receive an API key (a 24 digit alphanumerical string). By logging in via
+          GitHub’s OAuth
+          system,
+          you can connect that API to your account and gain access to two additional features that might help in
+          tailoring
+          your
+          backend to your needs:</p>
+        <ol class="docs">
+          <li>A live inspector of your requests/responses (<a href="#Inspect-Requests-and-Responses">details</a>)</li>
+          <li>A custom endpoint creator to specify JSON responses for certain API endpoints (<a
+              href="#Customizing-Endpoint-Behavior">details</a>)</li>
+        </ol>
+        <p class="docs">For any further clarification, you can refer to the detailed documentation below.</p>
+        <h2 class="title is-4 docs" id="use-cases">Use cases</h2>
+        <p class="docs"><em>200 OK</em> is intended as a learning and prototyping tool. If you are learning frontend web
+          development,
+          you
+          might appreciate having a no-configuration API backend that you can use to test your client-side code.</p>
+        <p class="docs">Alternatively, if you are writing frontend code that will rely on a backend API later, but that
+          API does not
+          exist
+          yet, you can mock the API for your frontend calls with <em>200 OK’s</em> basic REST interface and the custom
+          endpoint
+          configurator.</p>
+        <p class="docs">You might also find yourself a participant in a hackathon, and you need a
+          <em>fire-and-forget</em>-type of
+          backend
+          without any long-lived persistence. <em>200 OK</em> is a good fit for that use case as well.</p>
+        <h2 class="title is-4 docs" id="core-principles">Core Principles of <em>200 OK</em></h2>
+        <p class="docs"><em>200 OK</em> is an <strong>ephemeral, RESTful</strong> API service:</p>
+        <ul class="docs has-bullets">
+          <li><strong>Ephemeral</strong> means that each API will have a short life span: after <strong>seven
+              days</strong> it
+            will automatically be deleted, together with all its associated data.</li>
+          <li><strong>RESTful</strong> means that the API follows the common REST (<em>Representational State
+              Transfer</em>)
+            design principles.</li>
+        </ul>
+        <p class="docs">They key concept is that of <strong>resources</strong>: A <em>200 OK</em> API can be used to
+          store, retrieve,
+          update
+          and delete information in the form of resources. Resources are represented as a collection of items (each one
+          consisting of <strong>JSON-format data</strong>), with each item having a unique resource identifier.</p>
+        <p class="docs">The whole collection of resources as well as single items of a collection can be accessed with
+          the commonly
+          used HTTP
+          request methods: <code class="docs">GET</code> for retrieval, <code class="docs">POST</code> for creation,
+          <code class="docs">PUT</code> for updating
+          and
+          <code class="docs">DELETE</code> for deletion. See the section on RESTful requests for more on how to properly
+          structure
+          your
+          requests.</p>
+        <p class="docs">Every <em>200 OK</em> API is CORS-enabled and publicly accessible, so there is no authorization
+          token or
+          other
+          method
+          of user identification, and requests can come from any source, be it an application, client-side JavaScript
+          code
+          or
+          the command line.</p>
+        <p class="docs">In order to create an API with <em>200 OK</em>, you do not need to register or signup. It’s
+          totally free and
+          you can
+          get your own API in a matter of seconds by clicking the big, shiny button labeled <em>Create your API</em> on
+          the <a href="https://200ok.app">frontpage</a>. If you have no need for any of the helpful tools that <em>200
+            OK</em>
+          provides, you only need to grab your API URL (in the form of
+          <code class="docs">https://&lt;your-API-name&gt;.200ok.app/</code> and
+          you’re ready to go.</p>
+        <p class="docs">However, there are a few useful helper tools that you can access by logging in with your GitHub
+          account and
+          connecting your API. For that, you will need to enter your API name and the API key that you receive during
+          the
+          API
+          creation step.</p>
+        <p class="docs">See the <a href="#Tools">Tools section</a> for more information.</p>
+        <h2 class="title is-4 docs" id="restful-requests">RESTful requests</h2>
+        <h3 class="title is-5 docs" id="resources-and-resource-identifiers">Resources and resource identifiers</h3>
+        <p class="docs">The basic building block of a <em>200 OK</em> API is the <strong>resource</strong>. Resources
+          are the
+          <em>nouns</em>
+          that you can use to describe collections of information, be it users, documents or comments.</p>
+        <p class="docs">A simple resource can be accessed under the URI <code
+            class="docs">/&lt;resource-name&gt;</code>. So a resource of users
+          would
+          have a fully qualified URL of <code class="docs">https://&lt;your-API-name&gt;.200ok.app/users</code>. This
+          would represent
+          a
+          resource collection, comprising a varying number of individual users.</p>
+        <p class="docs"><strong>Note</strong>: For the purposes of readability, the documentation will use the shorter
+          <strong>URI</strong>
+          format for identifying resources and resource items, e.g. <code class="docs">/users/5/images</code>. To issue
+          any valid
+          request,
+          you will of course have to provide your tool with the fully qualified <strong>URL</strong> to your API
+          resource
+          in the
+          form of <code class="docs">https://&lt;your-API-name&gt;.200ok.app/users/5/images</code>.</p>
+        <p class="docs">Each item of a resource collection automatically receives an identifier in the form of an
+          incrementing
+          integer
+          value
+          (<code class="docs">1</code>, <code class="docs">2</code> etc.). The identifier is added automatically to each
+          item when it is stored.
+          That
+          identifier can be used in the form of the URI <code
+            class="docs">/&lt;resource-name&gt;/&lt;resource-identifier&gt;</code>
+          to
+          access an individual resource item.</p>
+        <p class="docs"><code class="docs">/users/23</code> would therefore represent an item in the <code
+            class="docs">users</code> resource collection with
+          the
+          identifier <code class="docs">23</code>.</p>
+        <p class="docs">Resources can also be nested. Those nested resources belong to a specific resource item in the
+          form of
+          <code class="docs">/&lt;resource-name&gt;/&lt;resource-identifier&gt;/&lt;nested-resource-name&gt;</code>.</p>
+        <p class="docs">Going with the example above, each user could have an associated image resource.
+          <code class="docs">/users/42/images</code>
+          would
+          then represent the <code class="docs">images</code> resource collection for the user with the identifier <code
+            class="docs">42</code>.
+          Items
+          from nested resource collections can otherwise be accessed the same way as any top-level resource.</p>
+        <p class="docs">In total, you can nest resources up to <strong>4 levels deep</strong>
+          (e.g. <code class="docs">/users/1/galleries/2/images/3/comments/4</code>).</p>
+        <h3 class="title is-5 docs" id="using-http-requests">Using HTTP requests</h3>
+        <p class="docs">A <em>200 OK</em> API assumes that each resource for which a request is received should exist.
+          For that
+          reason
+          it is
+          not necessary to explicitly create or delete a resource collection. Instead, any of the following operations
+          will work
+          on any resource, whether it has been explicitly accessed before or not.</p>
+        <p class="docs">There are four kinds of actions available on a resource collection or individual items,
+          represented by an
+          HTTP
+          method:</p>
+        <ul class="has-bullets docs">
+          <li><a href="#retrieval">Retrieve collections or items</a> (<code class="docs">GET</code>)</li>
+          <li><a href="#creation">Create collection items</a> (<code class="docs">POST</code>)</li>
+          <li><a href="#updating">Update collection items</a> (<code class="docs">PUT</code>)</li>
+          <li><a href="#deletion">Delete collection items</a> (<code class="docs">DELETE</code>)</li>
+        </ul>
+        <p class="docs">The data format for a <em>200 OK</em> API is <a
+            href="https://en.wikipedia.org/wiki/JSON">JSON</a>
+          (<em>JavaScript
+            Object Notation</em>), so each resource item is represented by a valid JSON object, while resource
+          collections
+          will
+          consist of an array of JSON objects.</p>
+        <p class="docs">Any data that you send to the API (e.g. in a <code class="docs">PUT</code> or <code
+            class="docs">POST</code> request) needs to be valid
+          JSON as
+          well. In order for such a request body to be properly parsed by your API, you need to include a
+          <code class="docs">Content-Type</code> header with the value <code class="docs">application/json</code>.
+          Depending on the environment
+          from
+          which
+          you make the request, this header might get automatically set.</p>
+        <p class="docs">A complete, valid HTTP POST request to a <code class="docs">users</code> resource might look as
+          follows:</p>
+        <pre class="lang-http"><code class="docs">POST /users HTTP/1.1
+Host: &lt;your-API-name&gt;.200ok.app
+User-Agent: exampleRequest-to-200ok
+Content-Type: application/json
+Accept: */*
+Content-Length: 78
+
+{
+  &quot;name&quot;: &quot;Tom Bombadil&quot;,
+  &quot;altName&quot;: &quot;Iarwain Ben-adar&quot;,
+  &quot;isEldest&quot;: true
+}</code></pre>
+        <h4 class="title is-6 docs" id="retrieval">Retrieval</h4>
+        <p class="docs">A resource can either be retrieved as a whole (comprising all of its items) or by specifically
+          requesting a
+          certain
+          resource item. This is done by making a <code class="docs">GET</code> request, which is the default request
+          type for most
+          browsers
+          or HTTP utilities (like the <code class="docs">curl</code> command line tool or the in-browser <code
+            class="docs">fetch()</code>
+          method).
+        </p>
+        <p class="docs">A <code class="docs">GET</code> request to <code class="docs">/users</code> would return the
+          whole <code class="docs">users</code> resource
+          collection
+          as an
+          array of JSON objects, while a <code class="docs">GET</code> request to <code class="docs">/users/1337</code>
+          would only return a JSON
+          object
+          for the item from <code class="docs">users</code> with the <code class="docs">id</code> field of <code
+            class="docs">1337</code>.</p>
+        <p class="docs">As was mentioned before, there is no need to explicitly create a resource collection itself. If,
+          for example,
+          you
+          want to manage a resource for images, you can issue a <code class="docs">GET</code> request to
+          <code class="docs">https://&lt;your-API-name&gt;.200ok.app/images</code> and receive an empty array as a
+          response without
+          having to
+          create that collection first.</p>
+        <p class="docs">A successful response to a <code class="docs">GET</code> request will contain the requested data
+          as well as a <em>200
+            OK</em>
+          status code.</p>
+        <h4 class="title is-6 docs" id="creation">Creation</h4>
+        <p class="docs">To create a new resource item, a <code class="docs">POST</code> request needs to be issued to
+          the collection itself. Keep
+          in
+          mind
+          that there is no need to create the resource collection itself: If you want to send data for the first item in
+          a
+          <code class="docs">comments</code> resource collection, you can do so by directly sending JSON data to
+          <code class="docs">/comments</code>.</p>
+        <p class="docs">In that case, the request body must contain valid JSON data which will be stored as is, with one
+          notable
+          exception:
+          <em>200 OK</em> automatically issues an <code class="docs">id</code> field for any newly created item. This
+          operation will
+          overwrite any <code class="docs">id</code> field values that you provide. This acts as a guarantee for
+          consistent data and
+          will
+          prevent any accidental duplication of <code class="docs">id</code>s that might render parts of your resource
+          collection
+          inaccessible for <code class="docs">GET</code> requests.</p>
+        <p class="docs">The response to a <code class="docs">POST</code> request will contain the newly created item
+          (comprising the data you sent
+          as well
+          as the newly created <code class="docs">id</code> field). This response will carry a <em>201 Created</em>
+          status code.</p>
+        <p class="docs">If, for example, you send the following JSON request body to <code class="docs">/users</code>:
+        </p>
+        <pre class="lang-json"><code class="docs">{
+  "name": "Glorfindel",
+  "PlaceOfBirth": "Valinor",
+  "isEldest": false
+}</code></pre>
+        <p class="docs">The response to that request will contain the following JSON body: </p>
+        <pre class="lang-json"><code class="docs">{
+  "id": 1,
+  "name": "Glorfindel",
+  "PlaceOfBirth": "Valinor",
+  "isEldest": false
+}</code></pre>
+        <p class="docs">The value of <code class="docs">id</code> is an incrementing integer number that allows you easy
+          access to any resource
+          collection
+          item without having to remember or store more complicated labelling schemes.</p>
+        <h4 class="title is-6 docs" id="updating">Updating</h4>
+        <p class="docs">In order to change the data represented by a resource item, a <code class="docs">PUT</code>
+          request can be made to that
+          resource
+          item together with a JSON request body. Those requests are always considered as <strong>merge
+            operations</strong>,
+          meaning that whatever data you send with the request body gets merged with the already existing data: New
+          fields
+          are
+          added and existing fields overwritten. Consequently, data will never be deleted by a <code
+            class="docs">PUT</code> request.
+        </p>
+        <p class="docs">If, for example, you want to update the dataset created above (because you don’t subscribe to
+          the <a href="http://tolkiengateway.net/wiki/Glorfindel#Controversy">controversial theory</a> that
+          <em>Glorfindel of
+            Gondolin</em> and <em>Glorfindel of Rivendell</em> are the same person), you would send a <code
+            class="docs">PUT</code>
+          request
+          to <code class="docs">/users/5</code>. If it contains the following request body:</p>
+        <pre class="lang-json"><code class="docs">{
+  "PlaceOfBirth": null
+}</code></pre>
+        <p class="docs">The resource item would look like this afterwards:</p>
+        <pre class="lang-json"><code class="docs">{
+  "id": 1,
+  "name": "Glorfindel",
+  "PlaceOfBirth": null,
+  "isEldest": false
+}</code></pre>
+        <p class="docs">A <code class="docs">PUT</code> operation will return a <em>204 No Content</em> response status
+          code to indicate a
+          successful
+          update.</p>
+        <h4 class="title is-6 docs" id="deletion">Deletion</h4>
+        <p class="docs">Deleting resource items is a straightforward operation. By sending a <code
+            class="docs">DELETE</code> request to a
+          resource
+          item,
+          it will be removed and you will receive a <em>204 No Content</em> response upon successful completion.</p>
+        <p class="docs">Sending a <code class="docs">DELETE</code> request to <code class="docs">/users/1</code> would
+          thus delete the resource item with the
+          <code class="docs">id</code> of <code class="docs">1</code> from the <code class="docs">users</code>
+          collection.</p>
+        <p class="docs">Keep in mind that you can only delete individual resource items, not resource collections
+          themselves.</p>
+        <h2 class="title is-4 docs" id="tools">Tools</h2>
+        <h3 class="title is-5 docs" id="prerequisites">Prerequisites</h3>
+        <p class="docs">While the automatic RESTful operation mode might be sufficient for a big set of users, the need
+          for more
+          fine-grained
+          control over your API might arise. Thus <em>200 OK</em> allows you to go a step further and enable better
+          debugging
+          and configuration of your API backend.</p>
+        <p class="docs">Since those features require some form of user identification to prevent abuse, you will need to
+          create an
+          account.
+          This can be done by <a href="htps://200ok.app/login">logging in</a> via a <a
+            href="https://www.github.com/">GitHub</a>
+          account. GitHub’s OAuth system will submit only a handful of profile information to <em>200 OK</em> that is
+          necessary
+          to uniquely identify you, and <em>200 OK</em> will store only a small subset of that information:</p>
+        <ul class="docs has-bullets">
+          <li>your GitHub profile name</li>
+          <li>your GitHub user id</li>
+          <li>a link to your GitHub avatar image</li>
+        </ul>
+        <h3 class="title is-5 docs" id="connecting-and-managing-your-apis">Connecting and Managing your APIs</h3>
+        <p class="docs">Once you have logged into <em>200 OK</em> via GitHub, you have access to the <a
+            href="https://200ok.app/dashboard">Dashboard</a> in which you can manage all your APIs.</p>
+        <figure class="docs">
+          <img src="/images/docs_dashboard.png" alt="screenshot of the 200 OK API dashboard">
+          <figcaption>The API management dashboard</figcaption>
+        </figure>
+        <p class="docs">If you have created your API before registering an account, you can retroactively claim it by
+          using the
+          <em>Connect
+            another API</em> button in the Dashboard. For this you will need to enter both the name of your API (like
+          <code class="docs">noisy-darwin</code>) and the 24-digit API key that you received upon the API’s creation.
+        </p>
+        <p class="docs">If you do not remember the latter and did not save it somewhere, you are unfortunately not able
+          to connect
+          your
+          existing API. However, since API creation is free, you can always just spawn a new one.</p>
+        <figure class="docs">
+          <img src="/images/docs_connect.png" alt="screenshot of the API connection interface">
+          <figcaption>The API connection interface</figcaption>
+        </figure>
+        <p class="docs">After entering both API name and API key, clicking <em>Connect</em> will tie the API to your
+          account and
+          subsequently
+          display it under <em>Your APIs</em> in the Dashboard.</p>
+        <p class="docs">You can also directly create an API when you’re logged in by clicking <em>Create a new API</em>
+          in the
+          Dashboard or
+          by clicking the button on <a href="https://200ok.app">the starting page</a> and it will automatically be
+          connected to
+          your account without requiring the API key to do so.</p>
+        <p class="docs">You can have a <strong>maximum number of seven APIs</strong> connected to your account. If you
+          have reached
+          the
+          maximum amount, you need to wait until one of your APIs expires. This happens <strong>seven days after its
+            creation</strong>, at which point it will automatically be removed from your account and all associated data
+          will be
+          deleted.</p>
+        <p class="docs">In the Dashboard, you can select a specific API by clicking on it in the <em>Your APIs</em>
+          list. In the
+          right
+          panel
+          you will now see details about that API (like the creation date and how much time is left before it expires).
+          You can
+          also select the <em>Inspect Requests/Responses</em> tool as well as the <em>Customize Endpoint Behavior</em>
+          feature.
+        </p>
+        <h3 class="title is-5 docs" id="inspect-requests-and-responses">Inspect Requests and Responses</h3>
+        <p class="docs">When first starting the inspection tool, there will not be much to look at. But every request
+          that you issue
+          to
+          your
+          API while the window is open will be displayed in real time on the page.</p>
+        <p class="docs">You can easily try this out by executing the suggested shell command, which will use the <code
+            class="docs">curl</code>
+          tool
+          (available in both Linux and MacOS command lines by default) to make a simple <code class="docs">GET</code>
+          request.</p>
+        <p class="docs">After making your first request, the page will immediately display a two-panel view, with all
+          requests
+          displayed in a
+          list on the left side and the request and response details displayed on the right side. The request list will
+          contain
+          a short identifier in the form of <code class="docs">&lt;HTTP method&gt; &lt;requested path&gt;</code> to
+          allow for a quick
+          distinction between multiple requests.</p>
+        <figure class="docs">
+          <img src="/images/docs_inspect.png" alt="screenshot of the request/response inspection tool">
+          <figcaption>The request/response inspection tool</figcaption>
+        </figure>
+        <p class="docs">When selecting a request by clicking on it, you can inspect both the request itself as well as
+          the response
+          received
+          from your API in a tabbed view on the right side.</p>
+        <p class="docs">Being able to inspect requests and responses can provide you with valuable insight when you try
+          to debug a
+          non-working application or piece of code. Tools might hide their request implementation from you, e.g. setting
+          headers
+          that do not comply with how <em>200 OK</em> works.</p>
+        <h3 class="title is-5 docs" id="customizing-endpoint-behavior">Customizing Endpoint Behavior</h3>
+        <p class="docs">While the RESTful principles provide a lot of flexibility, your specific requirements might call
+          for API
+          behavior
+          that does not translate well to the default resource-based approach. A good example would be a web frontend
+          that
+          at
+          some point will have an API backend that allows for user login/logout at those respective endpoints:
+          <code class="docs">/login</code> and <code class="docs">/logout</code>. Those are not resources (there should
+          be no collection
+          <code class="docs">login</code> with items like <code class="docs">/login/1</code>), so the standard behavior
+          of the API will not match
+          the
+          intended use.</p>
+          <figure class="docs">
+            <img src="/images/docs_customize.png" alt="screenshot of the API endpoint customization interface">
+            <figcaption>Customizing API endpoints with your own JSON response payloads</figcaption>
+          </figure>
+        <p class="docs">The Endpoint Customization tool allows you to overwrite this standard behavior of specific
+          routes with your
+          own
+          responses. Thus, you can mock responses just like you expect them to be returned by a backend API.</p>
+        <p class="docs">Initially, your API will not have any custom endpoints, so you will see an empty selection list
+          on the left
+          side.
+          Upon clicking <em>New Custom Route</em>, you will see a customization form on the right side which gives you
+          full
+          control over route behavior.</p>
+        <p class="docs">The <em>endpoint path</em> field defines the URI of your custom endpoint and you can immediately
+          see the full
+          URL
+          under which that endpoint will be available later. For the login example above, we would therefore enter
+          <code class="docs">/login</code> into that field.</p>
+        <p class="docs">There are four checkboxes below that toggle which of the four HTTP methods that endpoint should
+          respond to:
+          <code class="docs">GET</code>, <code class="docs">POST</code>, <code class="docs">PUT</code> and <code
+            class="docs">DELETE</code>. You can select any combination
+          of
+          those
+          four. So if our login example would call only for a <code class="docs">POST</code> request to login, all other
+          checkboxes
+          besides
+          <em>Allow POST requests</em> could be disabled, making it the only valid operation for that endpoint.</p>
+        <p class="docs">If you enable a HTTP method, you can define a JSON response with which your API is going to
+          respond. Please
+          note that
+          you are required to enter <a href="https://de.wikipedia.org/wiki/JavaScript_Object_Notation">valid JSON
+            data</a>. If
+          your input is malformed or contains characters or data types not supported by JSON, you will receive a warning
+          message
+          and will be unable to save your custom endpoint.</p>
+        <p class="docs">Once you are satisfied with your custom endpoint and have passed validation for your JSON
+          response data, you
+          can
+          click <em>Save Changes</em> and will now be able to make requests to that endpoint and receive the custom
+          responses.
+        </p>
+        <p class="docs">There is currently no limit to the amount of custom endpoints you can create, so feel free to
+          customize your
+          API to
+          your own liking.</p>
+      </div>
+    </div>
+  </div>
 </div>
+
+<script src="/javascript/prism.js"></script>

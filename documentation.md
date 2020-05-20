@@ -2,11 +2,11 @@
 
 ## Quick Start Guide
 
-_200 OK_ provides you with a RESTful, CORS-enabled API that only lives for 7 days after it has been created. It can be used for quick prototypes or learning projects where you want a drop-in, ready-to-use backend without any configuration.
+_200 OK_ provides you with a RESTful, CORS-enabled backend that only lives for 7 days after it has been created. It can be used for prototyping ideas or learning projects where you require a drop-in, ready-to-use backend without any configuration.
 
-If you are familiar with REST APIs, you already know how to use a _200 OK_ API.
+If you are familiar with REST APIs, you already know how to use _200 OK_.
 
-Your API follows the resource-based REST design approach and assumes that each request to a resource is made with purpose. If you want to store data for a user resource, you simply send a `POST` request to `https://<your-API-name>.200ok.app/users`, include a `Content-Type: application/json` header and send some valid JSON in your request body.
+Your API backend follows the resource-based REST design approach and assumes that each request to a resource is made with purpose. If you want to store data for a user resource, you simply send a `POST` request to `https://<your-API-name>.200ok.app/users`, include a `Content-Type: application/json` header and send some valid JSON in your request body.
 
 Your API automatically assigns an incrementing `id` field to that data and makes it available both as part of the resource collection (`/users`) and an individual collection item (`/users/<id>`).
 
@@ -21,12 +21,20 @@ You can issue requests for all of the basic CRUD operations:
 
 Resources can be nested up to four levels deep (e.g. `/topics/1/posts/2/comments/3/likes`), and each subresource is specific to an item of the parent resource (meaning that e.g. `/posts/1/comments/1` and `/posts/2/comments/1` refer to two different comments).
 
-Upon creation, you receive an API key (a 24 digit, alphanumerical string). When you decide to create an account by logging in via GitHub, you can connect that API to your account. Once you have done that, you have access to two tools:
+Upon creation, you receive an API key (a 24 digit, alphanumerical string). By logging in via GitHub's OAuth system, you can connect that API to your account and gain access to two additional features that might help in tailoring your backend to your needs:
 
 1. A live inspector of your requests/responses ([details](#Inspect-Requests-and-Responses))
 2. A custom endpoint creator to specify JSON responses for certain API endpoints ([details](#Customizing-Endpoint-Behavior))
 
 For any further clarification, you can refer to the detailed documentation below.
+
+## Use cases
+
+_200 OK_ is intended as a learning and prototyping tool. If you are learning frontend web development, you might appreciate having a no-configuration API backend that you can use to test your client-side code.
+
+Alternatively, if you are writing frontend code that will rely on a backend API later, but that API does not exist yet, you can mock the API for your frontend calls with _200 OK's_ basic REST interface and the custom endpoint configurator. 
+
+You might also find yourself a participant in a hackathon, and you need a _fire-and-forget_-type of backend without any long-lived persistence. _200 OK_ is a good fit for that use case as well. 
 
 ## Core Principles of _200 OK_
 
@@ -47,14 +55,6 @@ However, there are a few useful helper tools that you can access by logging in w
 
 See the [Tools section](#Tools) for more information. 
 
-## Use cases
-
-_200 OK_ is intended as a learning and prototyping tool. If you are learning frontend web development, you might appreciate having a no-configuration API backend that you can use to test your client-side code.
-
-Alternatively, if you are writing frontend code that will rely on a backend API later, but the code does not yet exist, you can mock the API for your frontend calls with _200 OK_. 
-
-You might also find yourself a participant in a hackathon, and you need a _fire-and-forget_-type of backend without any long-lived persistence. 200 OK is a good fit for that use case as well. 
-
 ## RESTful requests
 
 ### Resources and resource identifiers 
@@ -69,9 +69,9 @@ Each item of a resource collection automatically receives an identifier in the f
 
 `/users/23` would therefore represent an item in the `users` resource collection with the identifier `23`. 
 
-Resources can also be nested. Going with example above, each user could have an associated image resource. Nested resources belong to a specific resource item in the form of `/<resource-name>/<resource-identifier>/<nested-resource-name>`.
+Resources can also be nested. Those nested resources belong to a specific resource item in the form of `/<resource-name>/<resource-identifier>/<nested-resource-name>`.
 
-`/users/42/images` would represent the _images_ resource collection for the user with the identifier `42`. Items from nested resource collections can otherwise be accessed the same way as any top-level resource.
+Going with the example above, each user could have an associated image resource. `/users/42/images` would then represent the `images` resource collection for the user with the identifier `42`. Items from nested resource collections can otherwise be accessed the same way as any top-level resource.
 
 In total, you can nest resources up to **4 levels deep** (e.g. `/users/1/galleries/2/images/3/comments/4`). 
  
@@ -150,7 +150,7 @@ The value of `id` is an incrementing integer number that allows you easy access 
 
 #### Updating
 
-In order to change the data represented by a resource item, a `PUT` request can be made to that resource item together with a JSON request body. Those requests are always considered as **merge operations**, meaning that whatever data you send with the request body gets merged with the already existing data: New fields are added and existing fields get overwritten. Consequently, data will never be deleted by a `PUT` request.
+In order to change the data represented by a resource item, a `PUT` request can be made to that resource item together with a JSON request body. Those requests are always considered as **merge operations**, meaning that whatever data you send with the request body gets merged with the already existing data: New fields are added and existing fields overwritten. Consequently, data will never be deleted by a `PUT` request.
 
 If, for example, you want to update the dataset created above (because you don't subscribe to the [controversial theory](http://tolkiengateway.net/wiki/Glorfindel#Controversy) that _Glorfindel of Gondolin_ and _Glorfindel of Rivendell_ are the same person), you would send a `PUT` request to `/users/5`. If it contains the following request body:
 
@@ -177,13 +177,15 @@ A `PUT` operation will return a _204 No Content_ response status code to indicat
 
 Deleting resource items is a straightforward operation. By sending a `DELETE` request to a resource item, it will be removed and you will receive a _204 No Content_ response upon successful completion.
 
+Sending a `DELETE` request to `/users/1` would thus delete the resource item with the `id` of `1` from the `users` collection.
+
 Keep in mind that you can only delete individual resource items, not resource collections themselves.
  
 ## Tools
 
 ### Prerequisites
 
-While the automatic RESTful operation mode will likely be sufficient for a big set of users, the need for more fine-grained control over your API might arise. Thus _200 OK_ provides a set of tools that enable better debugging and configuration of an API.
+While the automatic RESTful operation mode might be sufficient for a big set of users, the need for more fine-grained control over your API might arise. Thus _200 OK_ allows you to go a step further and enable better debugging and configuration of your API backend.
 
 Since those features require some form of user identification to prevent abuse, you will need to create an account. This can be done by [logging in](htps://200ok.app/login) via a [GitHub](https://www.github.com/) account. GitHub's OAuth system will submit only a handful of profile information to _200 OK_ that is necessary to uniquely identify you, and _200 OK_ will store only a small subset of that information:
 
@@ -231,7 +233,7 @@ While the RESTful principles provide a lot of flexibility, your specific require
 
 ![/screenshot_of_customization_tool.png]
 
-The Endpoint Customization tool allows you to overwrite this standard behavior of specific routes with your own responses.
+The Endpoint Customization tool allows you to overwrite this standard behavior of specific routes with your own responses. Thus, you can mock responses just like you expect them to be returned by a backend API.
 
 Initially, your API will not have any custom endpoints, so you will see an empty selection list on the left side. Upon clicking _New Custom Route_, you will see a customization form on the right side which gives you full control over route behavior.
 
