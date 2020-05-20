@@ -31,6 +31,8 @@ $button-hover-color: $lighter-dark;
 $button-text-color: $light-green;
 $body-background-color: rgb(241, 236, 236);
 $input-border-color: $light-green;
+$menu-item-active-color: $light-green;
+$menu-item-active-background-color: $dark-blue-grey;
 
 // import required sass files from bulma package
 @import "../../node_modules/bulma/sass/utilities/_all.sass";
