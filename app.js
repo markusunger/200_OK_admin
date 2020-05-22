@@ -54,9 +54,22 @@ app.use('/api', apiRouter);
 
 app.use('/', frontendRouter);
 
-// catch-all route to handle 404's
-app.use((req, res) => {
-  res.render('static/404');
+// catch-all route to forward 404 errors to error handler
+app.use((req, res, next) => {
+  const error = new Error('Page not found.');
+  error.status = 404;
+  next(error);
+});
+
+// error handler to send proper 404 and 500 pages
+app.use((err, req, res, next) => {
+  if (app.get('env') === 'development') console.error(err);
+  res.status(err.status || 500);
+  if (err.status === 404) {
+    res.render('static/404');
+  } else {
+    res.render('static/500');
+  }
 });
 
 const gracefulShutdown = async (e) => {
