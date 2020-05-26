@@ -1,0 +1,66 @@
+#!/usr/bin/node
+
+// this tool can be run by a cronjob every 24 hrs, deleting all APIs and their
+// associated data when they don't meet the cutoff date (current date - 7 days)
+// for their creation
+
+// deletion is not done in transactions (since they're only supported with replica
+// sets or sharded clusters), so logging will provide the only way to see if
+// something went wrong and the db might be inconsistent
+
+// this reuses the API deletion functionality from the app itself
+
+/* eslint-disable no-console */
+/* eslint-disable global-require */
+
+
+(async () => {
+  const db = await require('../services/data');
+  const apiController = require('../controllers/apiController');
+
+  const API_EXPIRATION_DAYS = 7;
+
+  // first, register handlers for unexpected crashes
+  process.on('uncaughtException', async (error) => {
+    console.error('Unexpected shutdown!');
+    console.error(error);
+    process.exit(-1);
+  });
+
+  process.on('unhandledRejection', async (error) => {
+    console.error('Promise rejection not handled properly!');
+    console.error(error);
+    process.exit(-1);
+  });
+
+  // logger function to add timestamps to logs
+  function log(msg) {
+    const date = new Date();
+    // (all hail the great date method getMonth() that treats the first month as a 0)
+    const timestamp = `[${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}]`;
+    console.log(`${timestamp} ${msg}`);
+  }
+
+  // find all APIs that need to be deleted (names only)
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - API_EXPIRATION_DAYS);
+  let toDelete;
+
+  try {
+    const queryData = await db.collection('apiConfig').find({
+      createdAt: { $lt: cutoffDate },
+    });
+    toDelete = await queryData.map(data => data.apiName).toArray();
+  } catch (error) {
+    throw error;
+  }
+  log(`The following APIs will be deleted: ${toDelete.join(', ')}`);
+
+  // sequentially run deletion function for all API names
+  await toDelete.reduce(async (promise, apiName) => {
+    await promise;
+    await apiController.deleteApi(apiName);
+  }, Promise.resolve(null));
+
+  process.exit();
+})();
