@@ -28,7 +28,7 @@ const router = express.Router();
 
 router.use(cors(corsOptions));
 
-// AJAX call for anonymous API creation
+// endpoint for anonymous API creation
 router.post('/create', creationLimiter, async (req, res, next) => {
   try {
     const { apiName, apiKey } = await apiController.createApi();
@@ -38,7 +38,7 @@ router.post('/create', creationLimiter, async (req, res, next) => {
   }
 });
 
-// AJAX call for API details from the user-specific dashboard
+// endpoint for API details from the user-specific dashboard
 router.get('/info/:apiName', auth.ensureAuthentication, auth.ensureOwnership, async (req, res, next) => {
   const { apiName } = req.params;
   if (!apiName) next(new CustomError('No API name provided.', 400));
@@ -51,7 +51,7 @@ router.get('/info/:apiName', auth.ensureAuthentication, auth.ensureOwnership, as
   }
 });
 
-// AJAX call for customized endpoints from the customization page
+// endpoint for customized endpoints from the customization page
 router.get('/customize/:apiName', auth.ensureAuthentication, auth.ensureOwnership, async (req, res, next) => {
   const { apiName } = req.params;
   if (!apiName) next(new CustomError('No API name provided.', 400));
@@ -64,7 +64,7 @@ router.get('/customize/:apiName', auth.ensureAuthentication, auth.ensureOwnershi
   }
 });
 
-// AJAX call for saving custom endpoint behavior from the customization page
+// endpoint for saving custom endpoint behavior from the customization page
 router.post('/customize/:apiName/save', auth.ensureAuthentication, auth.ensureOwnership, async (req, res, next) => {
   const { apiName } = req.params;
   if (!apiName) next(new CustomError('No API name provided.', 400));
@@ -79,7 +79,7 @@ router.post('/customize/:apiName/save', auth.ensureAuthentication, auth.ensureOw
   }
 });
 
-// AJAX call for deletion of custom endpoint from the customization page
+// endpoint for deletion of custom endpoint from the customization page
 router.delete('/customize/:apiName/:path', auth.ensureAuthentication, auth.ensureOwnership, async (req, res, next) => {
   const { apiName, path } = req.params;
   if (!apiName) next(new CustomError('No API name provided.', 400));
@@ -93,7 +93,7 @@ router.delete('/customize/:apiName/:path', auth.ensureAuthentication, auth.ensur
   }
 });
 
-// AJAX call for SSE stream from the live debugging page
+// endpoint for SSE stream from the live debugging page
 router.get('/debug-stream/:apiName', auth.ensureAuthentication, auth.ensureOwnership, (req, res, next) => {
   const { apiName } = req.params;
   if (!apiName) next(new CustomError('No API name provided', 400));

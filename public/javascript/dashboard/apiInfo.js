@@ -37,7 +37,7 @@ export default function ApiInfo({ selectedApi }) {
       return html`
         <div class="box has-text-centered">
           <h3 class="title is-5">${apiName}</h3>
-          <p>Aavailable under <a href="https://${apiName}.200ok.app">${apiName}.200ok.app</a></p>
+          <p>Available under <a href="https://${apiName}.200ok.app">${apiName}.200ok.app</a></p>
           <p>Expires ${expiresIn}</p>
           <p class="is-small">(Created on ${createdAtFormatted})</p>
           <div class="information">
@@ -48,12 +48,22 @@ export default function ApiInfo({ selectedApi }) {
               <span>Inspect Requests/Responses</span>
             </a>
           </div>
+
           <div class="information">
             <a class="button is-medium is-primary is-fullwidth" href="/customize/${apiName}">
               <span class="icon is-medium">
                 <i class="fas fa-pen"></i>
               </span>
               <span>Customize Endpoint Behavior</span>
+            </a>
+          </div>
+
+          <div class="warning">
+            <a class="button is-medium is-danger is-fullwidth" href="/delete/${apiName}">
+              <span class="icon is-medium">
+                <i class="fas fa-trash-alt"></i>
+              </span>
+              <span>Delete this API</span>
             </a>
           </div>
         </div>

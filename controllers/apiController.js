@@ -1,3 +1,10 @@
+// access to native db driver for API deletion operations
+let db;
+(async () => {
+  // eslint-disable-next-line global-require
+  db = await require('../services/data');
+})();
+
 const Api = require('../models/api');
 const User = require('../models/user');
 const subscriber = require('../services/subscriber');
@@ -18,6 +25,78 @@ module.exports = {
     if (!result) throw (new CustomError('Could not create new API.'));
 
     return result;
+  },
+
+  // deletes an existing API
+  // this uses the native MongoDB driver on the connection as returned by services/data
+  // this feels a bit hacky but uses the most effective interface for what should be a
+  // transactional operation (which is not possible in my current setup, shouldn't have used Mongo)
+  deleteApi: async function deleteApi(apiName) {
+    if (!db) return false;
+    console.log(`Deleting API: ${apiName} ...`);
+
+    // delete data and custom endpoint collections
+    // (if they exist, dropping them without check would interrupt the connection, thx Mongo)
+    try {
+      let collectionList = await db.listCollections().toArray();
+      collectionList = collectionList.map(c => c.name);
+
+      const hasData = collectionList.includes(`api:${apiName}`);
+      if (hasData) {
+        await db.dropCollection(`api:${apiName}`);
+        console.log(`Collection api:${apiName} dropped.`);
+      } else {
+        console.log(`Collection api:${apiName} didn't exist.`);
+      }
+
+      const hasCustom = collectionList.includes(`pre:${apiName}`);
+      if (hasCustom) {
+        await db.dropCollection(`pre:${apiName}`);
+        console.log(`Collection pre:${apiName} dropped.`);
+      } else {
+        console.log(`Collection pre:${apiName} didn't exist.`);
+      }
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+
+    try {
+      // remove residual id counters
+      const idRemoval = await db.collection('idStore').deleteMany({
+        resource: { $regex: `^${apiName}` },
+      });
+      console.log(`${idRemoval.deletedCount} entries from id counter collection removed.`);
+
+      // remove API from connected API list of user
+      const userCleanup = await db.collection('users').findOneAndUpdate({
+        connectedApis: apiName,
+      }, {
+        $pull: {
+          connectedApis: apiName,
+        },
+      });
+      if (userCleanup.value) {
+        console.log(`Removed entry from user ${userCleanup.value.github.name}'s collection.`);
+      } else {
+        console.log('API was not connected to a user.');
+      }
+
+      // remove API from central api config collection
+      const apiRemoval = await db.collection('apiConfig').deleteOne({
+        apiName,
+      });
+      if (apiRemoval.deletedCount > 0) {
+        console.log('Successfully removed API from the database.');
+      } else {
+        console.log('WARNING! API was not fully removed from the database (entry in apiConfig not found or deleted).');
+      }
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+
+    return true;
   },
 
   // returns information about a specific API

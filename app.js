@@ -8,7 +8,7 @@ const frontendRouter = require('./routes/frontendRouter');
 const apiRouter = require('./routes/apiRouter');
 
 const cfg = require('./services/config');
-require('./services/data')(cfg);
+require('./services/data');
 const authService = require('./services/auth')(cfg);
 
 const app = express();
