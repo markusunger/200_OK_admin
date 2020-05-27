@@ -132,17 +132,36 @@ The web application that subscribes to request/response information on Redis wil
 
 The most commonly used technique are WebSockets that allow bidirectional communication between clients and a server. This kind of communication comes with its own cost, though, on both sides of the process. The server needs a separate WebSocket connection handler while the client will need to create a dedicated connection as well.
 
-Since the flow of information for the request/response inspection is limited to a single direction (from the server to the client), another solution provides a better fit: _Server-Sent Events_ (SSE). Server-sent events have much lighter requirements. They are served through a normal endpoint in the existing server application, foregoing the need for a dedicated listener. Browsr-side, SSE are realized through the browser's `EventSource` interface supported by all existing modern browsers.
+Since the flow of information for the request/response inspection is limited to a single direction (from the server to the client), another solution provides a better fit: _Server-Sent Events_ (SSE). Server-sent events have much lighter requirements. They are served through a normal endpoint in the existing server application, foregoing the need for a dedicated listener. Browser-side, SSE are realized through the browser's `EventSource` interface supported by all existing modern browsers.
 
+Besides being unidirectional, SSE come with the disadvantage of being restricted by the maximum amount of open HTTP connections for a domain that is enforced in the browser (at least when not using HTTP/2). Since there is only the need for one SSE connection in the case of _200 OK_, this does not matter here. 
 
+Since the browser fetches SSE from a normal API endpoint, code complexity could be kept low by being able to reuse all existing authentication and request handling functionality. That made Server-sent events a perfect fit for this particular use case.
 
+### Full CORS support
 
-- Redis Pubsub + SSE for real-time inspection of requests/responses
-  vs. WebSockets vs. document store
-- implementing CORS support from scratch
-- System Architecture (NGINX reverse proxy and SSL termination point, wildcard SSL cert)
+External APIs are most useful when they can be accessed from any environment. However, browser application code suffers from one security-related restriction when it comes to external API access: the same-origin policy, a mechanism in all major browsers that restricts access to resources from different origins than the script or document originates from.
+
+To allow valid cross-origin requests, there is a standard called CORS (Cross-Origin Resource Sharing) that needs server explicitly state whether a host is permitted to make a request to it. With the paradigm shift towards frontend-loaded web applications running in the browser, an API needs to support CORS to enable usage in those browser environments.
+
+The simplest form of access control with regards to the request maker's origin is a simple response header (`Access-Control-Allow-Origin`) that states whether a response will be exposed to a browser script. A wildcard value (`*`) is a carte blanche but does not solve all CORS-related issues. Whenever a non-simple request is made (as defined by a set of criteria[3]), a special `OPTIONS` method request is made first (called a _preflight request_). Since a _200 OK_ API supports HTTP methods that always require such a preflight request, support for those needs to be built in as well.
+
+Instead of relying on a third-party library, _200 OK_ implements its own CORS library. This allowed for making precise preflight responses. One of the preflight headers asks the server for its support for the actual request's HTTP method. Since those allowed methods can vary when a _200 OK_ user creates custom endpoint responses (thus controlling which methods should be allowed), the associated response headers needs to accurately reflect the circumstances under which a request should be allowed.
+
+### System Architecture
+
+Despite being a single-instance deployment, _200 OK_ consists of different parts that need to be put into a cohesive system architecture:
+
+- the main API backend
+- the administrative web interface application (including a backend and frontend scripts)
+- the main data store (MongoDB)
+- the publish/subscribe message broker (Redis)
+
+Routing requests to the correct application is one requirement already described earlier. Supporting SSL-encrypted traffic is another one, creating the need for either an SSL termination point or SSL support for both applications, as well as certification for all API subdomains.
+
+< TODO: add text here once decision about dockerized deployment is final >
 
 
 [^1]: See: The GitHub API.
 [^2]: https://en.wikipedia.org/wiki/Nested_set_model
-
+[^3]: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#Simple_requests
