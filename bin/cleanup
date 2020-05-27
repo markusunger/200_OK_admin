@@ -54,6 +54,12 @@
   } catch (error) {
     throw error;
   }
+
+  if (toDelete.length === 0) {
+    log('No APIs ripe for deletion.');
+    process.exit();
+  }
+
   log(`The following APIs will be deleted: ${toDelete.join(', ')}`);
 
   // sequentially run deletion function for all API names

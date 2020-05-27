@@ -268,7 +268,7 @@
           will delete all items in the <code class="docs">users</code> collection as well as all nested resource collections
           and their items.</p>
           <p class="docs">So when deleting <code class="docs">/users</code>, if there was a collection <code class="docs">
-            /users/1/comments</code>, it will be deleted as well. Be aware of the consequences of deleting collections.</p>
+            /users/1/comments</code>, it will be deleted as well. Be aware of the consequences of deleting whole collections!</p>
         <h2 class="title is-4 docs" id="tools">Tools</h2>
         <h3 class="title is-5 docs" id="prerequisites">Prerequisites</h3>
         <p class="docs">While the automatic RESTful operation mode might be sufficient for a big set of users, the need
@@ -288,8 +288,7 @@
         <p class="docs">Once you have logged into <em>200 OK</em> via GitHub, you have access to the <a
             href="https://200ok.app/dashboard">Dashboard</a> in which you can manage all your APIs.</p>
         <figure class="docs">
-          <img src="/images/docs_dashboard.png" alt="screenshot of the 200 OK
-            API dashboard">
+          <img src="/images/docs_dashboard.png" alt="screenshot of the 200 OK API dashboard">
           <figcaption>The API management dashboard</figcaption>
         </figure>
         <p class="docs">If you have created your API before registering an account, you can retroactively claim it by
@@ -299,8 +298,7 @@
         <p class="docs">If you do not remember the latter and did not save it somewhere, you are unfortunately not able
           to connect your existing API. However, since API creation is free, you can always just spawn a new one.</p>
         <figure class="docs">
-          <img src="/images/docs_connect.png" alt="screenshot of the API
-            connection interface">
+          <img src="/images/docs_connect.png" alt="screenshot of the API connection interface">
           <figcaption>The API connection interface</figcaption>
         </figure>
         <p class="docs">After entering both API name and API key, clicking <em>Connect</em> will tie the API to your
@@ -309,13 +307,15 @@
           in the Dashboard or by clicking the button on <a href="https://200ok.app">the starting page</a> and it will
           automatically be connected to your account without requiring the API key to do so.</p>
         <p class="docs">You can have a <strong>maximum number of seven APIs</strong> connected to your account. If you
-          have reached the maximum amount, you need to wait until one of your APIs expires. This happens <strong>seven
+          have reached the maximum amount, you can delete your existing connected APIs from the dashboard, or you
+          can simply wait until one of your APIs expires. This happens <strong>seven
             days after its creation</strong>, at which point it will automatically be removed from your account and all
           associated data will be deleted.</p>
         <p class="docs">In the Dashboard, you can select a specific API by clicking on it in the <em>Your APIs</em>
           list. In the right panel you will now see details about that API (like the creation date and how much time is
           left before it expires). You can also select the <em>Inspect Requests/Responses</em> tool as well as the
-          <em>Customize Endpoint Behavior</em> feature. </p>
+          <em>Customize Endpoint Behavior</em> feature. Lastly, at the bottom of the API detail window, you find the
+          link for the manual deletion of an API and all data linked to it.</p>
         <h3 class="title is-5 docs" id="request-response-inspector">Request And Response Inspector</h3>
         <p class="docs">When first starting the inspection tool, there will not be much to look at. But every request
           that you issue to your API while the window is open will be displayed in real time on the page.</p>
