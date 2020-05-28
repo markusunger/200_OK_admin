@@ -1,8 +1,9 @@
 <div class="container">
   <div class="box">
     {{#if result}}
-      <p class="information">You have enabled API authorization. Your API is now in <strong>private mode.</strong></p>
-      <p class="information">In order to make requests to <code>{{apiName}}.200ok.app</code> you will now need to add an <code>Authorization</code> header to each request:</p>
+      <p class="information">You have enabled API authorization. Your API '{{apiName}}' is now in <strong>private mode.</strong></p>
+      <p class="information">In order to make requests to <code>{{apiName}}.200ok.app</code> you will now need to add an <code>Authorization</code> header to each request that submits the following <strong>bearer token:</strong> <code>{{result}}</code></p>
+      <p class="information">The full header needs to look like this in order to make successful requests:</p>
       <pre class="lang-http"><code>Authorization: Bearer {{result}}</code></pre>
       <p class="information">If you ever forget your Authorization bearer token, you will need to disable private mode from the dashboard and re-enable it to generate a new token.</p>
     {{else}}

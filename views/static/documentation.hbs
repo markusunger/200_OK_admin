@@ -20,6 +20,7 @@
               <ul>
                 <li><a href="#prerequisites">Prerequisites</a></li>
                 <li><a href="#connecting-and-managing-your-apis">Connecting and Managing your APIs</a></li>
+                <li><a href="#api-authorization">API Authorization</a></li>
                 <li><a href="#request-response-inspector">Request/Response Inspector</a></li>
                 <li><a href="#customizing-endpoint-behavior">Customizing Endpoint Behavior</a></li>
               </ul>
@@ -192,10 +193,18 @@
           header might get automatically set.</p>
         <p class="docs">A complete, valid HTTP POST request to a <code
             class="docs">users</code> resource might look as follows:</p>
-        <pre class="lang-http"><code class="docs">POST /users HTTP/1.1 Host: &lt;your-API-name&gt;.200ok.app User-Agent:
-            exampleRequest-to-200ok Content-Type: application/json Accept: */* Content-Length: 78 { &quot;name&quot;:
-            &quot;Tom Bombadil&quot;, &quot;altName&quot;: &quot;Iarwain Ben-adar&quot;, &quot;isEldest&quot;: true
-            }</code></pre>
+        <pre class="lang-http"><code class="docs">POST /users HTTP/1.1 
+Host: &lt;your-API-name&gt;.200ok.app
+User-Agent: exampleRequest-to-200ok
+Content-Type: application/json
+Accept: */*
+Content-Length: 78
+          
+{
+  "name": "Tom Bombadil",
+  "altName": "Iarwain Ben-adar",
+  "isEldest": true
+}</code></pre>
         <h4 class="title is-6 docs" id="retrieval">Retrieval</h4>
         <p class="docs">A resource can either be retrieved as a whole (comprising all of its items) or by specifically
           requesting a certain resource item. This is done by making a <code class="docs">GET</code> request, which is
@@ -230,11 +239,18 @@
           will carry a <em>201 Created</em> status code.</p>
         <p class="docs">If, for example, you send the following JSON request body to <code class="docs">/users</code>:
         </p>
-        <pre class="lang-json"><code class="docs">{ "name": "Glorfindel", "PlaceOfBirth": "Valinor", "isEldest": false
-            }</code></pre>
+        <pre class="lang-json"><code class="docs">{
+  "name": "Glorfindel",
+  "PlaceOfBirth": "Valinor",
+  "isEldest": false
+}</code></pre>
         <p class="docs">The response to that request will contain the following JSON body: </p>
-        <pre class="lang-json"><code class="docs">{ "id": 1, "name": "Glorfindel", "PlaceOfBirth": "Valinor",
-            "isEldest": false }</code></pre>
+        <pre class="lang-json"><code class="docs">{
+  "id": 1,
+  "name": "Glorfindel",
+  "placeOfBirth": "Valinor",
+  "isEldest": false
+}</code></pre>
         <p class="docs">The value of <code class="docs">id</code> is an incrementing integer number that allows you easy
           access to any resource collection item without having to remember or store more complicated labelling schemes.
         </p>
@@ -251,10 +267,16 @@
           <code
             class="docs">PUT</code> request to <code class="docs">/users/5</code>. If it contains the following request
           body:</p>
-        <pre class="lang-json"><code class="docs">{ "PlaceOfBirth": null }</code></pre>
+        <pre class="lang-json"><code class="docs">{
+  "placeOfBirth": null
+}</code></pre>
         <p class="docs">The resource item would look like this afterwards:</p>
-        <pre class="lang-json"><code class="docs">{ "id": 1, "name": "Glorfindel", "PlaceOfBirth": null, "isEldest":
-            false }</code></pre>
+        <pre class="lang-json"><code class="docs">{
+  "id": 1,
+  "name": "Glorfindel",
+  "placeOfBirth": null,
+  "isEldest": false
+}</code></pre>
         <p class="docs">A <code class="docs">PUT</code> operation will return a <em>204 No Content</em> response status
           code to indicate a successful update.</p>
         <h4 class="title is-6 docs" id="deletion">Deletion</h4>
@@ -312,10 +334,27 @@
             days after its creation</strong>, at which point it will automatically be removed from your account and all
           associated data will be deleted.</p>
         <p class="docs">In the Dashboard, you can select a specific API by clicking on it in the <em>Your APIs</em>
-          list. In the right panel you will now see details about that API (like the creation date and how much time is
-          left before it expires). You can also select the <em>Inspect Requests/Responses</em> tool as well as the
-          <em>Customize Endpoint Behavior</em> feature. Lastly, at the bottom of the API detail window, you find the
-          link for the manual deletion of an API and all data linked to it.</p>
+          list. In the right panel you will now see details about that API: The creation date, how much time is
+          left before the API expires and whether it is in public or private mode.</p>
+          <p class="docs">Below that, you will find several option buttons. You can enable or disable the
+          API Authorization feature which puts your selected API in either private or public mode. 
+          By using the <em>Inspect Requests/Responses</em> tool, you can see a real-time overview of requests you
+          make to an API as well as their accompanying responses. The <em>Customize Endpoint Behavior</em> feature
+          allows you to define your own JSON responses for certain endpoints. Lastly, at the bottom of the API 
+          detail window, you find the link for the manual deletion of an API if you either don't need it anymore 
+          or want to start fresh with a new one.</p>
+        <p class="docs">Be aware, though, that you will lose all data stored via the API if you delete and there is no way to
+          reverse that decision!</p>
+          <h3 class="title is-5 docs" id="api-authorization">API Authorization</h3>
+          <p class="docs">With API authorization enabled, you will need to send an <code>Authorization</code> header 
+          field with all your API requests. Once you click the <em>Enable API Authorization</em> button, you will 
+          receive a <strong>bearer token</strong> that will authorize your requests. The full header required for 
+          successful authorization would look like this:</p>
+        <pre class="lang-http"><code>Authorization: Bearer &lt;your-token&gt;</code></pre>
+          <p class="docs">You will receive a response with a <code>401 Unauthorized</code> status code and a descriptive error message
+          if your requests lack the appropriate header or omit any necessary information.</p>
+          <p class="docs">To disable authorization, click the <em>Disable API Authorization</em> button after
+          selecting the respective API from the dashboard list.</p>
         <h3 class="title is-5 docs" id="request-response-inspector">Request And Response Inspector</h3>
         <p class="docs">When first starting the inspection tool, there will not be much to look at. But every request
           that you issue to your API while the window is open will be displayed in real time on the page.</p>
