@@ -5,6 +5,9 @@ let db;
   db = await require('../services/data');
 })();
 
+const crypto = require('crypto');
+const bcrypt = require('bcrypt');
+
 const Api = require('../models/api');
 const User = require('../models/user');
 const subscriber = require('../services/subscriber');
@@ -150,6 +153,47 @@ module.exports = {
     }
 
     return true;
+  },
+
+  // enables or disables auth mode for an API, creates and saves bearer token as well
+  authApi: async function authApi(apiName) {
+    const createBearerToken = () => crypto.randomBytes(30).toString('base64');
+
+    let isPrivate;
+    let bearerToken;
+    let saveBearerToken;
+
+    try {
+      const result = await Api.findOne({ apiName });
+      if (!result) throw new CustomError('API not found.');
+      ({ isPrivate } = result);
+    } catch (error) {
+      throw error;
+    }
+
+    if (!isPrivate) {
+      bearerToken = createBearerToken();
+      try {
+        saveBearerToken = await bcrypt.hash(bearerToken, 10);
+      } catch (error) {
+        throw error;
+      }
+    }
+    const isNewPrivate = !isPrivate;
+
+    try {
+      const result = await Api.updateOne({
+        apiName,
+      }, {
+        isPrivate: isNewPrivate,
+        bearerToken: saveBearerToken || '',
+      });
+      if (!result.nModified < 1) throw new CustomError('Something went wrong.');
+    } catch (error) {
+      throw error;
+    }
+
+    return isNewPrivate ? bearerToken : false;
   },
 
   // creates and immediately connects an API to a specific user (that needs to be logged in)

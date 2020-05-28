@@ -2,9 +2,11 @@
 
 ## Abstract
 
-_200 OK_ is a no-configuration, ephemeral backend service that provisions RESTful APIs. Following the REST architecture, each API adheres to a resource-based model of storing and delivering data. In addition to that, an API can be augmented to mock particular responses while also providing real-time inspection of the request/response cycle. With its no-setup approach _200 OK_ was developed as a zero-setup drop-in backend for learning projects, hackathons or to serve as a temporary mock API.
+_200 OK_ is a no-configuration, ephemeral backend service that provisions RESTful APIs. Following the REST architecture, each API adheres to a resource-based model of storing and delivering data. In addition to that, an API can be augmented to mock particular responses while also providing real-time inspection of the request/response cycle. _200 OK_ was developed as a zero-setup drop-in backend for learning projects, hackathons or to serve as a temporary mock API.
 
-Obtaining a personal API is as simple as clicking a button and no registration or signup is required in order to use the RESTful operation mode of the API. Multiple levels of nested resources are supported along with the four traditional REST operations of data retrieval, creation, updating and deletion. Each API handles all valid JSON payloads, supports CORS and is therefore easy to integrate in all kinds of projects, from React frontends over exploratory code sandbox scripts to command-line applications.
+Obtaining a personal API is as simple as clicking a button and no registration or signup is required in order to use the RESTful operation mode of the API.  The four traditional REST operations of data retrieval, creation, updating and deletion are supported together with up to four levels of nested resources. Each API handles valid JSON payloads, supports CORS and is therefore easy to integrate in all kinds of projects. From React frontends over exploratory code sandbox scripts to command-line applications, _200 OK_ supports many CRUD-based use cases for whom a RESTful data store is sufficient.
+
+The optional tooling provides an easy way to see all requests and their accompanying responses made to a user's API, broken up into an informative header and body display. With a simple interface, users can also mock responses for specific endpoints. By 
 
 The _200 OK_ deployment consists of two Node.js processes behind an NGINX reverse proxy. The two processes share a NoSQL data store (MongoDB) that stores all API data and metadata, as well as an in-memory store (Redis) for real-time request/response inspection.
 
@@ -142,7 +144,7 @@ Since the browser fetches SSE from a normal API endpoint, code complexity could 
 
 External APIs are most useful when they can be accessed from any environment. However, browser application code suffers from one security-related restriction when it comes to external API access: the same-origin policy, a mechanism in all major browsers that restricts access to resources from different origins than the script or document originates from.
 
-To allow valid cross-origin requests, there is a standard called CORS (Cross-Origin Resource Sharing) that needs server explicitly state whether a host is permitted to make a request to it. With the paradigm shift towards frontend-loaded web applications running in the browser, an API needs to support CORS to enable usage in those browser environments.
+To allow valid cross-origin requests, there is a standard called CORS (_Cross-Origin Resource Sharing_) that needs server explicitly state whether a host is permitted to make a request to it. With the paradigm shift towards frontend-loaded web applications running in the browser, an API needs to support CORS to enable usage in those browser environments.
 
 The simplest form of access control with regards to the request maker's origin is a simple response header (`Access-Control-Allow-Origin`) that states whether a response will be exposed to a browser script. A wildcard value (`*`) is a carte blanche but does not solve all CORS-related issues. Whenever a non-simple request is made (as defined by a set of criteria[3]), a special `OPTIONS` method request is made first (called a _preflight request_). Since a _200 OK_ API supports HTTP methods that always require such a preflight request, support for those needs to be built in as well.
 
@@ -157,9 +159,15 @@ Despite being a single-instance deployment, _200 OK_ consists of different parts
 - the main data store (MongoDB)
 - the publish/subscribe message broker (Redis)
 
+Separating the main API backend application from the web interface application was done for a number of reasons. First, it allowed a cleaner separation of concerns. The main application should be responsible for serving user API requests and not also for serving static web assets like HTML, CSS files or images. Secondly, both applications potentially have very different scaling needs. With both being separate, the whole web application could be further split up, for example to let a CDN serve all static assets.
+
 Routing requests to the correct application is one requirement already described earlier. Supporting SSL-encrypted traffic is another one, creating the need for either an SSL termination point or SSL support for both applications, as well as certification for all API subdomains.
 
-< TODO: add text here once decision about dockerized deployment is final >
+Splitting traffic by whether a request is targetted at an API or the web interface is done by an NGINX reverse proxy. It pattern matches for the existence of a subdomain in the hostname and forwards the request to either of the two applications.
+
+NGINX is also used as the SSL termination point since all traffic after that point is routed internally behind the same public IP address. TLS certification is acquired via a wildcard certificate from Let's Encrypt, covering all (sub-)domains and providing encryption for both the APIs and the web interface.
+
+< TODO: add architecture information once decision about dockerized deployment is final >
 
 
 [^1]: See: The GitHub API.

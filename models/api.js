@@ -6,7 +6,6 @@ const words = require('../lib/words');
 
 module.exports = (function apiModel() {
   function createApiName() {
-    // TODO: prevent duplicates
     const adjective = words.adjectives[Math.floor(Math.random() * words.adjectives.length)];
     const name = words.names[Math.floor(Math.random() * words.names.length)];
     return `${adjective}-${name}`;
@@ -33,11 +32,19 @@ module.exports = (function apiModel() {
       type: String,
       default: createApiKey,
     },
+    bearerToken: {
+      type: String,
+      default: '',
+    },
     createdAt: {
       type: Date,
       default: Date.now,
     },
     isConnected: {
+      type: Boolean,
+      default: false,
+    },
+    isPrivate: {
       type: Boolean,
       default: false,
     },
