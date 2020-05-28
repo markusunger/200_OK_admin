@@ -188,7 +188,7 @@ module.exports = {
         isPrivate: isNewPrivate,
         bearerToken: saveBearerToken || '',
       });
-      if (!result.nModified < 1) throw new CustomError('Something went wrong.');
+      if (result.nModified < 1) throw new CustomError('Something went wrong.');
     } catch (error) {
       throw error;
     }

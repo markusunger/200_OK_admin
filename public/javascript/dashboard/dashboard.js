@@ -16,14 +16,14 @@ export default function Dashboard({ apiList }) {
     return html`
       <div class="box">
         <p>Currently, you do not have an API connected to your account.</p>
-        <a class="button is-success is-outlined is-fullwidth spacing-top" href="/connect">
+        <a class="button is-primary is-outlined is-fullwidth spacing-top" href="/connect">
           <span class="icon is-large">
             <i class="fas fa-plug"></i>
           </span>
           <span>Connect another API</span>
         </a>
 
-        <a class="button is-success is-fullwidth spacing-top" href="/dashboard/create">
+        <a class="button is-primary is-fullwidth spacing-top" href="/dashboard/create">
           <span class="icon is-large">
             <i class="fas fa-plus-square"></i>
           </span>

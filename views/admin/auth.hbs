@@ -1,0 +1,18 @@
+<div class="container">
+  <div class="box">
+    {{#if result}}
+      <p class="information">You have enabled API authorization. Your API is now in <strong>private mode.</strong></p>
+      <p class="information">In order to make requests to <code>{{apiName}}.200ok.app</code> you will now need to add an <code>Authorization</code> header to each request:</p>
+      <pre class="lang-http"><code>Authorization: Bearer {{result}}</code></pre>
+      <p class="information">If you ever forget your Authorization bearer token, you will need to disable private mode from the dashboard and re-enable it to generate a new token.</p>
+    {{else}}
+      <p class="information">You have disabled the API authorization for <strong>'{{apiName}}'</strong>.</p>
+      <p class="information">In order to re-enable it, go to the dashboard and click <em>Enable API Authorization.</em></p>
+    {{/if}}
+    <div class="information">
+      <i class="fas fa-arrow-circle-left"></i> <a href="/dashboard">Back to dashboard</a>
+    </div>
+  </div>
+</div>
+
+<script src="/javascript/prism.js"></script>

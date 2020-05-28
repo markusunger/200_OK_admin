@@ -135,9 +135,18 @@ router.get('/customize/:apiName', auth.ensureAuthentication, auth.ensureOwnershi
 });
 
 // page for enabling/disabling auth mode
-router.get('/auth-mode/:apiName', auth.ensureAuthentication, auth.ensureOwnership, (req, res, next) => {
+router.get('/authorization/:apiName', auth.ensureAuthentication, auth.ensureOwnership, async (req, res, next) => {
   const { apiName } = req.params;
   if (!apiName) next(new CustomError('No API name provided.', 400));
+
+  try {
+    const result = await apiController.authApi(apiName);
+    return res.render('admin/auth', { apiName, result });
+  } catch (error) {
+    next(error);
+  }
+
+  return res.redirect('/dashboard');
 });
 
 // deletion handler and redirect for user-triggered API deletion

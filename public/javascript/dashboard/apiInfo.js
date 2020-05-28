@@ -32,16 +32,27 @@ export default function ApiInfo({ selectedApi }) {
     `;
   } else {
     if (data) {
-      const { apiName, expiresIn, createdAtFormatted } = data;
+      const { apiName, expiresIn, createdAtFormatted, isPrivate } = data;
 
       return html`
         <div class="box has-text-centered">
           <h3 class="title is-5">${apiName}</h3>
-          <p>Available under <a href="https://${apiName}.200ok.app">${apiName}.200ok.app</a></p>
-          <p>Expires ${expiresIn}</p>
-          <p class="is-small">(Created on ${createdAtFormatted})</p>
+          <p class="information">Available under <a href="https://${apiName}.200ok.app">${apiName}.200ok.app</a><br />
+          Expires ${expiresIn}<br />
+          (Created on ${createdAtFormatted})</p>
+          <p>This API is currently <strong>${isPrivate ? 'private' : 'public'}.</strong></p>
+
           <div class="information">
-            <a class="button is-medium is-primary is-fullwidth" href="/debug/${apiName}">
+          <a class="button is-primary is-fullwidth" href="/authorization/${apiName}">
+            <span class="icon is-medium">
+              <i class="${isPrivate ? 'fas fa-lock-open' : 'fas fa-lock'}"></i>
+            </span>
+            <span>${isPrivate ? 'Disable' : 'Enable'} API Authorization</span>
+          </a>
+        </div>
+
+          <div class="information">
+            <a class="button is-primary is-fullwidth" href="/debug/${apiName}">
               <span class="icon is-medium">
                 <i class="fas fa-wrench"></i>
               </span>
@@ -50,7 +61,7 @@ export default function ApiInfo({ selectedApi }) {
           </div>
 
           <div class="information">
-            <a class="button is-medium is-primary is-fullwidth" href="/customize/${apiName}">
+            <a class="button is-primary is-fullwidth" href="/customize/${apiName}">
               <span class="icon is-medium">
                 <i class="fas fa-pen"></i>
               </span>
@@ -59,7 +70,7 @@ export default function ApiInfo({ selectedApi }) {
           </div>
 
           <div class="warning">
-            <a class="button is-medium is-danger is-fullwidth" href="/delete/${apiName}">
+            <a class="button is-danger is-fullwidth" href="/delete/${apiName}">
               <span class="icon is-medium">
                 <i class="fas fa-trash-alt"></i>
               </span>

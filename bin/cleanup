@@ -18,7 +18,7 @@
   const db = await require('../services/data');
   const apiController = require('../controllers/apiController');
 
-  const API_EXPIRATION_DAYS = 0;
+  const API_EXPIRATION_DAYS = 7;
 
   // first, register handlers for unexpected crashes
   process.on('uncaughtException', async (error) => {
