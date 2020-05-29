@@ -107,10 +107,10 @@ Meterialized path means that the relationship of any resource item is represente
 
 ```json
 {
-  'id': 5,
-  'path': '/users/6/images',
-  'data': {
-    'example': true
+  "id": 5,
+  "path": "/users/6/images",
+  "data": {
+    "example": true
   }
 }
 ```
