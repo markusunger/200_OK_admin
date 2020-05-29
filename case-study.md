@@ -186,11 +186,18 @@ Separating the main API backend application from the web interface application w
 
 Routing requests to the correct application is one requirement already described earlier. Supporting SSL-encrypted traffic is another one, creating the need for either an SSL termination point or SSL support for both applications, as well as certification for all API subdomains.
 
-Splitting traffic by whether a request is targetted at an API or the web interface is done by an NGINX reverse proxy. It pattern matches for the existence of a subdomain in the hostname and forwards the request to either of the two applications.
-
-NGINX is also used as the SSL termination point since all traffic after that point is routed internally behind the same public IP address. TLS certification is acquired via a wildcard certificate from Let's Encrypt, covering all (sub-)domains and providing encryption for both the APIs and the web interface.
+Splitting traffic by whether a request is targetted at an API or the web interface is done by an NGINX reverse proxy. It pattern matches for the existence of a subdomain in the hostname and forwards the request to either of the two applications. NGINX is also used as the termination point for all encrypted traffic since all traffic after that point is routed internally behind the same public IP address. TLS certification itself is acquired via a wildcard certificate from Let's Encrypt, covering all (sub-)domains and providing encryption for both the APIs and the web interface.
 
 (TODO: add architecture information once decision about dockerized deployment is final)
+
+## Future Work
+
+There are a number of additions and improvements that I would love to make to _200 OK_, among them:
+- an export feature to download all API data as a JSON blob
+- a tool to be able to quickly fill selected resources with mock data (generic users, lists, etc.)
+- finer grained API authentication and authorization supporting multiple users and roles
+- extended mocking capabilities, e.g. supporting customized headers and response status codes
+- stronger testing coverage for higher degrees of deployment automation (CI/CD)
 
 [^1]: Roy Fielding, 2000, https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm
 [^2]: See: The GitHub API.
