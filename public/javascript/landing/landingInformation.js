@@ -70,7 +70,7 @@ export default function LandingInformation() {
             <span class="icon is-large has-text-light">
               <i class="fas fa-tasks fa-2x logo-shadow"></i>
             </span>
-            <h1 class="title is-5 lp-header">Manage your APIs</h1>
+            <h1 class="title is-5 lp-header">Manage and secure your APIs</h1>
             <h2 class="lp-subtitle has-text-light">Create and manage up to seven different APIs. Enable private mode to restrict access and require API authorization.</h2>
           </div>
         </div>

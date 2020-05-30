@@ -31,7 +31,9 @@ app.use(session({
   resave: true,
   maxAge: 3600,
   secure: true,
+  httpOnly: true,
   proxy: true,
+  name: '200ok_session',
   secret: cfg.cookieSecret,
 }));
 

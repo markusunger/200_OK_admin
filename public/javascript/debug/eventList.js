@@ -24,9 +24,11 @@ export default function EventList({
           </button>
         </p>
         <p class="config-list-title">Select Request</p>
-        <ul class="config-list">
-          ${eventList.map((event, idx) => html`<${EventListItem} clickEvent=${clickEvent} key=${event.timeStamp} event=${event} selectedClass=${idx === selectedEvent ? 'is-selected-item' : ''} />`)}
-        </ul>
+        <div class="config-list-container-list">
+          <ul class="config-list">
+            ${eventList.map((event, idx) => html`<${EventListItem} clickEvent=${clickEvent} key=${event.timeStamp} event=${event} selectedClass=${idx === selectedEvent ? 'is-selected-item' : ''} />`)}
+          </ul>
+        </div>
       </div>
     </div>
   `;

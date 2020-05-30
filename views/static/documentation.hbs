@@ -85,13 +85,15 @@
             class="docs">/posts/1/comments/1</code> and <code class="docs">/posts/2/comments/1</code> refer to two
           different comments).</p>
         <p class="docs">Upon creation, you receive an API key (a 24 digit alphanumerical string). By logging in via
-          GitHub’s OAuth system, you can connect that API to your account and gain access to two additional features
+          GitHub’s OAuth system, you can connect that API to your account and gain access to three additional features
           that might help in tailoring your backend to your needs:</p>
         <ol class="docs">
           <li>A live inspector of your requests/responses (<a
               href="#request-response-inspector">details</a>)</li>
           <li>A custom endpoint creator to specify JSON responses for certain API endpoints (<a
               href="#Customizing-Endpoint-Behavior">details</a>)</li>
+          <li>A way to set your API to private mode, requiring the correct authorization token to make requests to it (<a 
+              href="#api-authorization">details</a>)</li>
         </ol>
         <p class="docs">For any further clarification, you can refer to the detailed documentation below.</p>
         <h2 class="title is-4 docs" id="use-cases">Use cases</h2>
@@ -121,9 +123,8 @@
             class="docs">POST</code> for creation, <code class="docs">PUT</code> for updating and <code
             class="docs">DELETE</code> for deletion. See the section on RESTful requests for more on how to properly
           structure your requests.</p>
-        <p class="docs">Every <em>200 OK</em> API is CORS-enabled and publicly accessible, so there is no authorization
-          token or other method of user identification, and requests can come from any source, be it an application,
-          client-side JavaScript code or the command line.</p>
+        <p class="docs">Every <em>200 OK</em> API is CORS-enabled and publicly accessible by default, so requests can 
+        come from any source, be it an application, client-side JavaScript code or the command line.</p>
         <p class="docs">In order to create an API with <em>200 OK</em>, you do not need to register or signup. It’s
           totally free and you can get your own API in a matter of seconds by clicking the big, shiny button labeled
           <em>Create your API</em> on the <a href="https://200ok.app">frontpage</a>. If you have no need for any of the
@@ -131,7 +132,8 @@
             class="docs">https://&lt;your-API-name&gt;.200ok.app/</code> and you’re ready to go.</p>
         <p class="docs">However, there are a few useful helper tools that you can access by logging in with your GitHub
           account and connecting your API. For that, you will need to enter your API name and the API key that you
-          receive during the API creation step.</p>
+          receive during the API creation step. Registering also comes with the possiblity of making your API private, 
+          restricting access by ways of requiring an authorization token to be sent with each request.</p>
         <p class="docs">See the <a href="#tools">Tools section</a> for more information.</p>
         <h2 class="title is-4 docs" id="restful-requests">RESTful requests</h2>
         <h3 class="title is-5 docs" id="resources-and-resource-identifiers">Resources and resource identifiers</h3>
