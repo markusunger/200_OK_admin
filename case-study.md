@@ -10,6 +10,8 @@ The optional tooling provides an easy way to see all requests and their accompan
 
 The _200 OK_ deployment consists of two Node.js processes behind an NGINX reverse proxy. The two processes share a NoSQL data store (MongoDB) that persists all API data and metadata, as well as an in-memory store (Redis) for the real-time request/response inspection.
 
+![short video/GIF of the administration interface of 200 OK in action]
+
 ### Top-Level Design
 
 _200 OK_ was designed with a single-instance, multi-tenancy approach in mind. This required unique measures to handle dynamic routing as well as flexibly storing dynamically schemed yet relational data. Also, despite the single-instance approach, the goal was to allow for both horizontal and vertical scalability in the future without it impacting the core design.
@@ -85,11 +87,15 @@ Another consideration is one of aesthetics and usability. The strict resource mo
 
 The approach chosen by _200 OK_ relies on subdomains instead. Each API is identified by a unique subdomain. The reverse proxy now only needs to check whether a request is made to a URL with a subdomain (an API request) or without one (a request to the web interface). The subdomain name can also easily be extracted from within Express by splitting the hostname, making API identification easy for the following business logic.
 
+![illustration of reverse proxy identify different requests and proxying them to the correct application]
+
 ### Handling Request Routing
 
 The Express framework provides methods to handle requests based both on the endpoint they are intended for and the request method use. With the flexible nature of each API to treat any resource as valid as long as it conforms to the basic requirements (no nesting beyond four levels, numeric integers as resource identifiers), it is easy to see why there can be no fixed endpoint routes. Resources can be named however a user wants (again, within a few constraints) and still be usable on the first request to them. When the retrieval of a resource collection like `/users` is requested as the first operation on a _200 OK_ API, the result should be processed as if `/users` was already created but still void of data: the JSON response should simply contain an empty array.
 
-Route handling inside _the _200 OK_ application can therefore only be done by way of the distinct HTTP request method. A `DELETE` request is going to require a fundamentally different operation than a `GET` request. The exact route becomes what is essentially a parameter for that operation. The only difference between a `GET` request to `/users/3/comments` and `/lists/4` is whether the request aims for a whole resource collection or a specific item of it. Extracting this information from the request path is easy within the aforementioned naming constraints of a _200 OK_ API.
+Route handling inside the _200 OK_ application can therefore only be done by way of the distinct HTTP request method. A `DELETE` request is going to require a fundamentally different operation than a `GET` request. The exact route becomes what is essentially a parameter for that operation. The only difference between a `GET` request to `/users/3/comments` and `/lists/4` is whether the request aims for a whole resource collection or a specific item of it. Extracting this information from the request path is easy within the aforementioned naming constraints of a _200 OK_ API.
+
+![illustration for showing the 4 different method handlers with the exact endpoint essentially being a set of arguments for the handler]
 
 When done early in the application's middleware stack, it is easy to discern between valid resource requests and those that do not make sense within the loose limits. A resource `/users/5/images` should only be valid if an item with the id of `5` in the `/users` collection already exists. 
 
@@ -97,13 +103,17 @@ When done early in the application's middleware stack, it is easy to discern bet
 
 As per the REST specification, data received for a _200 OK_ API is relational in nature, but only with regards to whole resource collections and items, not granular data inside of them. Data stored for `/users/3/comments` is related to a specific item in the `users` resource collection (with the `id` of 3), but the server does not need to (and can not) concern itself with references stored inside the data itself since that responsibility is left to the user's code.
 
+![illustration of relationships in a 200 OK API]
+
 In addition to that relational coupling, each resource item does not have any predefined schema. In fact, since user-sent payloads are not known ahead of time, any predefined schema would have to be so loose as to not provide much benefit at all. Deducting a schema by analyzing incoming data (and subsequently enforcing adherence to it) would allow for better data integrity but at the cost of user freedom. Without a set schema, there are almost no constraints placed on the structure and design of the user-sent payloads which suits all the _200 OK_ use cases described above.  
 
 Yet the bigger problem is that of maintaining the relationship between resources without knowing beforehand which resources an API is going to represent. Conceptually, this is similar to a tree data structure where neither the depth nor the breadth of the tree will be known quantities. Consequently, an SQL database will not play to its (usually impactful) strengths. A dynamic relationship tree would mean that tables might need to be created at runtime, adding an expensive and potentially risky operation to each new API endpoint: if the table creation fails, the user request will fail as well. Since the user-sent payload would be stored in a JSONB column (or equivalent) anyway, SQL would only provide a way to manage those tree relationships but do so at a significant cost.
 
+![illustration of how data stored in a 200 OK API can be represented as a tree]
+
 This has led to the decision to use a document database, with MongoDB being the first choice thanks to its storage format being very close to JSON anyway. To manage relationships, _200 OK_ relies on a different method: _Materialized Paths_.
 
-Meterialized path means that the relationship of any resource item is represented by the full tree path to that item, encapsulated in a string. That means that there is no dedicated information stored about the parent collection itself, each collection just comprises a varying number of - in the case of MongoDB - documents with a `path` field that specifies the exact relationship of that item. That might look like the following JSON structure:
+Materialized path means that the relationship of any resource item is represented by the full tree path to that item, encapsulated in a string. That means that there is no dedicated information stored about the parent collection itself, each collection just comprises a varying number of - in the case of MongoDB - documents with a `path` field that specifies the exact relationship of that item. That might look like the following JSON structure:
 
 ```json
 {
@@ -143,6 +153,8 @@ With the core backend design in place, several pieces of functionality posed mor
 
 ### Real-Time Request and Response Inspection
 
+![GIF of the inspector in action]
+
 The decision to implement core API functionality and web administration functionality in two separate applications also created a barrier of communication between both. This barrier stands in the way of easily sharing request and response data with the user-facing frontend. A request for the `/users` resource of a specific API is fully processed in the backend application up to and including the point where the response is actually sent to the user.
 
 The only common denominator that both the web application as well as the backend application have is the data store. A naive idea would be to store requests and responses in that database so that the frontend can query for it. However, that solution would have a few drawbacks. First, it puts more load on the main database which decreases its overall capacity. But even more significantly, it introduces a maintainability demand: Most requests and responses will likely never be inspected on the frontend, so a lot of data is stored without a need and regular cleanup of old data is required.
@@ -169,6 +181,8 @@ To allow valid cross-origin requests, there is a standard called CORS (_Cross-Or
 
 The simplest form of access control with regards to the request maker's origin is a simple response header (`Access-Control-Allow-Origin`) that states whether a response will be exposed to a browser script. A wildcard value (`*`) is a carte blanche but does not solve all CORS-related issues. Whenever a non-simple request is made (as defined by a set of criteria[3]), a special `OPTIONS` method request is made first (called a _preflight request_). Since a _200 OK_ API supports HTTP methods that always require such a preflight request, support for those needs to be built in as well.
 
+![illustration to show how CORS works]
+
 (TODO: maybe elaborate more on the reasons for writing a CORS library from scratch or leave it a mystery to make it seem more complex than it actually was)
 
 Instead of relying on a third-party library, _200 OK_ implements its own CORS library. One of the preflight headers asks the server for its support for the actual request's HTTP method. Since those allowed methods can vary when a _200 OK_ user creates custom endpoint responses (thus controlling which methods should be allowed), the associated response headers needs to accurately reflect the circumstances under which a request should be allowed.
@@ -182,13 +196,15 @@ Despite being a single-instance deployment, _200 OK_ consists of different parts
 - the main data store (MongoDB)
 - the publish/subscribe message broker (Redis)
 
+![illustration of 200 OK's architecture]
+
 Separating the main API backend application from the web interface application was done for a number of reasons. First, it allowed a cleaner separation of concerns. The main application should be responsible for serving user API requests and not also for serving static web assets like HTML, CSS files or images. Secondly, both applications potentially have very different scaling needs. With both being separate, the whole web application could be further split up, for example to let a CDN serve all static assets and transform the application into a pure backend API.
 
 Routing requests to the correct application is one requirement already described earlier. Supporting SSL-encrypted traffic is another one, creating the need for either an SSL termination point or SSL support for both applications, as well as certification for all API subdomains.
 
 Splitting traffic by whether a request is targetted at an API or the web interface is done by an NGINX reverse proxy. It pattern matches for the existence of a subdomain in the hostname and forwards the request to either of the two applications. NGINX is also used as the termination point for all encrypted traffic since all traffic after that point is routed internally behind the same public IP address. TLS certification itself is acquired via a wildcard certificate from Let's Encrypt, covering all (sub-)domains and providing encryption for both the APIs and the web interface.
 
-(TODO: add architecture information once decision about dockerized deployment is final)
+(TODO: add more architecture information once decision about dockerized deployment is final)
 
 ## Future Work
 
