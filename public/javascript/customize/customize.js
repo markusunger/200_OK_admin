@@ -4,7 +4,9 @@ import NoRoutes from './noRoutes.js';
 import RouteDetails from './routeDetails.js';
 import ApiName from './apiNameContext.js';
 
-import { html, useState, useContext } from '../preact-htm.js';
+import {
+  html, useState, useEffect, useContext,
+} from '../preact-htm.js';
 
 const routeTemplate = {
   path: '/',
@@ -23,6 +25,11 @@ export default function Customize() {
   const {
     routes, error, isLoading, refetch,
   } = useFetch(`/api/customize/${apiName}`, 'GET');
+
+  useEffect(() => {
+    if (!routes) return;
+    if (routes.length > 0) setSelectedRoute(routes.length - 1);
+  }, [setSelectedRoute, routes]);
 
   // click handler for items in RouteList
   const clickRouteHandler = (e) => {

@@ -167,6 +167,10 @@ ul.config-list li:hover {
   color: white;
 }
 
+ul.config-list li.is-selected-item:hover {
+  background-color: #6dac2b;
+}
+
 span.json-key {
   color: white;
 }
