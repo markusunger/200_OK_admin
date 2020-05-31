@@ -26,7 +26,7 @@ Web applications typically consist of two parts: a frontend and a backend. The f
 
 There is a huge variety of providers across different levels of abstraction when it comes to web application backends and those offerings demand different levels of effort to manage while providing varying degrees of abstraction and control over the backend itself.
 
-![diagram showing possible backend systems with varying complexity, flexibility]
+![diagram showing possible backend systems with varying complexity and user control](/public/images/services_comparison_table.png)
 
 Relying on bare-metal deployment is at the root of the abstraction level, as are offerings in the Infrastructure-as-a-Service (IaaS) space. Both put the responsibility of dealing with an applications operating system and code into the hands of a developer. A Platform-as-a-Service (PaaS) instead abstracts away another layer: it manages all tasks related to an applications' deployment, letting the developer control only the application code itself.
 
@@ -87,7 +87,7 @@ Another consideration is one of aesthetics and usability. The strict resource mo
 
 The approach chosen by _200 OK_ relies on subdomains instead. Each API is identified by a unique subdomain. The reverse proxy now only needs to check whether a request is made to a URL with a subdomain (an API request) or without one (a request to the web interface). The subdomain name can also easily be extracted from within Express by splitting the hostname, making API identification easy for the following business logic.
 
-![illustration of reverse proxy identify different requests and proxying them to the correct application]
+![illustration of reverse proxy identify different requests and proxying them to the correct application](/public/images/reverse_proxy_concept.png)
 
 ### Handling Request Routing
 
@@ -213,7 +213,7 @@ There are a number of additions and improvements that I would love to make to _2
 - a tool to be able to quickly fill selected resources with mock data (generic users, lists, etc.)
 - finer grained API authentication and authorization supporting multiple users and roles
 - extended mocking capabilities, e.g. supporting customized headers and response status codes
-- stronger testing coverage for higher degrees of deployment automation (CI/CD)
+- stronger testing coverage and higher degrees of deployment automation (CI/CD)
 
 [^1]: Roy Fielding, 2000, https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm
 [^2]: See: The GitHub API.
