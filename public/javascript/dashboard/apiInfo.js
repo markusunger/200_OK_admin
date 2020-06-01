@@ -63,7 +63,7 @@ export default function ApiInfo({ selectedApi }) {
           <div class="information">
             <a class="button is-primary is-fullwidth" href="/customize/${apiName}">
               <span class="icon is-medium">
-                <i class="fas fa-pen"></i>
+                <i class="fas fa-tasks"></i>
               </span>
               <span>Customize Endpoint Behavior</span>
             </a>

@@ -7,7 +7,7 @@ export default function LandingInformation() {
         <div class="column is-one-third">
           <div class="content has-text-centered">
             <span class="icon is-large has-text-primary">
-              <i class="fas fa-laptop-code fa-2x logo-shadow"></i>
+              <i class="fas fa-cog fa-2x logo-shadow"></i>
             </span>
             <h1 class="title is-5 lp-header">No configuration</h1>
             <h2 class="lp-subtitle">Use RESTful request methods and the API will work without any further need for setup or configuration.</h2>
@@ -17,7 +17,7 @@ export default function LandingInformation() {
         <div class="column is-one-third">
           <div class="content has-text-centered">
             <span class="icon is-large has-text-primary">
-              <i class="fas fa-pencil-ruler fa-2x logo-shadow"></i>
+              <i class="fas fa-terminal fa-2x logo-shadow"></i>
             </span>
             <h1 class="title is-5 lp-header">Use from anywhere</h1>
             <h2 class="lp-subtitle">Your API is CORS-enabled, so it can be used from within the browser, any code sandbox tool or the command line.</h2>
