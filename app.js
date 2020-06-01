@@ -58,7 +58,7 @@ app.use('/', frontendRouter);
 
 // catch-all route to forward 404 errors to error handler
 app.use((req, res, next) => {
-  const error = new Error('Page not found.');
+  const error = new Error(`Page not found: ${req.url}`);
   error.status = 404;
   next(error);
 });
