@@ -1,24 +1,16 @@
 # Case Study for _200 OK_
 
+## Introduction
+
+When developing web applications, there are a number of options for handling the backend portion, ranging from creating a custom application to using a service like Google Firebase. For small projects it can require a significant amount of work to either write or setup such a backend. _200 OK_ was developed as a no setup, drop-in RESTful API backend for those small projects, e.g. learning prototypes or hackathon proof-of-concepts. With its functionality, _200 OK_ can also serve as a temporary mock API or a debugging tool, serving many standard CRUD-based use cases.
+
 ## Abstract
 
-_200 OK_ is a no-configuration backend service that provisions ephemeral RESTful APIs. Following the REST architecture style, each API adheres to a resource-based model of storing and delivering data. In addition to that, each API can be augmented to mock particular responses while also providing real-time inspection of the request/response cycle. _200 OK_ was developed as a zero-setup drop-in backend for learning projects, hackathons or to serve as a temporary mock API.
+_200 OK_ is a no-configuration backend service that provisions ephemeral RESTful APIs. Following the REST architecture style, each API adheres to a resource-based model of storing and delivering data. In addition to that, each API can be augmented to mock responses, while also providing real-time inspection of the request/response cycle. 
 
-Obtaining a personal API is as simple as clicking a button and no registration or signup is required in order to use the RESTful operation mode of the API. The four traditional REST operations for data retrieval, creation, updating and deletion (`GET`, `POST`, `PUT`, `DELETE`) are supported together with up to four levels of nesting for resources. Each API handles valid JSON payloads, supports CORS and is therefore easy to integrate in all kinds of projects. From React frontends over exploratory code sandbox scripts to command-line applications, _200 OK_ can enable many CRUD-based use cases for whom a RESTful data store is sufficient.
-
-The optional tooling provides an easy way to see all requests and their accompanying responses made to a user's API, broken up into an informative header and body display. With a simple interface, users can also mock responses for specific endpoints. By enabling authorization, APIs can also be made private so that they require an authorization token to be sent with each request.
-
-The _200 OK_ deployment consists of two Node.js processes behind an NGINX reverse proxy. The two processes share a NoSQL data store (MongoDB) that persists all API data and metadata, as well as an in-memory store (Redis) for the real-time request/response inspection.
+The four traditional REST operations for data retrieval, creation, updating and deletion (`GET`, `POST`, `PUT`, `DELETE`) are supported together with up to four levels of nesting for resources. Each API handles all valid JSON payloads, supports CORS and is therefore easy to integrate in different kinds of projects. The RESTful mode works without a need for configuration or custom settings and all additional functionality is optional and can be done in a modern web interface.
 
 ![short video/GIF of the administration interface of 200 OK in action]
-
-### Top-Level Design
-
-_200 OK_ was designed with a single-instance, multi-tenancy approach in mind. This required unique measures to handle dynamic routing as well as flexibly storing dynamically schemed yet relational data. Also, despite the single-instance approach, the goal was to allow for both horizontal and vertical scalability in the future without it impacting the core design.
-
-With the need to properly handle nested relationships for user-provided data, a performant and flexible solution for the data persistence was needed as well. A _materialized path_ approach backed by a MongoDB document database constitutes a solution that is both performant for the intended use case and robust enough to remain a valid approach even when extending both functionality and scale of the data layer.
-
-In order to separate concerns and allow for independent scaling, the main backend handling all user-generated API requests was separated from the user-facing frontend configuration platform. Since both processes need a way to quickly exchange information about user-initiated requests, a Redis store used with its publish/subscribe mode together with the use of server-sent events provides easy interprocess communication without much additional overhead.
 
 ## _200 OK_ as a BaaS
 
@@ -62,16 +54,13 @@ The _layerability of systems_ as the REST style describes it is not a big factor
 
 The basic item of a _200 OK_ API is the resource. It represents a collection of data items, each of which can be accessed individually as well. The representation of the collection always matches its original data format which is JSON (_JavaScript Object Notation_), one of the most popular data exchange formats of the web ecosystem. The state of a collection or a collection item can be manipulated through a defined set of interactions represented by the HTTP request methods `GET`, `POST`, `PUT` and `DELETE`.
 
-| HTTP Method | Target | Operation |
-|---|---|---|
-| GET | a resource collection or individual item | target data retrieval |
-| POST | a resource collection | creating a new collection item |
-| PUT | an individual resource item | changing an existing collection item |
-| DELETE | a resource collection or individual item | deleting the target collection or item |
-
-The decision to not implement a HATEOAS system stems primarily from the consideration that for the intended use cases (in general projects with small scopes), HATEOAS would not be very beneficial. In most cases, the API would not need to be explored as the only API user is the one who also determines how it is used, resulting in the additional information being more of a hindrance because it requires extracting the actual data payload from the additional hypermedia information.
-
 ## Core Backend Challenges
+
+_200 OK_ was designed with a single-instance, multi-tenancy approach in mind. This required unique measures to handle dynamic routing as well as flexibly storing dynamically schemed yet relational data. Also, despite the single-instance approach, the goal was to allow for both horizontal and vertical scalability in the future without it impacting the core design.
+
+With the need to properly handle nested relationships for user-provided data, a performant and flexible solution for the data persistence was needed as well. A _materialized path_ approach backed by a MongoDB document database constitutes a solution that is both performant for the intended use case and robust enough to remain a valid approach even when extending both functionality and scale of the data layer.
+
+In order to separate concerns and allow for independent scaling, the main backend handling all user-generated API requests was separated from the user-facing frontend configuration platform. Since both processes need a way to quickly exchange information about user-initiated requests, a Redis store used with its publish/subscribe mode together with the use of server-sent events provides easy interprocess communication without much additional overhead.
 
 ### Multi-Tenancy REST Interfaces
 
@@ -85,7 +74,7 @@ Giving each API a unique identifier can be done in different ways, the most obvi
 
 Another consideration is one of aesthetics and usability. The strict resource model of RESTful APIs uses URL paths to represent both resources and item identifiers. Adding a prefixed identifier obfuscates that pattern.
 
-The approach chosen by _200 OK_ relies on subdomains instead. Each API is identified by a unique subdomain. The reverse proxy now only needs to check whether a request is made to a URL with a subdomain (an API request) or without one (a request to the web interface). The subdomain name can also easily be extracted from within Express by splitting the hostname, making API identification easy for the following business logic.
+The approach chosen by _200 OK_ relies on subdomains instead. Each API is identified by a unique subdomain. The reverse proxy now only needs to check whether a request is made to a URL with a subdomain (an API request) or without one (a request to the web interface).
 
 ![illustration of reverse proxy identify different requests and proxying them to the correct application](/public/images/reverse_proxy_concept.png)
 
@@ -216,6 +205,6 @@ There are a number of additions and improvements that I would love to make to _2
 - stronger testing coverage and higher degrees of deployment automation (CI/CD)
 
 [^1]: Roy Fielding, 2000, https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm
-[^2]: See: The GitHub API.
+[^2]: The decision to not implement a HATEOAS system stems primarily from the consideration that for the intended use cases (in general projects with small scopes), HATEOAS would not be very beneficial. In most cases, the API would not need to be explored as the only API user is the one who also determines how it is used, resulting in the additional information being more of a hindrance because it requires extracting the actual data payload from the additional hypermedia information. For an example of HATEOAS in an API, the official GitHub API provides a good example.
 [^3]: https://en.wikipedia.org/wiki/Nested_set_model
 [^4]: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#Simple_requests
