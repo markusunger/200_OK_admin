@@ -2,13 +2,13 @@
 
 ## Introduction
 
-When developing web applications, there are a number of options for handling the backend portion, ranging from creating a custom application to using a service like Google Firebase. For small projects it can require a significant amount of work to either write or setup such a backend. _200 OK_ was developed as a no setup, drop-in RESTful API backend for those small projects, e.g. learning prototypes or hackathon proof-of-concepts. With its functionality, _200 OK_ can also serve as a temporary mock API or a debugging tool, serving many standard CRUD-based use cases.
+When developing web applications, there are a number of options for handling the backend portion, ranging from creating a custom application to using a service like Google Firebase. For many small projects this means a significant amount of work to either write or setup such a backend. _200 OK_ was developed as a no setup, drop-in RESTful API backend for applications with that scope, e.g. learning prototypes or hackathon proof-of-concepts. With its functionality, _200 OK_ can also serve as a temporary mock API or a debugging tool.
 
 ## Abstract
 
 _200 OK_ is a no-configuration backend service that provisions ephemeral RESTful APIs. Following the REST architecture style, each API adheres to a resource-based model of storing and delivering data. In addition to that, each API can be augmented to mock responses, while also providing real-time inspection of the request/response cycle. 
 
-The four traditional REST operations for data retrieval, creation, updating and deletion (`GET`, `POST`, `PUT`, `DELETE`) are supported together with up to four levels of nesting for resources. Each API handles all valid JSON payloads, supports CORS and is therefore easy to integrate in different kinds of projects. The RESTful mode works without a need for configuration or custom settings and all additional functionality is optional and can be done in a modern web interface.
+The four traditional REST operations for data retrieval, creation, updating and deletion (`GET`, `POST`, `PUT`, `DELETE`) are supported together with up to four levels of nesting for resources. Each API handles all valid JSON payloads, supports CORS and is therefore easy to integrate in different kinds of projects. The RESTful mode works without a need for configuration or custom settings and all additional functionality is optional and can be configured in a modern web interface.
 
 ![short video/GIF of the administration interface of 200 OK in action]
 
@@ -18,7 +18,7 @@ Web applications typically consist of two parts: a frontend and a backend. The f
 
 There is a huge variety of providers across different levels of abstraction when it comes to web application backends and those offerings demand different levels of effort to manage while providing varying degrees of abstraction and control over the backend itself.
 
-![diagram showing possible backend systems with varying complexity and user control](/public/images/services_comparison_table.png)
+![diagram showing possible backend systems with varying levels of complexity and user control](/public/images/services_comparison_table.png)
 
 Relying on bare-metal deployment is at the root of the abstraction level, as are offerings in the Infrastructure-as-a-Service (IaaS) space. Both put the responsibility of dealing with an applications operating system and code into the hands of a developer. A Platform-as-a-Service (PaaS) instead abstracts away another layer: it manages all tasks related to an applications' deployment, letting the developer control only the application code itself.
 
@@ -26,7 +26,7 @@ At the highest layer of abstraction stands the Backend-as-a-Service (BaaS) which
 
 _200 OK_ falls right between the PaaS and BaaS definitions. By providing a backend with a predefined yet long-established architecture (in the form of _REST_, see the next section) _200 OK_ holds a few unique advantages over a more complex BaaS like Google's Firebase or Amazon Amplify. Those services are closed-source platforms whose features are determined completely by the provider itself. Implementation details are mostly hidden behind the respective SDK's interface. BaaS services also come with a certain learning curve: features require knowledge of the SDK and integration into the provider's ecosystem means that skills are rarely transferable between providers. Plus, the additional learning curve of how to use the BaaS is determined by the quality of its documentation and the complexity of its API.
 
-In contrast, _200 OK_ provides a feature set focused on the pure data storage and management functionality. It also closely follows the popular REST (_Representational State Transfer_) model for providing a simple but powerful interface that is in wide use across the web development world. It retains the general benefits of abstraction that a BaaS offers but has greatly reduced setup times and requires almost no prerequisite user knowledge.
+In contrast, _200 OK_ provides a feature set focused on the pure data storage and management functionality. It also closely follows the popular REST (_Representational State Transfer_) architecture model for providing a simple but powerful interface that is in wide use across the web development world. It retains the general benefits of abstraction that a BaaS offers but has greatly reduced setup times and requires almost no prerequisite user knowledge.
 
 ## Providing a REST interface
 
@@ -56,7 +56,7 @@ The basic item of a _200 OK_ API is the resource. It represents a collection of 
 
 ## Core Backend Challenges
 
-_200 OK_ was designed with a single-instance, multi-tenancy approach in mind. This required unique measures to handle dynamic routing as well as flexibly storing dynamically schemed yet relational data. Also, despite the single-instance approach, the goal was to allow for both horizontal and vertical scalability in the future without it impacting the core design.
+_200 OK_ was designed with a single-instance, multi-tenancy approach in mind. This required unique measures to handle dynamic routing as well as flexibly storing dynamic relational data. Also, despite the single-instance approach, the goal was to allow for both horizontal and vertical scalability in the future without it impacting the core design.
 
 With the need to properly handle nested relationships for user-provided data, a performant and flexible solution for the data persistence was needed as well. A _materialized path_ approach backed by a MongoDB document database constitutes a solution that is both performant for the intended use case and robust enough to remain a valid approach even when extending both functionality and scale of the data layer.
 
@@ -64,11 +64,11 @@ In order to separate concerns and allow for independent scaling, the main backen
 
 ### Multi-Tenancy REST Interfaces
 
-With its ephemeral nature, a _200 OK_ API will typically not generate much need for processing power or memory space, so a dedicated single-tenant architecture would result in a significant resource overhead, e.g. when providing an isolated environment (like a containerized deployment) consisting of an application server and a data store. A typical use case for a _200 OK_ API might require some light read and write access over the course of two days, while any pre-provisioned resources would sit idle for the rest of the APIs lifetime, needlessly consuming resources.
+A _200 OK_ API will typically not generate much need for processing power or memory space, so a dedicated single-tenant architecture would result in a significant resource overhead, e.g. when providing an isolated environment (like a containerized deployment) consisting of an application server and a data store for every tenant. A reprsentative use case for a _200 OK_ API might require some light read and write access over the course of two days, resulting in any pre-provisioned resources sitting idle for the rest of the APIs lifetime, needlessly consuming resources.
 
-Thus, the decision was made to create a multi-tenant application server whose design would still allow for horizontal or vertical scalability but would also acknowledge the light processor and memory loads that each API causes. The choice for such an application server fell on Node.js with the Express framework, both of which are well suited for such a multi-tenant system thanks to their flexibility and lightweight core.
+Thus, the decision was made to create a multi-tenant application server whose design would still allow for horizontal or vertical scalability but would also acknowledge the light processor and memory loads that each API causes. Multi-tenancy in this context means that all API access is handled by the same application process. The choice for such an application server fell on Node.js with the Express framework, both of which are well suited for this task thanks to their flexibility and lightweight core.
 
-This approach poses a fundamental problem in relation to multi-tenancy: Since each API receives a unique identifier but all requests are served by the same application, the tenants need to be rcognized. However, this can be solved within the constraints of the Express framework.
+This approach poses a fundamental problem in relation to multi-tenancy: Since each API receives a unique identifier but all requests are served by the same application, the tenants need to be recognized.
 
 Giving each API a unique identifier can be done in different ways, the most obvious one being a path-based, randomly created identifier. So an API with an identifier of `123456` would be available under `api.com/123456`. The biggest problem with that approach is how to then identify requests to an API compared to ones for the administrative web interface. The reverse proxy would need to apply pattern matching to identify API requests (like `api.com/123456`) and web requests (like `api.com/dashboard`). Depending on the complexity of the API identifier, this could mean creating dedicated whitelist for all web endpoints.
 
@@ -82,15 +82,15 @@ The approach chosen by _200 OK_ relies on subdomains instead. Each API is identi
 
 The Express framework provides methods to handle requests based both on the endpoint they are intended for and the request method use. With the flexible nature of each API to treat any resource as valid as long as it conforms to the basic requirements (no nesting beyond four levels, numeric integers as resource identifiers), it is easy to see why there can be no fixed endpoint routes. Resources can be named however a user wants (again, within a few constraints) and still be usable on the first request to them. When the retrieval of a resource collection like `/users` is requested as the first operation on a _200 OK_ API, the result should be processed as if `/users` was already created but still void of data: the JSON response should simply contain an empty array.
 
-Route handling inside the _200 OK_ application can therefore only be done by way of the distinct HTTP request method. A `DELETE` request is going to require a fundamentally different operation than a `GET` request. The exact route becomes what is essentially a parameter for that operation. The only difference between a `GET` request to `/users/3/comments` and `/lists/4` is whether the request aims for a whole resource collection or a specific item of it. Extracting this information from the request path is easy within the aforementioned naming constraints of a _200 OK_ API.
+Route handling inside the _200 OK_ application can therefore only be done by way of the distinct HTTP request method. A `DELETE` request is going to require a fundamentally different operation than a `GET` request. The exact route becomes what is essentially a parameter for that operation. The only difference between a `GET` request to `/users/3/comments` and `/lists/4` is whether the request aims for a whole resource collection or a specific item of it. Extracting this information from the request path is easy within the aforementioned naming constraints of a _200 OK_ API. This way of creating catch-all routes also works exceptionally well with the _materialized path_ approach for organizing the relationship between resources (see [the following chapter](#storing-relational-data-ithout-a-schema)).
 
 ![illustration for showing the 4 different method handlers with the exact endpoint essentially being a set of arguments for the handler]
 
-When done early in the application's middleware stack, it is easy to discern between valid resource requests and those that do not make sense within the loose limits. A resource `/users/5/images` should only be valid if an item with the id of `5` in the `/users` collection already exists. 
+When done early in the application's middleware stack, it is also easy to discern between valid resource requests and those that do not make sense within the loose limits. Rejecting a request can be done before many I/O-intensive operations. For example, a resource `/users/5/images` should only be valid if an item with the id of `5` in the `/users` collection already exists. If it doesn't, there should be no `images` resource for that user, making the request invalid.
 
 ### Storing Relational Data Without A Schema
 
-As per the REST specification, data received for a _200 OK_ API is relational in nature, but only with regards to whole resource collections and items, not granular data inside of them. Data stored for `/users/3/comments` is related to a specific item in the `users` resource collection (with the `id` of 3), but the server does not need to (and can not) concern itself with references stored inside the data itself since that responsibility is left to the user's code.
+As per the REST specification, data received for a _200 OK_ API is relational in nature.
 
 ![illustration of relationships in a 200 OK API]
 
@@ -126,9 +126,7 @@ While there are multiple ways of representing a tree structure in data stores (l
 
 The only truly costly operation, moving sub-trees inside the structure (which would require updating all nodes in that sub-tree), is not part of the _200 OK_ requirements. The limited ways of manipulating the tree would make any more complex solution add mostly unnecessary optimization overhead.
 
-(TODO: maybe add something about why integer identifiers were chosen and are enforced by the server, but this might go some place else)
-
-However, one disadvantage of materialized paths in a NoSQL data store is that there is no inherent way of keeping track of resource item identifiers. When inserting a new item into a resource collection, there is no possibility to easily deduce the next available identifier without having to query all sibling nodes, an operation bearing potentially high costs. _200 OK_ solves this issue with a dedicated identifier collection that provisions the next highest integer identifier to any new resource item.
+However, one disadvantage of materialized paths in a NoSQL data store is that there is no inherent way of keeping track of resource item identifiers (like there would be with an auto-incrementing column in a relational database). When inserting a new item into a resource collection, there is no possibility to easily deduce the next available identifier without having to query all sibling nodes, an operation bearing potentially high costs. _200 OK_ solves this issue with a dedicated identifier collection that provisions the next highest integer identifier to any new resource item.
 
 All in all, for all the necessary operations and within the constraints put on each API, materialized paths provide a performant solution to managing relationships.
 
@@ -144,9 +142,7 @@ With the core backend design in place, several pieces of functionality posed mor
 
 ![GIF of the inspector in action]
 
-The decision to implement core API functionality and web administration functionality in two separate applications also created a barrier of communication between both. This barrier stands in the way of easily sharing request and response data with the user-facing frontend. A request for the `/users` resource of a specific API is fully processed in the backend application up to and including the point where the response is actually sent to the user.
-
-The only common denominator that both the web application as well as the backend application have is the data store. A naive idea would be to store requests and responses in that database so that the frontend can query for it. However, that solution would have a few drawbacks. First, it puts more load on the main database which decreases its overall capacity. But even more significantly, it introduces a maintainability demand: Most requests and responses will likely never be inspected on the frontend, so a lot of data is stored without a need and regular cleanup of old data is required.
+The decision to implement core API functionality and web administration functionality in two separate applications also created a barrier of communication between both. The only common denominator that both the web application as well as the backend application have is the data store. So to allow real-time request/response inspection in the web application, a simple approach would be to store that information in the database so that the frontend can retrieve it. However, that solution would have a few drawbacks. First, it puts more load on the main database which decreases its overall capacity. But even more significantly, it introduces a maintainability demand: Most requests and responses will likely never be inspected on the frontend, so a lot of data is stored without a need and regular cleanup of old data is required.
 
 A better solution can be achieved by using a dedicated message broker. _Redis_ is an in-memory data store with message brokering functionality in the form of its publish/subscribe mode. Leveraging that functionality, the API backend can publish each request/response cycle to Redis. When a subscriber in the frontend application listens for that data, it will receive it, otherwise it is immediately discarded.
 
@@ -171,8 +167,6 @@ To allow valid cross-origin requests, there is a standard called CORS (_Cross-Or
 The simplest form of access control with regards to the request maker's origin is a simple response header (`Access-Control-Allow-Origin`) that states whether a response will be exposed to a browser script. A wildcard value (`*`) is a carte blanche but does not solve all CORS-related issues. Whenever a non-simple request is made (as defined by a set of criteria[3]), a special `OPTIONS` method request is made first (called a _preflight request_). Since a _200 OK_ API supports HTTP methods that always require such a preflight request, support for those needs to be built in as well.
 
 ![illustration to show how CORS works]
-
-(TODO: maybe elaborate more on the reasons for writing a CORS library from scratch or leave it a mystery to make it seem more complex than it actually was)
 
 Instead of relying on a third-party library, _200 OK_ implements its own CORS library. One of the preflight headers asks the server for its support for the actual request's HTTP method. Since those allowed methods can vary when a _200 OK_ user creates custom endpoint responses (thus controlling which methods should be allowed), the associated response headers needs to accurately reflect the circumstances under which a request should be allowed.
 
