@@ -10,7 +10,7 @@ _200 OK_ is a no-configuration backend service that provisions ephemeral RESTful
 
 The four traditional REST operations for data retrieval, creation, updating and deletion (`GET`, `POST`, `PUT`, `DELETE`) are supported together with up to four levels of nesting for resources. Each API handles all valid JSON payloads, supports CORS and is therefore easy to integrate in different kinds of projects. The RESTful mode works without a need for configuration or custom settings and all additional functionality is optional and can be configured in a modern web interface.
 
-![short video/GIF of the administration interface of 200 OK in action]
+![short demo of the web interface in action](/public/images/api-creation.gif)
 
 ## _200 OK_ as a low-level BaaS
 
@@ -140,7 +140,7 @@ With the core backend design in place, several pieces of functionality posed mor
 
 ### Real-Time Request and Response Inspection
 
-![GIF of the inspector in action]
+![real-time inspection of the request and response cycle](/public/images/request-response-inspection.gif)
 
 The decision to implement core API functionality and web administration functionality in two separate applications also created a barrier of communication between both. The only common denominator that both the web application as well as the backend application have is the data store. So to allow real-time request/response inspection in the web application, a simple approach would be to store that information in the database so that the frontend can retrieve it. However, that solution would have a few drawbacks. First, it puts more load on the main database which decreases its overall capacity. But even more significantly, it introduces a maintainability demand: Most requests and responses will likely never be inspected on the frontend, so a lot of data is stored without a need and regular cleanup of old data is required.
 
@@ -167,6 +167,8 @@ To allow valid cross-origin requests, there is a standard called CORS (_Cross-Or
 The simplest form of access control with regards to the request maker's origin is a simple response header (`Access-Control-Allow-Origin`) that states whether a response will be exposed to a browser script. A wildcard value (`*`) is a carte blanche but does not solve all CORS-related issues. Whenever a non-simple request is made (as defined by a set of criteria[3]), a special `OPTIONS` method request is made first (called a _preflight request_). Since a _200 OK_ API supports HTTP methods that always require such a preflight request, support for those needs to be built in as well.
 
 Instead of relying on a third-party library, _200 OK_ implements its own CORS library. One of the preflight headers asks the server for its support for the actual request's HTTP method. Since those allowed methods can vary when a _200 OK_ user creates custom endpoint responses (thus controlling which methods should be allowed), the associated response headers needs to accurately reflect the circumstances under which a request should be allowed.
+
+![overview of both authorization and custom route functionality](/public/images/private_customize.gif)
 
 ### System Architecture
 
