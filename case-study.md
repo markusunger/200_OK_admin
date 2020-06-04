@@ -2,7 +2,7 @@
 
 ## Introduction
 
-When developing web applications, there are a number of options for handling the backend portion, ranging from creating a custom application to using a service like Google Firebase. For many small projects this means a significant amount of work to either write or setup such a backend. _200 OK_ was developed as a no setup, drop-in RESTful API backend for applications with that scope, e.g. learning prototypes or hackathon proof-of-concepts. With its functionality, _200 OK_ can also serve as a temporary mock API or a debugging tool.
+When developing web applications, there are a number of options for handling the backend portion, ranging from creating a custom application to using a service like Google Firebase. For many small projects this means a significant amount of work to either write or setup such a backend. _200 OK_ was developed as a no setup, drop-in RESTful API backend for applications with that scope, e.g. learning prototypes or hackathon proof-of-concepts. With its functionality, _200 OK_ can also serve as a temporary mock API or as a debugging tool for header and payload inspection.
 
 ## Abstract
 
@@ -12,9 +12,9 @@ The four traditional REST operations for data retrieval, creation, updating and 
 
 ![short video/GIF of the administration interface of 200 OK in action]
 
-## _200 OK_ as a BaaS
+## _200 OK_ as a low-level BaaS
 
-Web applications typically consist of two parts: a frontend and a backend. The frontend portion is usually concerned with the presentation layer, how a user interacts with the the application and how it is displayed across a range of devices. The backend, in contrast, is responsible for managing all underlying data and contains the business logic for transforming that data. 
+Web applications typically consist of two parts: a frontend and a backend. The frontend portion is usually concerned with the presentation layer, how a user interacts with the the application and how it is displayed across a range of devices. The backend, in contrast, is responsible for managing all underlying data and contains the business logic for retrieving and transforming that data. 
 
 There is a huge variety of providers across different levels of abstraction when it comes to web application backends and those offerings demand different levels of effort to manage while providing varying degrees of abstraction and control over the backend itself.
 
@@ -22,11 +22,11 @@ There is a huge variety of providers across different levels of abstraction when
 
 Relying on bare-metal deployment is at the root of the abstraction level, as are offerings in the Infrastructure-as-a-Service (IaaS) space. Both put the responsibility of dealing with an applications operating system and code into the hands of a developer. A Platform-as-a-Service (PaaS) instead abstracts away another layer: it manages all tasks related to an applications' deployment, letting the developer control only the application code itself.
 
-At the highest layer of abstraction stands the Backend-as-a-Service (BaaS) which also manages any backend functionality, exposing only a defined set of interactions with it. An application developer's responsibility is now limited to the frontend part only with its lower barrier for deployment. An example of a popular BaaS offering is Google Firebase which provides a Software Development Kit (SDK) to facilitate access to its different backend features like a data store, authentication services or analytics. With this reduced responsibility comes a significant vendor lock-in effect, though, creating significant time and effort to switch from one BaaS to another.
+At the highest layer of abstraction stands the Backend-as-a-Service (BaaS) which also manages any backend functionality, exposing only a defined set of interactions with it. An application developer's responsibility is now limited to the frontend part only with its lower barrier for deployment. An example of a popular BaaS offering is Google Firebase which provides a Software Development Kit (SDK) to facilitate access to its different backend features like a data store, authentication services or analytics. The tradeoff made for this reduced responsibility is a significant vendor lock-in effect and non-transferrable knowledge to using such an offering.
 
-_200 OK_ falls right between the PaaS and BaaS definitions. By providing a backend with a predefined yet long-established architecture (in the form of _REST_, see the next section) _200 OK_ holds a few unique advantages over a more complex BaaS like Google's Firebase or Amazon Amplify. Those services are closed-source platforms whose features are determined completely by the provider itself. Implementation details are mostly hidden behind the respective SDK's interface. BaaS services also come with a certain learning curve: features require knowledge of the SDK and integration into the provider's ecosystem means that skills are rarely transferable between providers. Plus, the additional learning curve of how to use the BaaS is determined by the quality of its documentation and the complexity of its API.
+_200 OK_ falls right between the PaaS and BaaS definitions. By providing a backend with a predefined yet long-established architecture (in the form of _REST_) _200 OK_ holds a few unique advantages over a more complex BaaS like Google's Firebase or Amazon Amplify. Those services are closed-source platforms whose features are determined completely by the provider itself. Implementation details are mostly hidden behind the respective SDK's interface. BaaS services also come with a certain learning curve: features require knowledge of the SDK and integration into the provider's ecosystem means that skills are rarely transferable between providers. Plus, the additional learning curve of how to use the BaaS is determined by the quality of its documentation and the complexity of its API.
 
-In contrast, _200 OK_ provides a feature set focused on the pure data storage and management functionality. It also closely follows the popular REST (_Representational State Transfer_) architecture model for providing a simple but powerful interface that is in wide use across the web development world. It retains the general benefits of abstraction that a BaaS offers but has greatly reduced setup times and requires almost no prerequisite user knowledge.
+In contrast, _200 OK_ provides a feature set focused on the pure data storage and management functionality. It also closely follows the popular REST (_Representational State Transfer_) architecture model for providing a simple but powerful interface that is in wide use across the web development world. It retains the general benefits of abstraction that a BaaS offers but has greatly reduced setup times and requires almost no prerequisite user knowledge. Plus, REST is fundamentally implementation-agnostic, meaning that there is no reliance on client libraries or SDKs. As long as there is support for making HTTP requests (which is almost universally possible in any language), any RESTful interface is fully useable.
 
 ## Providing a REST interface
 
@@ -38,7 +38,7 @@ The original REST architecture specification [1] layed out guiding principles fo
 - cacheable inside of
 - a layered system
 
-Modern APIs often do not follow all of those principles closely and are thus often called _RESTful_, meaning that they follow most but not all of the REST style guidelines. Seldomly does an API provide the hypermedia functionality that Fielding described as an interface constraint: HATEOAS (_Hypermedia As The Engine Of Application State_) means that responses include contextual hyperlinks to related resources, allowing API usage without any prior knowledge of its design. [2] Many APIs labelled as _RESTful_ do also not adhere strictly to mapping all possible actions to a resource, another key piece of Fieldings's original paper.
+REST is only an architecture style and modern implementations don't necessarily have to follow all guidelines which is why most modern REST APIs are labelled as _RESTful_, meaning that they only incorporate an (albeit large) subset of the original REST specification. HATEOAS (_Hypermedia As The Engine Of Application State_) is something that is often missing from RESTful APIs. HEATEOAS means that API responses should include contextual hyperlinks to related resources, allowing API usage without any prior knowledge of its design. [2]
 
 _200 OK_ follows most REST principles in that it:
 
@@ -48,9 +48,11 @@ _200 OK_ follows most REST principles in that it:
 
 The uniform interface that relies on the HTTP standard's different request methods and has resources as its key components is as simple as it is flexible. The widespread use of RESTful APIs in large parts of the web development world is a testament to the quality and ease of use that the REST model provides.
 
-The stateless nature is inherent to the way HTTP works and REST acknowledges the advantages that result from that. 
+The stateless nature is inherent to the way HTTP works and both REST and _200 OK_ acknowledge the advantages that result from that. 
 
 The _layerability of systems_ as the REST style describes it is not a big factor in how _200 OK_ operates. The general idea is to have a REST API whose resources can represent an underlying data source in many different ways, e.g. different formats (JSON, XML, CSV, ...) or different aggregations of the same data. A _200 OK_ API does only accept JSON payloads and stores them in almost the same format. But with access to that data being provided by the API, the underlying data store is effectively decoupled from its users, allowing flexibility in changing or improving it without interrupting a user workflow as long as the RESTful interface remains the same.
+
+![The REST style for a web API](/public/images/rest-style.png)
 
 The basic item of a _200 OK_ API is the resource. It represents a collection of data items, each of which can be accessed individually as well. The representation of the collection always matches its original data format which is JSON (_JavaScript Object Notation_), one of the most popular data exchange formats of the web ecosystem. The state of a collection or a collection item can be manipulated through a defined set of interactions represented by the HTTP request methods `GET`, `POST`, `PUT` and `DELETE`.
 
@@ -64,7 +66,7 @@ In order to separate concerns and allow for independent scaling, the main backen
 
 ### Multi-Tenancy REST Interfaces
 
-A _200 OK_ API will typically not generate much need for processing power or memory space, so a dedicated single-tenant architecture would result in a significant resource overhead, e.g. when providing an isolated environment (like a containerized deployment) consisting of an application server and a data store for every tenant. A reprsentative use case for a _200 OK_ API might require some light read and write access over the course of two days, resulting in any pre-provisioned resources sitting idle for the rest of the APIs lifetime, needlessly consuming resources.
+A _200 OK_ API will typically not generate much need for processing power or memory space, so a dedicated single-tenant architecture would result in a significant resource overhead, e.g. when providing an isolated environment (like a containerized deployment) consisting of an application server and a data store for every tenant. A reprsentative use case for a _200 OK_ API might require some light read and write access over the course of two days, resulting in any pre-provisioned resources sitting idle for the rest of the API's lifetime, needlessly consuming resources.
 
 Thus, the decision was made to create a multi-tenant application server whose design would still allow for horizontal or vertical scalability but would also acknowledge the light processor and memory loads that each API causes. Multi-tenancy in this context means that all API access is handled by the same application process. The choice for such an application server fell on Node.js with the Express framework, both of which are well suited for this task thanks to their flexibility and lightweight core.
 
@@ -82,7 +84,7 @@ The approach chosen by _200 OK_ relies on subdomains instead. Each API is identi
 
 The Express framework provides methods to handle requests based both on the endpoint they are intended for and the request method use. With the flexible nature of each API to treat any resource as valid as long as it conforms to the basic requirements (no nesting beyond four levels, numeric integers as resource identifiers), it is easy to see why there can be no fixed endpoint routes. Resources can be named however a user wants (again, within a few constraints) and still be usable on the first request to them. When the retrieval of a resource collection like `/users` is requested as the first operation on a _200 OK_ API, the result should be processed as if `/users` was already created but still void of data: the JSON response should simply contain an empty array.
 
-Route handling inside the _200 OK_ application can therefore only be done by way of the distinct HTTP request method. A `DELETE` request is going to require a fundamentally different operation than a `GET` request. The exact route becomes what is essentially a parameter for that operation. The only difference between a `GET` request to `/users/3/comments` and `/lists/4` is whether the request aims for a whole resource collection or a specific item of it. Extracting this information from the request path is easy within the aforementioned naming constraints of a _200 OK_ API. This way of creating catch-all routes also works exceptionally well with the _materialized path_ approach for organizing the relationship between resources (see [the following chapter](#storing-relational-data-ithout-a-schema)).
+Route handling inside the _200 OK_ application can therefore only be done by way of the distinct HTTP request method. A `DELETE` request is going to require a fundamentally different operation than a `GET` request. The exact route becomes what is essentially a parameter for that operation. The only difference between a `GET` request to `/users/3/comments` and `/lists/4` is whether the request aims for a whole resource collection or a specific item of it. Extracting this information from the request path is easy within the aforementioned naming constraints of a _200 OK_ API. This way of creating catch-all routes also works exceptionally well with the _materialized path_ approach for organizing the relationship between resources (see [the following chapter](#storing-relational-data-without-a-schema)).
 
 ![illustration for showing the 4 different method handlers with the exact endpoint essentially being a set of arguments for the handler]
 
@@ -90,15 +92,13 @@ When done early in the application's middleware stack, it is also easy to discer
 
 ### Storing Relational Data Without A Schema
 
-As per the REST specification, data received for a _200 OK_ API is relational in nature.
-
-![illustration of relationships in a 200 OK API]
+Data received for a _200 OK_ API is relational in nature, represented by the possible nesting of resource collections.
 
 In addition to that relational coupling, each resource item does not have any predefined schema. In fact, since user-sent payloads are not known ahead of time, any predefined schema would have to be so loose as to not provide much benefit at all. Deducting a schema by analyzing incoming data (and subsequently enforcing adherence to it) would allow for better data integrity but at the cost of user freedom. Without a set schema, there are almost no constraints placed on the structure and design of the user-sent payloads which suits all the _200 OK_ use cases described above.  
 
 Yet the bigger problem is that of maintaining the relationship between resources without knowing beforehand which resources an API is going to represent. Conceptually, this is similar to a tree data structure where neither the depth nor the breadth of the tree will be known quantities. Consequently, an SQL database will not play to its (usually impactful) strengths. A dynamic relationship tree would mean that tables might need to be created at runtime, adding an expensive and potentially risky operation to each new API endpoint: if the table creation fails, the user request will fail as well. Since the user-sent payload would be stored in a JSONB column (or equivalent) anyway, SQL would only provide a way to manage those tree relationships but do so at a significant cost.
 
-![illustration of how data stored in a 200 OK API can be represented as a tree]
+![relationships between resource collections and items](/public/images/resource_relationships.png)
 
 This has led to the decision to use a document database, with MongoDB being the first choice thanks to its storage format being very close to JSON anyway. To manage relationships, _200 OK_ relies on a different method: _Materialized Paths_.
 
@@ -166,8 +166,6 @@ To allow valid cross-origin requests, there is a standard called CORS (_Cross-Or
 
 The simplest form of access control with regards to the request maker's origin is a simple response header (`Access-Control-Allow-Origin`) that states whether a response will be exposed to a browser script. A wildcard value (`*`) is a carte blanche but does not solve all CORS-related issues. Whenever a non-simple request is made (as defined by a set of criteria[3]), a special `OPTIONS` method request is made first (called a _preflight request_). Since a _200 OK_ API supports HTTP methods that always require such a preflight request, support for those needs to be built in as well.
 
-![illustration to show how CORS works]
-
 Instead of relying on a third-party library, _200 OK_ implements its own CORS library. One of the preflight headers asks the server for its support for the actual request's HTTP method. Since those allowed methods can vary when a _200 OK_ user creates custom endpoint responses (thus controlling which methods should be allowed), the associated response headers needs to accurately reflect the circumstances under which a request should be allowed.
 
 ### System Architecture
@@ -179,15 +177,13 @@ Despite being a single-instance deployment, _200 OK_ consists of different parts
 - the main data store (MongoDB)
 - the publish/subscribe message broker (Redis)
 
-![illustration of 200 OK's architecture]
+![illustration of 200 OK's architecture](/public/images/system_architecture.png)
 
 Separating the main API backend application from the web interface application was done for a number of reasons. First, it allowed a cleaner separation of concerns. The main application should be responsible for serving user API requests and not also for serving static web assets like HTML, CSS files or images. Secondly, both applications potentially have very different scaling needs. With both being separate, the whole web application could be further split up, for example to let a CDN serve all static assets and transform the application into a pure backend API.
 
 Routing requests to the correct application is one requirement already described earlier. Supporting SSL-encrypted traffic is another one, creating the need for either an SSL termination point or SSL support for both applications, as well as certification for all API subdomains.
 
 Splitting traffic by whether a request is targetted at an API or the web interface is done by an NGINX reverse proxy. It pattern matches for the existence of a subdomain in the hostname and forwards the request to either of the two applications. NGINX is also used as the termination point for all encrypted traffic since all traffic after that point is routed internally behind the same public IP address. TLS certification itself is acquired via a wildcard certificate from Let's Encrypt, covering all (sub-)domains and providing encryption for both the APIs and the web interface.
-
-(TODO: add more architecture information once decision about dockerized deployment is final)
 
 ## Future Work
 
