@@ -1,0 +1,365 @@
+<h1 id="case-study-for-200-ok">Case Study for <em>200 OK</em></h1>
+<h2 id="introduction">Introduction</h2>
+<p>When developing web applications, there are a number of options for handling the backend portion, ranging from
+  creating a custom application to using a service like Google Firebase. For many small projects this means a
+  significant amount of work to either write or setup such a backend. <em>200 OK</em> was developed as a no setup,
+  drop-in RESTful API backend for applications with that scope, like learning prototypes or hackathon proof-of-concepts.
+  With its functionality, <em>200 OK</em> can also serve as a temporary mock API or as a debugging tool for header and
+  payload inspection.</p>
+<p><img src="/public/images/api-creation.gif" alt="short demo of the web interface in action" /> <em>The one-click
+    approach to create a full REST API</em></p>
+<h2 id="abstract">Abstract</h2>
+<p><em>200 OK</em> is a no-configuration backend service that provisions ephemeral RESTful APIs. Following the REST
+  architecture style, each API adheres to a resource-based model for storing and delivering data. In addition to that,
+  each API can be augmented to mock response payloads, plus there is an option for real-time inspection of the
+  request/response cycle.</p>
+<p>The four traditional REST operations for data retrieval, creation, updating and deletion (<code>GET</code>,
+  <code>POST</code>, <code>PUT</code>, <code>DELETE</code>) are supported for resources that can be nested up to four
+  levels deep. Each API handles all valid JSON payloads, supports CORS and is therefore easy to integrate in many
+  different kinds of projects. The RESTful mode works without a need for configuration or custom settings and all
+  additional functionality is optional and can be configured in a modern web interface.</p>
+<h2 id="ok-as-a-low-level-baas"><em>200 OK</em> as a low-level BaaS</h2>
+<p>Web applications typically consist of two parts: a frontend and a backend. The frontend portion is usually concerned
+  with the presentation layer, how a user interacts with the the application and how it is displayed across a range of
+  devices. The backend, in contrast, is responsible for managing all underlying data and contains the business logic for
+  retrieving and transforming that data.</p>
+<p>There is a huge variety of providers across different levels of abstraction when it comes to web application backends
+  and those offerings demand different levels of effort to manage them while providing varying degrees of abstraction
+  and control over the backend itself.</p>
+<figure>
+  <img src="/public/images/services_comparison_table.png"
+    alt="diagram showing possible backend systems with varying levels of complexity and user control" />
+  <figcaption>diagram showing possible backend systems with varying levels of complexity and user control</figcaption>
+</figure>
+<p>Relying on bare-metal deployment is at the root of the abstraction level, as are offerings in the
+  Infrastructure-as-a-Service (IaaS) space. Both put the responsibility of dealing with an applications operating system
+  and code into the hands of a developer, with the latter at least taking care of the physical hardware concerns. A
+  Platform-as-a-Service (PaaS) instead abstracts away anotjer layer: it manages all tasks related to an applications’
+  deployment, letting the developer care only about the application code itself.</p>
+<p>At the highest layer of abstraction stands the Backend-as-a-Service (BaaS) which also manages any backend
+  functionality, exposing only a defined set of interactions with it. An application developer’s responsibility is now
+  limited to the frontend part. An example of a popular BaaS offering is Google Firebase which provides a Software
+  Development Kit (SDK) to facilitate access to its different backend features like a data store, authentication
+  services or analytics. The tradeoff made for this reduced responsibility is a significant vendor lock-in effect and
+  non-transferrable knowledge to using such an offering.</p>
+<p><em>200 OK</em> falls right between the PaaS and BaaS definitions. By providing a backend with a long-established
+  architecture style (in the form of <em>REST</em>) <em>200 OK</em> holds a few unique advantages over a more complex
+  BaaS like Google’s Firebase or Amazon Amplify. Those services are closed-source platforms whose features are
+  determined completely by the provider itself. Implementation details are mostly hidden behind the respective SDK’s
+  interface. BaaS services therefore come with a certain learning curve: Features require knowledge of the SDK, and
+  integrating that functionality means that skills with such a BaaS are rarely transferable between vendors.</p>
+<p>In contrast, <em>200 OK</em> provides a feature set focused purely on data storage and transformation. It also
+  closely follows the popular REST (<em>Representational State Transfer</em>) architecture model for providing a simple
+  but powerful interface that is in wide use across the web development world. It retains the general benefits of
+  abstraction that a BaaS offers but has greatly reduced setup times and requires almost no prerequisite user knowledge.
+  Plus, REST is fundamentally implementation-agnostic, meaning that there is no reliance on client libraries or SDKs. As
+  long as there is support for making HTTP requests (which is almost universally possible in any language, either
+  through the standard library or additional third-party packages), a <em>200 OK</em> API is fully useable.</p>
+<h2 id="providing-a-rest-interface">Providing a REST interface</h2>
+<p>The original REST architecture specification by Roy Fielding<a href="#fn1" class="footnote-ref"
+    id="fnref1"><sup>1</sup></a> layed out guiding principles for an interface to provide interoperability between
+  networked computers:</p>
+<ul>
+  <li>a uniform interface for</li>
+  <li>a client-server architecture that is</li>
+  <li>stateless and</li>
+  <li>cacheable inside of</li>
+  <li>a layered system</li>
+</ul>
+<p>REST is only an architecture style and web-focused implementations don’t necessarily have to follow all guidelines
+  which is why many modern REST APIs are labelled as <em>RESTful</em>, meaning that they only incorporate an (albeit
+  large) subset of the original REST specification. HATEOAS (<em>Hypermedia As The Engine Of Application State</em>),
+  for example, is something that is often missing from RESTful APIs. HATEOAS means that API responses should include
+  contextual hyperlinks to related resources, allowing API usage without any prior knowledge of its design.<a
+    href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></p>
+<p><img src="/public/images/rest-style.png" alt="The REST style for a web API" /> <em>The REST architecture for a Web
+    API</em></p>
+<p><em>200 OK</em> follows most REST principles in that it:</p>
+<ul>
+  <li>provides a uniform interface (following the resource model and HTTP methods to execute operations on those
+    resources)</li>
+  <li>is stateless (with no request being dependent on any knowledge from a former request)</li>
+  <li>is cacheable (with metadata indicating changes of the requested representation and whether it actually needs to be
+    transferred again)</li>
+</ul>
+<p>The uniform interface that relies on the HTTP standard’s different request methods and has resources as its key
+  components is as simple as it is flexible. The widespread use of RESTful APIs in large parts of the web development
+  world is a testament to the quality and ease of use that the REST model provides.</p>
+<p>The stateless nature is inherent to the way HTTP works and both REST and <em>200 OK</em> acknowledge the advantages
+  that result from that. Any resource representation exposed by the REST interface is mirroring its current state.</p>
+<p>The <em>layerability of systems</em> as the REST style describes it is not a big factor in how <em>200 OK</em>
+  operates. The general idea is to have a REST API whose resources can represent an underlying data source in many
+  different ways, e.g. different formats (JSON, XML, CSV, …) or different aggregations of the same data. A <em>200
+    OK</em> API does only accept JSON payloads and stores them in almost the same format. But with access to that data
+  being provided by the API, the underlying data store is effectively decoupled from its users, allowing flexibility in
+  changing or improving it without interrupting a user workflow as long as the interface remains the same.</p>
+<p>The basic item of a <em>200 OK</em> API is the resource. It represents a collection of data items, each of which can
+  be accessed individually as well. The representation of the collection always matches its original data format which
+  is JSON (<em>JavaScript Object Notation</em>), one of the most popular data exchange formats of the web ecosystem. The
+  state of a collection or a collection item can be manipulated through a defined set of interactions represented by the
+  HTTP request methods <code>GET</code>, <code>POST</code>, <code>PUT</code> and <code>DELETE</code>.</p>
+<h2 id="core-backend-challenges">Core Backend Challenges</h2>
+<p><em>200 OK</em> was designed with a single-instance, multi-tenancy approach in mind. This required unique measures to
+  handle dynamic routing as well as flexibly storing dynamic relational data. Also, despite the single-instance
+  approach, the goal was to allow for both horizontal and vertical scalability in the future without it impacting the
+  core design.</p>
+<p>With the need to properly handle nested relationships for user-provided data, a performant and flexible solution for
+  the data persistence was needed as well. A <em>materialized path</em> approach backed by a MongoDB document database
+  constitutes a solution that is both performant for the intended use case and robust enough to remain a valid approach
+  even when extending both functionality and scale of the data layer.</p>
+<p>In order to separate concerns and allow for independent scaling, the main backend handling all user-generated API
+  requests was separated from the user-facing frontend configuration platform. Since both processes need a way to
+  quickly exchange information about user-initiated requests, a Redis store used with its publish/subscribe mode
+  together with the use of server-sent events provides easy interprocess communication without much additional overhead.
+</p>
+<h3 id="multi-tenancy-rest-interfaces">Multi-Tenancy REST Interfaces</h3>
+<p>A <em>200 OK</em> API will typically not generate much need for processing power or memory space, so a dedicated
+  single-tenant architecture would result in a significant resource overhead. Providing an isolated environment (like a
+  containerized deployment) consisting of an application server and a data store for every tenant (API) is not an good
+  solution: A reprsentative use case for a <em>200 OK</em> API might require some light read and write access over the
+  course of two days, resulting in any pre-provisioned resources sitting idle for the rest of the API’s lifetime,
+  needlessly consuming resources.</p>
+<p>Thus, the decision was made to create a multi-tenant application server whose design would still allow for horizontal
+  or vertical scalability but would also acknowledge the light processor and memory loads that each API causes.
+  Multi-tenancy in this context means that API access for all users is handled by the same application process. The
+  choice for such an application server fell on Node.js with the Express framework, both of which are well suited for
+  this task thanks to their flexibility and lightweight core.</p>
+<p>This approach poses a fundamental problem in relation to multi-tenancy: Since each API receives a unique identifier
+  but all requests are served by the same application, the tenants need to be recognized.</p>
+<p>Giving each API a unique identifier can be done in different ways, the most obvious one being a path-based, randomly
+  created identifier. So an API with an identifier of <code>123456</code> would be available under
+  <code>api.com/123456</code>. The biggest problem with that approach is how to then identify requests to an API
+  compared to ones for the administrative web interface. The reverse proxy would need to apply pattern matching to
+  identify API requests (like <code>api.com/123456</code>) and web requests (like <code>api.com/dashboard</code>).
+  Depending on the complexity of the API identifier, this could mean creating dedicated whitelist for all web endpoints.
+</p>
+<p>Another consideration is one of aesthetics and usability. The strict resource model of RESTful APIs uses URL paths to
+  represent both resources and item identifiers. Adding an additional API identifier to the URL path obfuscates that
+  pattern.</p>
+<p>The approach chosen by <em>200 OK</em> relies on subdomains instead. Each API is identified by a unique subdomain.
+  The reverse proxy now only needs to check whether a request is made to a URL with a subdomain (an API request) or
+  without one (a request to the web interface).</p>
+<figure>
+  <img src="/public/images/reverse_proxy_concept.png"
+    alt="illustration of reverse proxy identify different requests and proxying them to the correct application" />
+  <figcaption>illustration of reverse proxy identify different requests and proxying them to the correct application
+  </figcaption>
+</figure>
+<h3 id="handling-request-routing">Handling Request Routing</h3>
+<p>The Express framework provides methods to handle requests based both on the endpoint they are intended for and the
+  request method use. With the flexible nature of each API to treat any resource as valid as long as it conforms to the
+  basic requirements (no nesting beyond four levels, numeric integers as resource identifiers), it is easy to see why
+  there can be no fixed endpoint routes. Resources can be named however a user wants (again, within a few constraints)
+  and still be usable on the first request to them. When the retrieval of a resource collection like <code>/users</code>
+  is requested as the first operation on a <em>200 OK</em> API, the result should be processed as if <code>/users</code>
+  was already created but still void of data: the JSON response should simply contain an empty array.</p>
+<p>Route handling inside the <em>200 OK</em> application can therefore only be done by way of the distinct HTTP request
+  method. A <code>DELETE</code> request is going to require a fundamentally different operation than a <code>GET</code>
+  request. The exact route becomes what is essentially a parameter for that operation. The only difference between a
+  <code>GET</code> request to <code>/users/3/comments</code> and <code>/lists/4</code> is whether the request aims for a
+  whole resource collection or a specific item of it. Extracting this information from the request path is easy within
+  the aforementioned naming constraints of a <em>200 OK</em> API. This way of creating catch-all routes also works
+  exceptionally well with the <em>materialized path</em> approach for organizing the relationship between resources (see
+  <a href="#storing-relational-data-without-a-schema">the following chapter</a>).</p>
+<p>When done early in the application’s middleware stack, it is also easy to discern between valid resource requests and
+  those that do not make sense within the loose limits. Rejecting a request can be done before many I/O-intensive
+  operations. For example, a resource <code>/users/5/images</code> should only be valid if an item with the id of
+  <code>5</code> in the <code>/users</code> collection already exists. If it doesn’t, there should be no
+  <code>images</code> resource for that user, making the request invalid.</p>
+<h3 id="storing-relational-data-without-a-schema">Storing Relational Data Without A Schema</h3>
+<p>Data received for a <em>200 OK</em> API is relational in nature, represented by the possible nesting of resource
+  collections.</p>
+<p><img src="/public/images/resource_relationships.png" alt="relationships between resource collections and items" />
+  <em>Relationships in a resource-based API model</em></p>
+<p>In addition to that relational coupling, each resource item does not have any predefined schema. In fact, since
+  user-sent payloads are not known ahead of time, any predefined schema would have to be so loose as to not provide much
+  benefit at all. Deducting a schema by analyzing incoming data (and subsequently enforcing adherence to it) would allow
+  for better data integrity but at the cost of user freedom. Without a set schema, there are almost no constraints
+  placed on the structure and design of the user-sent payloads which suits all the <em>200 OK</em> use cases described
+  above.</p>
+<p>Yet the bigger problem is that of maintaining the relationship between resources without knowing beforehand which
+  resources an API is going to represent. Conceptually, this is similar to a tree data structure where neither the depth
+  nor the breadth of the tree will be known quantities. Consequently, an SQL database will not play to its (usually
+  impactful) strengths. A dynamic relationship tree would mean that tables might need to be created at runtime, adding
+  an expensive and potentially risky operation to each new API endpoint: if the table creation fails, the user request
+  will fail as well. Since the user-sent payload would be stored in a JSONB column (or equivalent) anyway, SQL would
+  only provide a way to manage those tree relationships but do so at a significant cost.</p>
+<p>This has led to the decision to use a document database, with MongoDB being the first choice thanks to its storage
+  format being very close to the JSON payload format. To manage relationships, <em>200 OK</em> relies on a different
+  method: <em>Materialized Paths</em>.</p>
+<p>Materialized path means that the relationship of any resource item is represented by the full tree path to that item,
+  encapsulated in a string. That means that there is no dedicated information stored about the parent collection itself,
+  each collection just comprises a varying number of - in the case of MongoDB - documents with a <code>path</code> field
+  that specifies the exact relationship of that item. That might look like the following JSON structure:</p>
+<div class="sourceCode" id="cb1">
+  <pre class="sourceCode json"><code class="sourceCode json"><a class="sourceLine" id="cb1-1" title="1"><span
+          class="fu">{</span></a>
+      <a class="sourceLine" id="cb1-2" title="2"> <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span
+          class="dv">5</span><span class="fu">,</span></a>
+      <a class="sourceLine" id="cb1-3" title="3"> <span class="dt">&quot;path&quot;</span><span class="fu">:</span>
+        <span class="st">&quot;/users/6/images&quot;</span><span class="fu">,</span></a>
+      <a class="sourceLine" id="cb1-4" title="4"> <span class="dt">&quot;data&quot;</span><span class="fu">:</span>
+        <span class="fu">{</span></a>
+      <a class="sourceLine" id="cb1-5" title="5"> <span class="dt">&quot;example&quot;</span><span class="fu">:</span>
+        <span class="kw">true</span></a>
+      <a class="sourceLine" id="cb1-6" title="6"> <span class="fu">}</span></a>
+      <a class="sourceLine" id="cb1-7" title="7"><span class="fu">}</span></a></code></pre>
+</div>
+<p>Each item receives just two identifiers: the path reflects the exact relationship for the item, in the example it
+  would belong to the <code>images</code> collection nested below the <code>users</code> item with the <code>id</code>
+  of <code>6</code>. The item itself would also be associated an <code>id</code> of <code>5</code>. A whole resource
+  collection can therefore be retrieved without additional complexity by simply matching the path to it for each item.
+  With the <code>id</code> provisioning handled separately, all resource items can be stored within the same document
+  collection of the database while still allowing all necessary operations on the underlying tree structure.</p>
+<p>To further explain the decision for materialized paths, we have to take an even closer look at the nature of the
+  relationship tree for <em>200 OK</em>. Only a subset of all the functionality that is possible to represent with a
+  tree structure is required for a RESTful API. New tree nodes (representing resource collections) will only be created
+  on the outer edges of the tree. When such a collection gets removed, all data nested below it can also be removed, so
+  operations on parts of the tree are very limited and straightforward. Within those constraints, any complex operation
+  like walking the tree by depth or breadth is also not relevant.</p>
+<p>While there are multiple ways of representing a tree structure in data stores (like the nested set model<a
+    href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> for relational databases), materialized paths provide
+  the following advantages:</p>
+<ul>
+  <li>The organizational overhead is restricted to an additional column or property.</li>
+  <li>Inserting a node is a cheap operation since no existing nodes need to be updated.</li>
+  <li>Deletion of a sub-tree is easy with pattern matching of the materialized path column/property.</li>
+</ul>
+<p>The only truly costly operation, moving sub-trees inside the structure (which would require updating all nodes in
+  that sub-tree), is not part of the <em>200 OK</em> requirements. The limited ways of manipulating the tree would make
+  any more complex solution add mostly unnecessary optimization overhead.</p>
+<p>However, one disadvantage of materialized paths in a NoSQL data store is that there is no inherent way of keeping
+  track of resource item identifiers (like there would be with an auto-incrementing column in a relational database).
+  When inserting a new item into a resource collection, there is no possibility to easily deduce the next available
+  identifier without having to query all sibling nodes, an operation bearing potentially high costs. <em>200 OK</em>
+  solves this issue with a dedicated identifier collection that provisions the next highest integer identifier to any
+  new resource item.</p>
+<p>All in all, for all the necessary operations and within the constraints put on each API, materialized paths provide a
+  performant solution to managing relationships.</p>
+<h2 id="implementation-challenges">Implementation Challenges</h2>
+<p>With the core backend design in place, several pieces of functionality posed more specific challenges with regards to
+  their implementation. Among those were:</p>
+<ul>
+  <li>Allowing real-time request and response inspection that requires communication between the API backend and the web
+    interface application.</li>
+  <li>Supporting the full CORS functionality for allowing cross-origin requests to the APIs.</li>
+  <li>Support for SSL-encrypted requests across all APIs and thus finding a system architecture that provides the means
+    to do so.</li>
+</ul>
+<h3 id="real-time-request-and-response-inspection">Real-Time Request and Response Inspection</h3>
+<figure>
+  <img src="/public/images/request-response-inspection.gif"
+    alt="real-time inspection of the request and response cycle" />
+  <figcaption>real-time inspection of the request and response cycle</figcaption>
+</figure>
+<p>The decision to implement core API functionality and web administration functionality in two separate applications
+  also created a barrier of communication between both. The only common denominator that both the web application as
+  well as the backend application have is the data store. So to allow real-time request/response inspection in the web
+  application, a simple approach would be to store that information in the database so that the frontend can retrieve
+  it. However, that solution would have a few drawbacks. First, it puts more load on the main database which decreases
+  its overall capacity. But even more significantly, it introduces a maintainability demand: Most requests and responses
+  will likely never be inspected on the frontend, so a lot of data is stored without a need and regular cleanup of old
+  data is required.</p>
+<p>A better solution can be achieved by using a dedicated message broker. <em>Redis</em> is an in-memory data store with
+  message brokering functionality in the form of its publish/subscribe mode. Leveraging that functionality, the API
+  backend can publish each request/response cycle to Redis. When a subscriber in the frontend application listens for
+  that data, it will receive it, otherwise it is immediately discarded.</p>
+<p>This solves all described issues. The main data store is kept unaffected while a better suited tool handles the
+  communication in a completely decoupled manner. With the ephemeral in-memory nature of Redis, there are no cleanups
+  necessary as all data is either published and received immediately or discarded. In-memory storage also keeps the
+  added latency of those operations to a minimum compared to the disk-based storage of the NoSQL store.</p>
+<p>The web application that subscribes to request/response information on Redis will also require a real-time
+  communication method with the interface running inside a user’s browser. There are various fleshed-out solution to
+  facilitate longer-living server/client communication outside the one-off nature of basic HTTP requests.</p>
+<p>The most commonly used technique are WebSockets that allow bidirectional communication between clients and a server.
+  This kind of communication comes with its own cost, though, on both sides of the process. The server needs a separate
+  WebSocket connection handler listening on a different port than the rest of the HTTP-based communication, while the
+  client will need to create a dedicated connection as well.</p>
+<p>Since the flow of information for the request/response inspection is limited to a single direction (from the server
+  to the client), another solution provides a better fit: <em>Server-Sent Events</em> (SSE). Server-sent events have
+  much lighter requirements. They are served through a normal endpoint in the existing server application, foregoing the
+  need for a dedicated listener. Browser-side, SSE are realized through the browser’s <code>EventSource</code> interface
+  supported by all existing modern browsers and adding only minimal overhead to the client-side code base.</p>
+<p>Besides being unidirectional, SSE come with the disadvantage of being restricted by the maximum amount of open HTTP
+  connections for a domain that is enforced in the browser (at least when not using HTTP/2). Since there is only the
+  need for one SSE connection in the case of <em>200 OK</em>, this does not matter.</p>
+<p>Since the browser fetches SSE from a normal API endpoint, code complexity could be kept low by being able to reuse
+  all existing authentication and request handling functionality. That made Server-sent events a perfect fit for this
+  particular use case.</p>
+<h3 id="full-cors-support">Full CORS support</h3>
+<p>External APIs are most useful when they can be accessed from any environment. However, browser application code
+  suffers from one security-related restriction when it comes to external API access: the same-origin policy, a security
+  mechanism in all major browsers that restricts access to resources from different origins than the accessing script or
+  document originates from.</p>
+<p>To allow valid cross-origin requests, there is a standard called CORS (<em>Cross-Origin Resource Sharing</em>) that
+  requires a server to explicitly state whether a host is permitted to make a request to it. With the paradigm shift
+  towards web applications with lots of internal logic running in the browser, an API needs to support CORS to enable
+  usage in those environments.</p>
+<p>The simplest form of access control with regards to the request maker’s origin is a simple response header
+  (<code>Access-Control-Allow-Origin</code>) that states whether a response will be exposed to a browser script. A
+  wildcard value (<code>*</code>) is a carte blanche but does not solve all CORS-related issues. Whenever a non-simple
+  request is made (as defined by a set of criteria<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>), a
+  special <code>OPTIONS</code> method request is made first (called a <em>preflight request</em>). Since a <em>200
+    OK</em> API supports HTTP methods that always require such a preflight request, support for those needs to be built
+  in as well.</p>
+<p>Instead of relying on a third-party library, <em>200 OK</em> implements its own CORS library. One of the preflight
+  headers asks the server for its support for the actual request’s HTTP method. Since those allowed methods can vary
+  when a <em>200 OK</em> user creates custom endpoint responses (thus controlling which methods should be allowed), the
+  associated response headers needs to accurately reflect the circumstances under which a request should be allowed.</p>
+<h3 id="system-architecture">System Architecture</h3>
+<p>Despite being a single-instance deployment, <em>200 OK</em> consists of different parts that need to be put into a
+  cohesive system architecture:</p>
+<ul>
+  <li>the main API backend</li>
+  <li>the administrative web interface application (including a backend and frontend scripts)</li>
+  <li>the main data store (MongoDB)</li>
+  <li>the publish/subscribe message broker (Redis)</li>
+</ul>
+<figure>
+  <img src="/public/images/system_architecture.png" alt="illustration of 200 OK’s architecture" />
+  <figcaption>illustration of 200 OK’s architecture</figcaption>
+</figure>
+<p>Separating the main API backend application from the web interface application was done for a number of reasons.
+  First, it allowed a cleaner separation of concerns. The main application should be responsible for serving user API
+  requests and not also for serving static web assets like HTML, CSS files or images. Secondly, both applications
+  potentially have very different scaling needs. With both being separate, the whole web application could be further
+  split up, for example to let a CDN serve all static assets and transform the application into a pure backend API.</p>
+<p>Routing requests to the correct application is one requirement already described earlier. Supporting SSL-encrypted
+  traffic is another one, creating the need for either an SSL termination point or SSL support for both applications, as
+  well as certification for all API subdomains.</p>
+<p>Splitting traffic by whether a request is targetted at an API or the web interface is done by an NGINX reverse proxy.
+  It pattern matches for the existence of a subdomain in the hostname and forwards the request to either of the two
+  applications. NGINX is also used as the termination point for all encrypted traffic since all traffic after that point
+  is routed internally behind the same public IP address. TLS certification itself is acquired via a wildcard
+  certificate from Let’s Encrypt, covering all (sub-)domains and providing encryption for both the APIs and the web
+  interface.</p>
+<h2 id="future-work">Future Work</h2>
+<p>There are a number of additions and improvements that I would love to make to <em>200 OK</em>, among them: - an
+  export feature to download all API data as a JSON blob - a tool to be able to quickly fill selected resources with
+  mock data (generic users, lists, etc.) - finer grained API authentication and authorization supporting multiple users
+  and roles - extended mocking capabilities, e.g. supporting customized headers and response status codes - stronger
+  testing coverage and higher degrees of deployment automation (CI/CD)</p>
+<section class="footnotes">
+  <hr />
+  <ol>
+    <li id="fn1">
+      <p>Roy Fielding, 2000, https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm<a href="#fnref1"
+          class="footnote-back">↩</a></p>
+    </li>
+    <li id="fn2">
+      <p>The decision to not implement a HATEOAS system stems primarily from the consideration that for the intended use
+        cases (in general projects with small scopes), HATEOAS would not be very beneficial. In most cases, the API
+        would not need to be explored as the only API user is the one who also determines how it is used, resulting in
+        the additional information being more of a hindrance because it requires extracting the actual data payload from
+        the additional hypermedia information. For an example of HATEOAS in an API, the official GitHub API provides a
+        good example.<a href="#fnref2" class="footnote-back">↩</a></p>
+    </li>
+    <li id="fn3">
+      <p>https://en.wikipedia.org/wiki/Nested_set_model<a href="#fnref3" class="footnote-back">↩</a></p>
+    </li>
+    <li id="fn4">
+      <p>https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#Simple_requests<a href="#fnref4"
+          class="footnote-back">↩</a></p>
+    </li>
+  </ol>
+</section>
